@@ -141,6 +141,7 @@
 ;  (declare (type <mumble> <mumble>-1 <mumble>-2)
 ;	   (values boolean)))
 
+#-(or draft-ansi-cl-2 ansi-cl)
 (deftype boolean () '(or null (not null)))
 
 (deftype card32 () '(unsigned-byte 32))
