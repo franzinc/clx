@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.18 1998/04/01 03:54:35 layer Exp $
+# $Id: Makefile,v 1.19 1998/04/01 06:44:36 layer Exp $
 #  Makefile for CLX
 
 makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
@@ -59,6 +59,11 @@ endif
 ifeq ($(OS_NAME),sunos)
 XCFLAGS = -I/usr/openwin/include
 PICFLAGS = -K pic
+MAKE_SHARED = ld -G
+endif
+
+ifeq ($(OS_NAME),linux)
+PICFLAGS = 
 MAKE_SHARED = ld -G
 endif
 
