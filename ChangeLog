@@ -5,6 +5,11 @@
 	* <changes go here...>
 
 *******************************************************************************
+join from acl62 to trunk on 7/3/03
+command:
+  join.sh acl62 acl62_to_trunk_merge3 acl62_to_trunk_merge_070303 clx
+
+*******************************************************************************
 MIT R5.0, ACL #27
 
 Thu Jan 29 20:58:27 PST 2003  Duane Rettig  <duane@beta>
@@ -113,6 +118,11 @@ Sat Sep 23 20:47:21 PST 2000  Duane Rettig  <duane@beta>
 
 *******************************************************************************
 <no version change>
+
+2003-04-30  Kevin Layer  <layer@crikey>
+
+    for bug12007:
+	* Makefile: add -lpthread on linux
 
 2002-08-09  Duane Rettig  <duane@beta>
 
