@@ -33,10 +33,12 @@ CFLAGS	= -O -DUNIXCONN $(XCFLAGS)
 SPEED	= 3
 SAFETY	= 0
 DEBUG	= 1
-
+RECORD_XREF_INFO = nil
+RECORD_SOURCE_FILE_INFO = nil
 
 C_SRC	= excldep.c socket.c
 C_OBJS	= excldep.o socket.o
+C_SOBJS	= excldep.so socket.so
 
 L_OBJS	= defsystem.fasl package.fasl excldep.fasl depdefs.fasl clx.fasl \
 	dependent.fasl exclcmac.fasl macros.fasl bufmac.fasl buffer.fasl \
@@ -61,6 +63,20 @@ L_SRC	= defsystem.cl package.cl excldep.cl depdefs.cl clx.cl \
 all:	partial-clos
 compile-CLX-for-CLUE:	compile-partial-clos-CLX
 clue:	partial-clos
+
+excldep.so: excldep.c
+	-mv excldep.o excldep.ooo
+	cc $(CFLAGS) -c -K pic excldep.c
+	ld -G -o excldep.so excldep.o
+	rm -f excldep.o
+	-mv excldep.ooo excldep.o
+
+socket.so: socket.c
+	-mv socket.o socket.ooo
+	cc $(CFLAGS) -c -K pic -I/usr/openwin/include socket.c
+	ld -G -o socket.so socket.o
+	rm -f socket.o
+	-mv socket.ooo socket.o
 
 #
 # Three build rules are provided: no-clos, partial-clos, and full-clos.
@@ -94,7 +110,8 @@ compile-no-clos-CLX:	$(C_OBJS)
 	    (compile-system :clx) \
 	    (compile-system :clx-debug))) \
 	 :speed $(SPEED) :debug $(DEBUG) :safety $(SAFETY) \
-	 :record-source-file-info nil :record-xref-info nil \
+	 :record-source-file-info $(RECORD_SOURCE_FILE_INFO) \
+	 :record-xref-info $(RECORD_XREF_INFO) \
 	 :compile-print nil :compile-verbose nil \
 	 :redefinition-warnings t :gcprint nil)" | $(CL) $(CLOPTS) -batch
 
@@ -109,7 +126,8 @@ compile-partial-clos-CLX:	$(C_OBJS)
 	    (compile-system :clx) \
 	    (compile-system :clx-debug))) \
 	 :speed $(SPEED) :debug $(DEBUG) :safety $(SAFETY) \
-	 :record-source-file-info nil :record-xref-info nil \
+	 :record-source-file-info $(RECORD_SOURCE_FILE_INFO) \
+	 :record-xref-info $(RECORD_XREF_INFO) \
 	 :compile-print nil :compile-verbose nil \
 	 :redefinition-warnings t :gcprint nil)" | $(CL) $(CLOPTS) -batch
 
@@ -124,7 +142,8 @@ compile-full-clos-CLX:	$(C_OBJS)
 	    (compile-system :clx) \
 	    (compile-system :clx-debug))) \
 	 :speed $(SPEED) :debug $(DEBUG) :safety $(SAFETY) \
-	 :record-source-file-info nil :record-xref-info nil \
+	 :record-source-file-info $(RECORD_SOURCE_FILE_INFO) \
+	 :record-xref-info $(RECORD_XREF_INFO) \
 	 :compile-print nil :compile-verbose nil \
 	 :redefinition-warnings t :gcprint nil)" | $(CL) $(CLOPTS) -batch
 
@@ -140,11 +159,14 @@ load-CLX:
 	"(exit)" | $(CL) $(CLOPTS)
 
 clean:
-	$(RM) -f *.fasl debug/*.fasl $(CLX) core $(C_OBJS) make.out
+	$(RM) -f *.fasl debug/*.fasl $(CLX) core $(C_OBJS) $(C_SOBJS) make.out
 
 install:
 	mv CLX.fasl $(DEST)/clx.fasl
 	mv *.o $(DEST)
+	if test -f socket.so; then \
+		mv *.so $(DEST); \
+	fi
 
 tags:
 	$(TAGS) $(L_SRC) $(C_SRC)

@@ -97,14 +97,16 @@
 			  (list (ff:convert-to-lang "fd_wait_for_input")))
 	      (make-array 1 :element-type '(unsigned-byte 32))))
   (ff:remove-entry-point (ff:convert-to-lang "fd_wait_for_input"))
-  (load "excldep.o"))
+  #+svr4 (load "excldep.so")
+  #-svr4 (load "excldep.o"))
 
 (when (plusp (ff:get-entry-points
 	      (make-array 1 :initial-contents
 			  (list (ff:convert-to-lang "connect_to_server")))
 	      (make-array 1 :element-type '(unsigned-byte 32))))
   (ff:remove-entry-point (ff:convert-to-lang "connect_to_server" :language :c))
-  (load "socket.o"))
+  #+svr4 (load "socket.so")
+  #-svr4 (load "socket.o"))
 
 (ff:defforeign-list `((connect-to-server
 		       :entry-point
