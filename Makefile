@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.22 1999/05/04 01:21:16 layer Exp $
+# $Id: Makefile,v 1.23 2000/03/04 05:14:44 duane Exp $
 #  Makefile for CLX
 
 SHELL = sh
@@ -56,6 +56,8 @@ CLOPTS	= -qq
 
 SO = so
 
+SIXTYFOURBIT = $(shell cd ../src; make -s echo-64bit)
+
 ifeq ($(OS_NAME),aix)
 XCFLAGS = -D_BSD -D_NO_PROTO -D_NONSTD_TYPES -D_MBI=void
 MAKE_SHARED = make_shared
@@ -85,8 +87,13 @@ MAKE_SHARED = ld -Bshareable -Bdynamic
 endif
 
 ifeq ($(OS_NAME),osf1)
+ifeq ($(SIXTYFOURBIT),yes)
+XCFLAGS = -G 0 -DAcl64Bit -resumption_safe
+MAKE_SHARED = ../src/bin/make_shared.dec64
+else
 XCFLAGS = -G 0 -taso -xtaso -xtaso_short -resumption_safe
-MAKE_SHARED = make_shared
+MAKE_SHARED = ../src/bin/make_shared.dec
+endif
 endif
 
 ifeq ($(OS_NAME),irix)

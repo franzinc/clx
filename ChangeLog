@@ -5,6 +5,14 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #15
+
+Fri Mar  3 20:47:21 PST 2000  Duane Rettig  <duane@beta>
+
+	* Makefile: Add 64-bit
+	* clx0.cl: Incf version
+
+*******************************************************************************
 2000-02-25  Charles A. Cox  <cox@freezer>
 
 	* excldep.cl: add ':strings-convert nil' to some def-foreign-calls.
