@@ -83,7 +83,7 @@
 (pushnew :clx *features*)
 (pushnew :xlib *features*)
 
-(defparameter *version* "MIT R5.0 (Franz ACL4.1)")
+(defparameter *version* "MIT R5.0 (Franz ACL4.1 (CLX #2))")
 (pushnew :clx-mit-r4 *features*)
 (pushnew :clx-mit-r5 *features*)
 
