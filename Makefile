@@ -7,28 +7,26 @@
 # * Change the next line to point to where you have Common Lisp installed *
 # *        (make sure the Lisp doesn't already have CLX loaded in)        *
 # *************************************************************************
-CL	= /usr/local/bin/cl
+CL	= ../src/lisp -I ../src/dcl.dxl
 
-RM	= /bin/rm
 SHELL	= /bin/sh
 ECHO	= /bin/echo
 MV	= /usr/fi/mv-nfs -c
 TAGS	= /usr/local/lib/emacs/etc/etags
 
 # Name of dumped lisp
-CLX	= CLX
+CLX	= clx.dxl
 
 CLOPTS	= -qq
 
-# Use this one for Suns
-CFLAGS	= -O -DUNIXCONN $(XCFLAGS)
 # Use this one for Silicon Graphics & Mips Inc MIPS based machines
-# CFLAGS = -O -G 0 -I/usr/include/bsd
+#   XCFLAGS = -G 0 -I/usr/include/bsd
 # Use this one for DEC MIPS based machines
-# CFLAGS = -O -G 0 -DUNIXCONN
+#   XCFLAGS = -G 0
 # Use this one for HP machines
-# CFLAGS = -O -DSYSV -DUNIXCONN
+#   XCFLAGS = -DSYSV
 
+CFLAGS	= -O -DUNIXCONN $(XCFLAGS)
 
 # Lisp optimization for compiling
 SPEED	= 3
@@ -134,12 +132,15 @@ compile-no-clos-CLX:	$(C_OBJS)
 	(let ((*record-source-file-info* $(RECORD_SOURCE_FILE_INFO)) \
 	      (*load-source-file-info* $(LOAD_SOURCE_FILE_INFO)) \
 	      (*record-xref-info* $(RECORD_XREF_INFO)) \
-	      (*load-xref-info* $(LOAD_XREF_INFO))) \
+	      (*load-xref-info* $(LOAD_XREF_INFO)) \
+	      (*compile-verbose* t) \
+	      (*compile-print* nil)) \
 	    (compile-system :clx) \
 	    (compile-system :clx-debug))" | $(CL) $(CLOPTS) -batch
 
 compile-partial-clos-CLX:	$(C_OBJS)
-	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
+	$(ECHO) "(ff:get-entry-point (ff:convert-to-lang \"fd_wait_for_input\")) \
+	(pushnew :clx-ansi-common-lisp *features*) \
 	(load-logical-pathname-translations \"clx\") \
 	(load \"defsystem\") \
 	(load \"package\") \
@@ -151,9 +152,11 @@ compile-partial-clos-CLX:	$(C_OBJS)
 	(let ((*record-source-file-info* $(RECORD_SOURCE_FILE_INFO)) \
 	      (*load-source-file-info* $(LOAD_SOURCE_FILE_INFO)) \
 	      (*record-xref-info* $(RECORD_XREF_INFO)) \
-	      (*load-xref-info* $(LOAD_XREF_INFO))) \
+	      (*load-xref-info* $(LOAD_XREF_INFO)) \
+	      (*compile-verbose* t) \
+	      (*compile-print* nil)) \
 	    (compile-system :clx) \
-	    (compile-system :clx-debug))" | $(CL) $(CLOPTS) -batch
+	    (compile-system :clx-debug))" | $(CL) $(CLOPTS) -batch -backtrace-on-error
 
 compile-full-clos-CLX:	$(C_OBJS)
 	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
@@ -168,7 +171,9 @@ compile-full-clos-CLX:	$(C_OBJS)
 	(let ((*record-source-file-info* $(RECORD_SOURCE_FILE_INFO)) \
 	      (*load-source-file-info* $(LOAD_SOURCE_FILE_INFO)) \
 	      (*record-xref-info* $(RECORD_XREF_INFO)) \
-	      (*load-xref-info* $(LOAD_XREF_INFO))) \
+	      (*load-xref-info* $(LOAD_XREF_INFO)) \
+	      (*compile-verbose* t) \
+	      (*compile-print* nil)) \
 	    (compile-system :clx) \
 	    (compile-system :clx-debug))" | $(CL) $(CLOPTS) -batch
 
@@ -185,10 +190,10 @@ load-CLX:
 	"(exit)" | $(CL) $(CLOPTS)
 
 clean_OS:
-	rm -f $(C_OBJS) $(C_SOBJS) 
+	rm -f *.o *.so *.sl
 
 clean:
-	$(RM) -f *.fasl debug/*.fasl $(CLX) core $(C_OBJS) $(C_SOBJS) make.out
+	rm -f *.fasl *.o *.so *.sl debug/*.fasl $(CLX) core make.out
 
 install_OS:
 	$(MV) *.o $(DEST)
@@ -204,3 +209,9 @@ install: install_OS
 
 tags:
 	$(TAGS) $(L_SRC) $(C_SRC)
+
+DISTFILES = CHANGES ChangeLog Makefile */Makefile NEWCHANGES README */README \
+	*.c *.cl */*.cl doc/*.Z
+
+echo-distribution-source-files:
+	@echo $(DISTFILES)
