@@ -15,8 +15,12 @@
 
 (in-package :xlib)
 
+#+(version>= 5 0)
+(eval-when (compile)
+  (require :foreign))
+
 (eval-when (compile load eval)
-  #-mswindows (require :foreign)
+  #-(or (version>= 5 0) mswindows) (require :foreign)
   (require :process)			; Needed even if scheduler is not
 					; running.  (Must be able to make
 					; a process-lock.)
@@ -103,21 +107,21 @@
 	  else (decf rest numread)
 	       (incf start-index numread))))))
 
-#-mswindows
+#-(or (version>= 5 0) mswindows)
 (unless (ff:get-entry-point (ff:convert-to-lang "fd_wait_for_input"))
   (ff:remove-entry-point (ff:convert-to-lang "fd_wait_for_input"))
   #+dlfcn (load "clx:excldep.so")
   #+dlhp  (load "clx:excldep.sl")
   #-dynload (load "clx:excldep.o"))
 
-#-mswindows
+#-(or (version>= 5 0) mswindows)
 (unless (ff:get-entry-point (ff:convert-to-lang "connect_to_server"))
   (ff:remove-entry-point (ff:convert-to-lang "connect_to_server" :language :c))
   #+dlfcn (load "clx:socket.so")
   #+dlhp (load "clx:socket.sl")
   #-dynload (load "clx:socket.o"))
 
-#-mswindows
+#-(or (version>= 5 0) mswindows)
 (ff:defforeign-list `((connect-to-server
 		       :entry-point
 		       ,(ff:convert-to-lang "connect_to_server")
@@ -132,6 +136,27 @@
 		       :callback nil
 		       :allow-other-keys t
 		       :arguments (fixnum fixnum))))
+
+#+(and (version>= 5 0) (not mswindows))
+(progn
+  (unless (excl::get-entry-point (excl::convert-foreign-name "fd_wait_for_input"))
+    (load (format nil "clx:excldep.~a" (car excl::*load-foreign-types*))))
+
+  (unless (excl::get-entry-point (excl::convert-foreign-name "connect_to_server"))
+    (load (format nil "clx:socket.~a" (car excl::*load-foreign-types*))))
+
+  (ff:def-foreign-call (connect-to-server "connect_to_server")
+      ((host (* :char) simple-string) (display :int fixnum))
+    :returning (:int fixnum)
+    :arg-checking nil)
+
+  (ff:def-foreign-call (fd-wait-for-input "fd_wait_for_input")
+      ((fd :int fixnum) (timeout :int fixnum))
+    :returning (:int fixnum)
+    :call-direct t
+    :arg-checking nil)
+)
+
 
 (eval-when (compile)
   (declaim (declaration buffer-bytes))
