@@ -337,6 +337,7 @@
 		       #+allegro #'make-condition
 		       #-(or lispm allegro) #'make-condition
 		       error-key
+		       :asynchronous :unknown
 		       :error-key error-key
 		       :display display
 		       :major major-code
