@@ -1,3 +1,8 @@
+Mon Dec  6 17:01:31 1993  Ken Cheetham  (cheetham at frozen)
+
+	* clx/dependent.cl: add excl:string-to-euc line to make
+        international acl work on remote displays
+
 Fri Dec  3 16:24:34 1993  Duane Rettig  (duane at clay)
 
 (for 4.2.devel.22 merge):
