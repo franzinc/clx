@@ -5,6 +5,17 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #23
+
+2001-12-11  Kevin Layer  <layer@crikey>
+
+	* Makefile: push (on windows only) :clx-use-allegro-streams onto
+	*features*.  The hope is to someday use this on UNIX, too.  See
+	rfe5052 for more discussion.
+	* dependent.cl,
+	* excldep.cl: use clx-use-allegro-streams feature instead of mswindows
+
+*******************************************************************************
 MIT R5.0, ACL #22
 
 2001-06-26  Kevin Layer  <layer@crikey>

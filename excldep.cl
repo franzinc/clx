@@ -89,7 +89,7 @@
 ;; Read from the given fd into 'vector', which has element type card8.
 ;; Start storing at index 'start-index' and read exactly 'length' bytes.
 ;; Return t if an error or eof occurred, nil otherwise.
-#-(and mswindows (version>= 6))
+#-(and (version>= 6) clx-use-allegro-streams)
 (defun fd-read-bytes (fd vector start-index length)
   (declare (fixnum #-mswindows fd start-index length)
 	   (type (simple-array (unsigned-byte 8) (*)) vector))
@@ -122,7 +122,7 @@
 	  else (decf rest numread)
 	       (incf start-index numread))))))
 
-#+(and mswindows (version>= 6))
+#+(and (version>= 6) clx-use-allegro-streams)
 (defun fd-read-bytes (fd vector start-index length)
   ;; Read from the given stream fd into 'vector', which has element type card8.
   ;; Start storing at index 'start-index' and read exactly 'length' bytes.
@@ -132,8 +132,8 @@
       (let ((end-index (+ start-index length)))
 	(loop
 	  (let ((next-index (excl:read-vector vector fd 
-					 :start start-index
-					 :end end-index)))
+					      :start start-index
+					      :end end-index)))
 	    (excl:if* (eq next-index start-index)
 	       then ; end of file before was all filled up
 		    (return t)
@@ -193,7 +193,7 @@
     :returning (:int fixnum)
     :call-direct t
     :arg-checking nil)
-)
+  )
 
 
 (eval-when (compile)
