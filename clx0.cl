@@ -909,3 +909,8 @@
   (or (encode-mask *pointer-event-mask-vector* pointer-event-mask
 		   'pointer-event-mask-class)
       (x-type-error pointer-event-mask 'pointer-event-mask)))
+
+(sys:defpatch "clx" 1
+  "Fix for secure connections with Xauth instead of xhost."
+  :type :system
+  :post-loadable t)
