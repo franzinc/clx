@@ -22,6 +22,7 @@
 
 (in-package :xlib)
 
+(eval-when (compile load eval)
 (export '(display-root
 	  display-black
 	  display-white
@@ -33,6 +34,7 @@
 	  display-refresh
 	  root-tree
 	  window-tree))
+)
 
 (defun display-root (display) (screen-root (display-default-screen display)))
 (defun display-black (display) (screen-black-pixel (display-default-screen display)))

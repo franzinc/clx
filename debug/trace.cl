@@ -230,6 +230,7 @@
 
 (defun trace-more-info (display request-id vector start end)
   ;; Currently only returns current process.
+  (declare (ignore display request-id vector start end))
   #+allegro
   (list mp::*current-process*))
 
@@ -300,6 +301,7 @@
 
 (defun trace-error-print (display more-info vector
 			  &optional (stream *standard-output*))
+  (declare (ignore more-info))
   (let ((event (allocate-event)))
     ;; Copy into event from reply buffer
     (buffer-replace (reply-ibuf8 event)
