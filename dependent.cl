@@ -1458,7 +1458,8 @@
 	   (type array-index start end))
   #.(declare-buffun)
   (excl::filesys-write-bytes (display-output-stream display) vector start
-			     (- end start)))
+			     (- end start)
+			     display))
   
 #+lcl3.0
 (defun buffer-write-default (vector display start end)

@@ -1,3 +1,8 @@
+Wed Sep 28 01:15:38 1994  Steve Haflich  (smh@vapor)
+
+	* dependent.cl:
+		excl::filesys-write-bytes now has an extra arg.
+
 Tue Jan 11 15:36:39 1994  George Jacob  (georgej@lava)
 
 	* clx.cl: Changed *version* to indicate ACL4.2
