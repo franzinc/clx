@@ -89,6 +89,7 @@
 ;; Read from the given fd into 'vector', which has element type card8.
 ;; Start storing at index 'start-index' and read exactly 'length' bytes.
 ;; Return t if an error or eof occurred, nil otherwise.
+#-(and (version>= 6) clx-use-allegro-streams)
 (defun fd-read-bytes (fd vector start-index length)
   (declare (fixnum #-mswindows fd start-index length)
 	   (type (simple-array (unsigned-byte 8) (*)) vector))
@@ -120,6 +121,27 @@
 	  then (return t)
 	  else (decf rest numread)
 	       (incf start-index numread))))))
+
+#+(and (version>= 6) clx-use-allegro-streams)
+(defun fd-read-bytes (fd vector start-index length)
+  ;; Read from the given stream fd into 'vector', which has element type card8.
+  ;; Start storing at index 'start-index' and read exactly 'length' bytes.
+  ;; Return t if an error or eof occurred, nil otherwise.
+  (declare (fixnum next-index start-index length))
+  (with-interrupt-checking-on
+      (let ((end-index (+ start-index length)))
+	(loop
+	  (let ((next-index (excl:read-vector vector fd 
+					      :start start-index
+					      :end end-index)))
+	    (excl:if* (eq next-index start-index)
+	       then ; end of file before was all filled up
+		    (return t)
+	     elseif (eq next-index end-index)
+	       then ; we're all done
+		    (return nil)
+	       else (setq start-index next-index)))))))
+
 
 #-(or (version>= 5 0) mswindows)
 (unless (ff:get-entry-point (ff:convert-to-lang "fd_wait_for_input"))
@@ -157,6 +179,15 @@
   (unless (excl::get-entry-point (excl::convert-foreign-name "fd_wait_for_input"))
     (load (format nil "clx:excldep.~a" (car excl::*load-foreign-types*))))
 
+  (ff:def-foreign-call (fd-wait-for-input "fd_wait_for_input")
+      ((fd :int fixnum) (timeout :int fixnum))
+    :returning (:int fixnum)
+    :call-direct t
+    :arg-checking nil)
+  )
+
+#+(and (version>= 5 0) (not clx-use-allegro-streams))
+(progn
   (unless (excl::get-entry-point (excl::convert-foreign-name "connect_to_server"))
     (load (format nil "clx:socket.~a" (car excl::*load-foreign-types*))))
 
@@ -165,13 +196,7 @@
     :returning (:int fixnum)
     :strings-convert nil		; cac 25feb00
     :arg-checking nil)
-
-  (ff:def-foreign-call (fd-wait-for-input "fd_wait_for_input")
-      ((fd :int fixnum) (timeout :int fixnum))
-    :returning (:int fixnum)
-    :call-direct t
-    :arg-checking nil)
-)
+  )
 
 
 (eval-when (compile)

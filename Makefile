@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.25 2000/07/17 20:22:39 layer Exp $
+# $Id: Makefile,v 1.26 2002/07/09 20:55:46 layer Exp $
 #  Makefile for CLX
 
 SHELL = sh
@@ -56,22 +56,49 @@ CLOPTS	= -qq
 
 SO = so
 
+ifeq ($(OS_NAME),hp-ux)
+CC = /usr/bin/cc
+else
+CC = cc
+endif
+
 ifeq ($(OS_NAME),aix)
 XCFLAGS = -D_BSD -D_NO_PROTO -D_NONSTD_TYPES -D_MBI=void
-MAKE_SHARED = ../src/bin/make_shared.ibm
+MAKE_SHARED = sh ../src/bin/make_shared.ibm -make_exp ../src/bin/make_exp
 endif
 
 ifeq ($(OS_NAME),hp-ux)
+ifeq ($(SIXTYFOURBIT),yes)
+XCFLAGS = -O -Ae +DA2.0W -DAcl64Bit
+MAKE_SHARED = sh ../src/bin/make_shared.hp64
+PICFLAGS = +Z
+#CC = aCC
+else
 XCFLAGS = -O -Ae +DA1.1
 SO = sl
-MAKE_SHARED = ../src/bin/make_shared.hp
+MAKE_SHARED = sh ../src/bin/make_shared.hp
 PICFLAGS = +z
+endif
+endif
+
+ifeq ($(OS_NAME),darwin)
+XCFLAGS = -I/usr/X11R6/include
+PICFLAGS = 
+SHAREFLAGS = 
+MAKE_SHARED = sh ../src/bin/make_shared.mac
+SO = dylib
 endif
 
 ifeq ($(OS_NAME),sunos)
+ifeq ($(SIXTYFOURBIT),yes)
+XCFLAGS = -xarch=v9 -DAcl64Bit
+PICFLAGS = -K pic
+MAKE_SHARED = ld -G
+else
 XCFLAGS = -I/usr/openwin/include
 PICFLAGS = -K pic
 MAKE_SHARED = ld -G
+endif
 endif
 
 ifeq ($(OS_NAME),linux)
@@ -87,10 +114,10 @@ endif
 ifeq ($(OS_NAME),osf1)
 ifeq ($(SIXTYFOURBIT),yes)
 XCFLAGS = -G 0 -DAcl64Bit -resumption_safe
-MAKE_SHARED = ../src/bin/make_shared.dec64
+MAKE_SHARED = sh ../src/bin/make_shared.dec64
 else
 XCFLAGS = -G 0 -taso -xtaso -xtaso_short -resumption_safe
-MAKE_SHARED = ../src/bin/make_shared.dec
+MAKE_SHARED = sh ../src/bin/make_shared.dec
 endif
 endif
 
@@ -147,20 +174,28 @@ compile-CLX-for-CLUE:	compile-partial-clos-CLX
 clue:	partial-clos
 
 excldep.so: excldep.c
-	cc $(CFLAGS) -c $(PICFLAGS) excldep.c
+	$(CC) $(CFLAGS) -c $(PICFLAGS) excldep.c
 	$(MAKE_SHARED) -o excldep.so excldep.o
 
 excldep.sl: excldep.c
-	cc $(CFLAGS) -c $(PICFLAGS) excldep.c
+	$(CC) $(CFLAGS) -c $(PICFLAGS) excldep.c
 	$(MAKE_SHARED) -o excldep.sl excldep.o
 
+excldep.dylib: excldep.c
+	$(CC) $(CFLAGS) -c $(PICFLAGS) excldep.c
+	$(MAKE_SHARED) -o excldep.dylib excldep.o
+
 socket.so: socket.c
-	cc $(CFLAGS) -c $(PICFLAGS) socket.c
+	$(CC) $(CFLAGS) -c $(PICFLAGS) socket.c
 	$(MAKE_SHARED) -o socket.so socket.o
 
 socket.sl: socket.c
-	cc $(CFLAGS) -c $(PICFLAGS) socket.c
+	$(CC) $(CFLAGS) -c $(PICFLAGS) socket.c
 	$(MAKE_SHARED) -o socket.sl socket.o
+
+socket.dylib: socket.c
+	$(CC) $(CFLAGS) -c $(PICFLAGS) socket.c
+	$(MAKE_SHARED) -o socket.dylib socket.o
 
 #
 # Three build rules are provided: no-clos, partial-clos, and full-clos.
@@ -187,6 +222,7 @@ c:	$(C_OBJS)
 
 compile-no-clos-CLX:	$(C_OBJS)
 	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
+        #+mswindows (push :clx-use-allegro-streams *features*) \
 	(load-logical-pathname-translations \"clx\") \
 	(load \"defsystem\") \
 	(proclaim '(optimize \
@@ -210,6 +246,7 @@ compile-no-clos-CLX:	$(C_OBJS)
 compile-partial-clos-CLX:	$(C_OBJS)
 	$(ECHO) "#-mswindows (ff:get-entry-point (ff:convert-foreign-name \"fd_wait_for_input\")) \
 	(pushnew :clx-ansi-common-lisp *features*) \
+	#+mswindows (push :clx-use-allegro-streams *features*) \
 	(load-logical-pathname-translations \"clx\") \
 	(load \"defsystem\") \
 	(load \"package\") \
@@ -235,6 +272,7 @@ compile-partial-clos-CLX:	$(C_OBJS)
 
 compile-full-clos-CLX:	$(C_OBJS)
 	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
+	#+mswindows (push :clx-use-allegro-streams *features*) \
 	(load-logical-pathname-translations \"clx\") \
 	(load \"defsystem\") \
 	(load \"package\") \

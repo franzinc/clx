@@ -1290,7 +1290,7 @@
 	stream
       (error "Cannot connect to server: ~A:~D" host display))))
 
-#+(and excl mswindows)
+#+(and excl clx-use-allegro-streams)
 (defun open-x-stream (host display protocol)
   (declare (ignore protocol)) ;; assume TCP
   (let ((stream (socket:make-socket :remote-host (string host)
@@ -1300,7 +1300,7 @@
 	stream
       (error "Cannot connect to server: ~A:~D" host display))))
 
-#+(and excl (not mswindows))
+#+(and excl (not clx-use-allegro-streams))
 ;;
 ;; Note that since we don't use the CL i/o facilities to do i/o, the display
 ;; input and output "stream" is really a file descriptor (fixnum).
@@ -1358,7 +1358,7 @@
   (let* ((howmany (- end start))
 	 (fd (display-input-stream display)))
     (declare (type array-index howmany)
-	     #-mswindows (fixnum fd))
+	     #-clx-use-allegro-streams (fixnum fd))
 
     (or (cond ((fd-char-avail-p fd) nil)
 	      ((eql timeout 0) :timeout)
@@ -1469,11 +1469,11 @@
 	   (type display display)
 	   (type array-index start end))
   #.(declare-buffun)
-  #+mswindows
+  #+clx-use-allegro-streams
   (let ((stream (display-output-stream display)))
     (unless (null stream)
       (stream:stream-write-sequence stream vector start end)))
-  #-mswindows
+  #-clx-use-allegro-streams
   (excl::filesys-write-bytes (display-output-stream display) vector start
 			     (- end start)
 			     display))
@@ -1536,12 +1536,12 @@
 
 ;;; buffer-force-output-default - force output to the X stream
 
-#+(and excl (not mswindows))
+#+(and excl (not clx-use-allegro-streams))
 (defun buffer-force-output-default (display)
   ;; buffer-write-default does the actual writing.
   (declare (ignore display)))
 
-#-(and excl (not mswindows))
+#+(and excl clx-use-allegro-streams)
 (defun buffer-force-output-default (display)
   ;; The default buffer force-output function for use with common-lisp streams
   (declare (type display display))
@@ -1552,7 +1552,7 @@
 
 ;;; BUFFER-CLOSE-DEFAULT - close the X stream
 
-#+(and excl (not mswindows))
+#+(and excl (not clx-use-allegro-streams))
 (defun buffer-close-default (display &key abort)
   ;; The default buffer close function for use with common-lisp streams
   (declare (type display display)
@@ -1560,7 +1560,7 @@
   #.(declare-buffun)
   (excl::filesys-checking-close (display-output-stream display)))
 
-#-(and excl (not mswindows))
+#+(and excl clx-use-allegro-streams)
 (defun buffer-close-default (display &key abort)
   ;; The default buffer close function for use with common-lisp streams
   (declare (type display display))
@@ -1660,9 +1660,9 @@
 	   (type (or null number) timeout))
   (declare (values timeout))
   (let ((fd (display-input-stream display)))
-    #-mswindows (declare (fixnum fd))
-    (when #-mswindows (>= fd 0)
-	  #+mswindows (streamp fd)
+    #-clx-use-allegro-streams (declare (fixnum fd))
+    (when #-clx-use-allegro-streams (>= fd 0)
+	  #+clx-use-allegro-streams (streamp fd)
       (cond ((fd-char-avail-p fd)
 	     nil)
 
@@ -1732,7 +1732,7 @@
 ;;; buffer. This should never block, so it can be called from the scheduler.
 
 ;;; The default implementation is to just use listen.
-#-(and excl (not mswindows))
+#+(and excl clx-use-allegro-streams)
 (defun buffer-listen-default (display)
   (declare (type display display))
   (let ((stream (display-input-stream display)))
@@ -1741,7 +1741,7 @@
 	t
       (listen stream))))
 
-#+(and excl (not mswindows))
+#+(and excl (not clx-use-allegro-streams))
 (defun buffer-listen-default (display)
   (declare (type display display))
   (let ((fd (display-input-stream display)))
@@ -1749,7 +1749,6 @@
     (if (= fd -1)
 	t
       (fd-char-avail-p fd))))
-
 
 ;;;----------------------------------------------------------------------------
 ;;; System dependent speed hacks
