@@ -1,5 +1,7 @@
-# $Id: Makefile,v 1.19.4.4 1999/04/14 23:08:51 layer Exp $
+# $Id: Makefile,v 1.19.4.5 1999/04/15 09:01:48 layer Exp $
 #  Makefile for CLX
+
+SHELL = sh
 
 makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
 
@@ -42,7 +44,6 @@ CLX		= clx
 DUMPLISP_ARGS	= :checkpoint nil
 endif
 
-SHELL	= sh
 ifeq ($(OS_NAME),windows)
 ECHO	= echo
 else
