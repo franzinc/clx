@@ -5,6 +5,14 @@
 	* <changes go here...>
 
 *******************************************************************************
+2000-01-27  Charles A. Cox  <cox@delta>
+
+	* excldep.cl: wait for input when whole buffer doesn't get filled at
+	once (problem discovered while working on xcw patch for reasoning).
+	(Also changed MITdist/excldep.cl, but the original code was
+	different.  Don't know if this file is actually used anywhere.)
+
+*******************************************************************************
 <no version change> join from acl50 branch
 
 - changes from 3/19/99 to 4/14/99

@@ -205,6 +205,14 @@
    (do ((rest length))
        ((eq 0 rest) nil)
      (declare (fixnum rest))
+     ;; added by cac 24jul99
+     ;; Crude but effective way to wait for input when whole buffer
+     ;; doesn't get filled all at once.  Probably should
+     ;; make more robust in light of possible failing sockets.
+     (loop
+       (when #+mswindows (listen fd)
+	     #-mswindows (excl::filesys-character-available-p fd)
+	     (return)))
      (multiple-value-bind (numread errcode)
 	 (comp::.primcall-sargs 'sys::filesys excl::fs-read-bytes fd vector
 				start-index rest)
