@@ -7,6 +7,13 @@
 *******************************************************************************
 <no version change>
 
+2000-07-23  Kevin Layer  <layer@ultra>
+
+	* Makefile: fix MAKE_SHARED for ibm
+
+*******************************************************************************
+<no version change>
+
 2000-07-17  Kevin Layer  <layer@ultra>
 
 	* Makefile: remove SIXTYFOURBIT variable
