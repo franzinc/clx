@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.16 1998/02/13 21:05:03 layer Exp $
+# $Id: Makefile,v 1.17 1998/03/18 20:28:09 layer Exp $
 #  Makefile for CLX
 
 makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
@@ -37,7 +37,7 @@ ECHO	= echo
 else
 ECHO	= /bin/echo
 endif
-MV	= /usr/fi/mv-nfs -c
+MV	= mv
 TAGS	= /usr/local/lib/emacs/etc/etags
 
 CLOPTS	= -qq

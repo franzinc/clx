@@ -1307,9 +1307,11 @@
 ;;
 (defun open-x-stream (host display protocol)
   (declare (ignore protocol));; unused
-  (let ((fd (connect-to-server #+:ics (excl:string-to-euc (string host))
-			       #-:ics (string host)
-                               display)))
+  (let ((fd (connect-to-server
+	     (excl:ics-target-case
+	      (:-ics (string host))
+	      (:+ics (excl:string-to-euc (string host))))
+	     display)))
     (when (minusp fd)
       (error "Failed to connect to server: ~A ~D" host display))
     fd))

@@ -5,6 +5,14 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #12
+
+Wed Mar 18 10:28:26 1998  Kevin Layer  <layer@ultra>
+
+	* Makefile: don't use mv-nfs
+	* dependent.cl: use ics-target-case instead of #+ics, etc
+
+*******************************************************************************
 MIT R5.0, ACL #11
 
 Sat Feb 28 15:22:34 1998  Duane Rettig  <duane@beta>
