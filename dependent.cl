@@ -2211,7 +2211,7 @@
   (error "HOST-ADDRESS not implemented yet."))
 
 #+(and allegro (version>= 5 0))
-(eval-when (compile eval load) (require :socket))
+(eval-when (compile eval load) (require :sock))
 
 #+(and allegro (version>= 5 0))
 (defun host-address (host &optional (family :internet))
