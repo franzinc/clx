@@ -202,3 +202,45 @@
 (eval-when (compile)
   (declaim (declaration buffer-bytes))
   )
+
+;; Bring in and rename the old filesys-read-bytes from where it is
+;; defined in streamc.cl, but streamc might no longer be available:
+
+(in-package :excl)
+
+(eval-when (compile eval)
+  (require :iodefs))
+
+(defun excl-write-bytes (handle svector start-index length stream)
+  ;; Write the contents of the simple-vector to the given handle.
+  ;; Start at start-index and write length bytes, counting 8 bit bytes.
+  ;; The loop and retry on EINTR is necessary on some machines because random
+  ;; alarm signals can cause a write that has been blocked to return EINTR.
+  (declare (optimize speed)
+	   (type adim start-index length))
+  (let ((*stream-for-sigpipe* (or *stream-for-sigpipe* stream)))
+    (fast
+     (loop
+       (multiple-value-bind (written errcode)
+	   (if* (streamp handle)
+	      then (let ((res (write-vector-2 svector handle start-index (+ start-index length) 0 0)))
+		     (declare (type adim res))
+		     (- res start-index))
+	      else (excl::.primcall 'sys::filesys #.fs-write-bytes
+				    handle svector start-index length))
+	 (if* errcode
+	    then (if* (or (eq errcode (fast *error-code-would-block*))
+			  (eq errcode (fast *error-code-eagain*)))
+		    then (let* ((fnn (- -1 handle))
+				(sys::*stack-group-watchfor-fds*
+				 (cons fnn sys::*stack-group-watchfor-fds*)))
+			   (excl::funcall-in-package
+			    :process-wait :multiprocessing "Blocked on output to socket"
+			    #'write-no-hang-p handle)) ;; [bug11901], [bug12195]
+		  elseif (not (eq errcode *error-code-interrupted-system-call*))
+		    then (.errno-stream-error "writing bytes to" handle errcode))
+		 (setq written 0)	; if error assume 0 written
+	    else (decf length written)
+		 (if* (<= length 0)
+		    then (return t)
+		    else (incf start-index written))))))))

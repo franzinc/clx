@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.27 2002/08/14 17:49:29 layer Exp $
+# $Id: Makefile,v 1.28 2003/01/30 04:56:25 duane Exp $
 #  Makefile for CLX
 
 SHELL = sh
@@ -227,7 +227,7 @@ c:	$(C_OBJS)
 
 compile-no-clos-CLX:	$(C_OBJS)
 	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
-        #+mswindows (push :clx-use-allegro-streams *features*) \
+        (push :clx-use-allegro-streams *features*) \
 	(load-logical-pathname-translations \"clx\") \
 	(load \"defsystem\") \
 	(proclaim '(optimize \
@@ -251,7 +251,7 @@ compile-no-clos-CLX:	$(C_OBJS)
 compile-partial-clos-CLX:	$(C_OBJS)
 	$(ECHO) "#-mswindows (ff:get-entry-point (ff:convert-foreign-name \"fd_wait_for_input\")) \
 	(pushnew :clx-ansi-common-lisp *features*) \
-	#+mswindows (push :clx-use-allegro-streams *features*) \
+	(push :clx-use-allegro-streams *features*) \
 	(load-logical-pathname-translations \"clx\") \
 	(load \"defsystem\") \
 	(load \"package\") \
@@ -277,7 +277,7 @@ compile-partial-clos-CLX:	$(C_OBJS)
 
 compile-full-clos-CLX:	$(C_OBJS)
 	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
-	#+mswindows (push :clx-use-allegro-streams *features*) \
+	(push :clx-use-allegro-streams *features*) \
 	(load-logical-pathname-translations \"clx\") \
 	(load \"defsystem\") \
 	(load \"package\") \

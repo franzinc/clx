@@ -1472,9 +1472,9 @@
   #+clx-use-allegro-streams
   (let ((stream (display-output-stream display)))
     (unless (null stream)
-      (stream:stream-write-sequence stream vector start end)))
+      (write-sequence vector stream :start start :end end)))
   #-clx-use-allegro-streams
-  (excl::filesys-write-bytes (display-output-stream display) vector start
+  (excl::excl-write-bytes (display-output-stream display) vector start
 			     (- end start)
 			     display))
 
@@ -2214,6 +2214,7 @@
   #+(version>= 6 0 pre-beta 0)
   (progn
     (require :sock)
+    #-(version>= 7 0)
     (require :gray-compat))
   #-(version>= 6 0 pre-beta 0)
   (require :sock))

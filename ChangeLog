@@ -5,6 +5,15 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #27
+
+Thu Jan 29 20:58:27 PST 2003  Duane Rettig  <duane@beta>
+
+	* clx0.cl: Incf version
+	* Makefile: Always use allegro streams
+	* excldep.cl: Remove dependency on gray streams
+	
+*******************************************************************************
 join from acl62 to trunk on 8/14/2002
 command:
    *********** THE FOLLOWING COMMAND IS WRONG:
