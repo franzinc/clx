@@ -1,0 +1,4 @@
+Fri Jun 25 09:00:09 1993  Kevin Layer  (layer@sole)
+
+	* Makefile: new args :load-xref-info and :load-source-file-info to
+	si::system-compile-wrapper.

@@ -35,6 +35,8 @@ SAFETY	= 0
 DEBUG	= 1
 RECORD_XREF_INFO = nil
 RECORD_SOURCE_FILE_INFO = nil
+LOAD_XREF_INFO = nil
+LOAD_SOURCE_FILE_INFO = nil
 
 C_SRC	= excldep.c socket.c
 C_OBJS	= excldep.o socket.o
@@ -112,6 +114,8 @@ compile-no-clos-CLX:	$(C_OBJS)
 	 :speed $(SPEED) :debug $(DEBUG) :safety $(SAFETY) \
 	 :record-source-file-info $(RECORD_SOURCE_FILE_INFO) \
 	 :record-xref-info $(RECORD_XREF_INFO) \
+	 :load-source-file-info $(LOAD_SOURCE_FILE_INFO) \
+	 :load-xref-info $(LOAD_XREF_INFO) \
 	 :compile-print nil :compile-verbose nil \
 	 :redefinition-warnings t :gcprint nil)" | $(CL) $(CLOPTS) -batch
 
@@ -128,6 +132,8 @@ compile-partial-clos-CLX:	$(C_OBJS)
 	 :speed $(SPEED) :debug $(DEBUG) :safety $(SAFETY) \
 	 :record-source-file-info $(RECORD_SOURCE_FILE_INFO) \
 	 :record-xref-info $(RECORD_XREF_INFO) \
+	 :load-source-file-info $(LOAD_SOURCE_FILE_INFO) \
+	 :load-xref-info $(LOAD_XREF_INFO) \
 	 :compile-print nil :compile-verbose nil \
 	 :redefinition-warnings t :gcprint nil)" | $(CL) $(CLOPTS) -batch
 
@@ -144,6 +150,8 @@ compile-full-clos-CLX:	$(C_OBJS)
 	 :speed $(SPEED) :debug $(DEBUG) :safety $(SAFETY) \
 	 :record-source-file-info $(RECORD_SOURCE_FILE_INFO) \
 	 :record-xref-info $(RECORD_XREF_INFO) \
+	 :load-source-file-info $(LOAD_SOURCE_FILE_INFO) \
+	 :load-xref-info $(LOAD_XREF_INFO) \
 	 :compile-print nil :compile-verbose nil \
 	 :redefinition-warnings t :gcprint nil)" | $(CL) $(CLOPTS) -batch
 
