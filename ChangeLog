@@ -7,6 +7,13 @@
 *******************************************************************************
 <no version change>
 
+2001-05-29  Kevin Layer  <layer@crikey>
+
+	* Makefile: fix C compile time env on HP
+
+*******************************************************************************
+<no version change>
+
 Wed May 22 12:50:10 PDT 2001  Duane Rettig  <duane@beta>
 
 	* Makefile: Add MacOSX

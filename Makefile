@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.25.2.3 2001/05/23 19:51:17 duane Exp $
+# $Id: Makefile,v 1.25.2.4 2001/05/30 20:07:21 layer Exp $
 #  Makefile for CLX
 
 SHELL = sh
@@ -55,7 +55,12 @@ TAGS	= /usr/local/lib/emacs/etc/etags
 CLOPTS	= -qq
 
 SO = so
+
+ifeq ($(OS_NAME),hp-ux)
+CC = /usr/bin/cc
+else
 CC = cc
+endif
 
 ifeq ($(OS_NAME),aix)
 XCFLAGS = -D_BSD -D_NO_PROTO -D_NONSTD_TYPES -D_MBI=void
