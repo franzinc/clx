@@ -1,0 +1,58 @@
+This file describes the differences between X11 R5 CLX and the version of
+CLX in this directory.
+
+This CLX is different in two main areas:
+	1) It works only with ACL versions 3.1.10 and greater.  (If you need
+	   a version of CLX that works with ACL versions < 3.1.10, please get
+	   the R5 CLX distribution from MIT).
+	2) It has some fixes that are too recent to be in R5 CLX.
+
+===============================================================================
+
+General changes, applicable to all ports:
+----------------------------------------
+Version string updated to "MIT R5.0 (Franz ACL4.1)".
+	-- *version*					clx.l
+
+Added parse-geometry and parse-color functions.  See C Xlib manual, sections
+10.3 and 10.4 for details
+	-- parse-geometry				manager.l
+	-- parse-color					manager.l
+	-- export list					package.l
+
+Added wm-client-window function, analagous to C's XmuClientWindow function.
+	-- wm-client-window, try-children		manager.l
+	-- export list					package.l
+
+Added perror() messages to socket code.
+	--						socket.c
+
+===============================================================================
+Franz specific changes, applicable to Allegro and Extended Common Lisps:
+(note that all these changes are #+excl or #+allegro, so if you're not
+ using our product these changes are "commented" out)
+-----------------------------------------------------------------------
+set-case-mode removed from Makefile.  Instead issue warning in package.cl
+if the case is non sensitive.
+	-- 						Makefile
+	-- top level form				package.l
+
+Change default rule to be partial-clos, instead of no-clos.  Also add hook
+for ACL $(XCFLAGS) variable.
+	--						Makefile
+
+README file made correct for this version.
+	--						README
+
+Provided :clx when loading clx interpreted.  Removed patch code from excldep.cl.
+	-- top level form				excldep.cl
+	-- lots						excldep.cl
+ 
+Instances of excl:defcmacro changed to define-compiler-macro in exclcmac.cl.
+Compatibility code put in excldep.cl and package.cl.  Moved type checking
+stuff to exclcmac, so it's loaded after types are defined.  Exclcmac is
+also now loaded into CLX.fasl.
+	-- lots						exclcmac.cl
+	-- define-compiler-macro			excldep.cl
+	-- import list in defpackage			package.cl
+	-- cat list					Makefile
