@@ -1,5 +1,11 @@
-# $Id: Makefile,v 1.13 1997/10/20 22:51:39 layer Exp $
+# $Id: Makefile,v 1.14 1997/11/06 20:51:12 layer Exp $
 #  Makefile for CLX
+
+makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
+
+ifeq ($(makefile_top),exists)
+include ../makefile.top
+endif
 
 # For versions prior to ACL 5.0 (and 4.3.2 on Windows), comment out the
 # following line:
@@ -10,19 +16,27 @@ SAVEIMG = yes
 # *        (make sure the Lisp doesn't already have CLX loaded in)        *
 # *************************************************************************
 ifdef SAVEIMG
-CL		= ../src/lisp -I ../src/dcl.dxl
+ifeq ($(OS_NAME),windows)
+CL		= sh ../src/runlisp.sh -f clx.tmp ../src/lisp -I ../src/dcl.dxl
+else
+CL		= cat clx.tmp | ../src/lisp -I ../src/dcl.dxl
+endif
 # Name of dumped lisp
 CLX		= clx.dxl
 DUMPLISP_ARGS	=
 else
-CL		= ../src/dcl
+CL		= cat clx.tmp | ../src/dcl
 # Name of dumped lisp
 CLX		= clx
 DUMPLISP_ARGS	= :checkpoint nil
 endif
 
 SHELL	= /bin/sh
+ifeq ($(OS_NAME),windows)
+ECHO	= echo
+else
 ECHO	= /bin/echo
+endif
 MV	= /usr/fi/mv-nfs -c
 TAGS	= /usr/local/lib/emacs/etc/etags
 
@@ -53,8 +67,10 @@ compile_print		= nil
 redef_warning		= t
 
 C_SRC	= excldep.c socket.c
+ifneq ($(OS_NAME),windows)
 C_OBJS	= excldep.o socket.o
 C_SOBJS	= excldep.so socket.so
+endif
 
 L_OBJS	= defsystem.fasl package.fasl excldep.fasl depdefs.fasl clx.fasl \
 	dependent.fasl exclcmac.fasl macros.fasl bufmac.fasl buffer.fasl \
@@ -123,14 +139,14 @@ socket.sl: socket.c
 # (note that the :clos feature implies native CLOS *not* PCL).
 #
 
-no-clos:	$(C_OBJS) compile-no-clos-CLX cat
+no-clos:	$(C_OBJS) compile-no-clos-CLX bigclx.fasl
 
 #
 # This rule is used to compile CLX to be used with XCW version 2, or CLUE.
 #
-partial-clos:	$(C_OBJS) compile-partial-clos-CLX cat
+partial-clos:	$(C_OBJS) compile-partial-clos-CLX bigclx.fasl
 
-full-clos:	$(C_OBJS) compile-full-clos-CLX cat
+full-clos:	$(C_OBJS) compile-full-clos-CLX bigclx.fasl
 
 
 c:	$(C_OBJS)
@@ -154,7 +170,9 @@ compile-no-clos-CLX:	$(C_OBJS)
 	      (*compile-verbose* $(compile_verbose))) \
 	    (setf (sys:gsgc-switch :print) $(gc_print)) \
 	    (compile-system :clx) \
-	    (compile-system :clx-debug))" | $(CL) $(CLOPTS) -batch
+	    (compile-system :clx-debug) \
+	    (exit 0))" > clx.tmp
+	$(CL) $(CLOPTS) -batch
 
 compile-partial-clos-CLX:	$(C_OBJS)
 	$(ECHO) "#-mswindows (ff:get-entry-point (ff:convert-to-lang \"fd_wait_for_input\")) \
@@ -178,7 +196,9 @@ compile-partial-clos-CLX:	$(C_OBJS)
 	      (*compile-print* $(compile_print))) \
 	    (setf (sys:gsgc-switch :print) $(gc_print)) \
 	    (compile-system :clx) \
-	    (compile-system :clx-debug))" | $(CL) $(CLOPTS) -batch -backtrace-on-error
+	    (compile-system :clx-debug) \
+	    (exit 0))" > clx.tmp
+	$(CL) $(CLOPTS) -batch -backtrace-on-error
 
 compile-full-clos-CLX:	$(C_OBJS)
 	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
@@ -200,10 +220,19 @@ compile-full-clos-CLX:	$(C_OBJS)
 	      (*compile-verbose* $(compile_verbose))) \
 	    (setf (sys:gsgc-switch :print) $(gc_print)) \
 	    (compile-system :clx) \
-	    (compile-system :clx-debug))" | $(CL) $(CLOPTS) -batch
+	    (compile-system :clx-debug) \
+	    (exit 0))" > clx.tmp
+	$(CL) $(CLOPTS) -batch
 
-cat:
-	-cat $(L_NOMACROS_OBJS) > bigclx.fasl
+bigclx.fasl:
+#The following doesn't work on Windows, so use concatenate-system instead.
+#	-cat $(L_NOMACROS_OBJS) > bigclx.fasl
+#The following contains a little more than the above does (same as L_OBJS).
+	$(ECHO) "(load-logical-pathname-translations \"clx\") \
+	(load \"defsystem\") \
+	(concatenate-system :clx \"bigclx.fasl\") \
+	(exit 0)" > clx.tmp
+	$(CL) $(CLOPTS) -batch
 
 load-CLX:
 	$(ECHO) "\
@@ -212,7 +241,8 @@ load-CLX:
 	  (progn (load \"defsystem\") (load-system :clx)) \
 	  :global-gc t :devel nil)" \
 	'(dumplisp :name "$(CLX)" $(DUMPLISP_ARGS))' \
-	"(exit)" | $(CL) $(CLOPTS)
+	"(exit 0)" > clx.tmp
+	$(CL) $(CLOPTS)
 
 clean_OS:
 	rm -f *.o *.so *.sl

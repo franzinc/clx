@@ -5,6 +5,14 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #5
+
+Wed Nov  5 10:11:47 1997  Kevin Layer  <layer@ultra>
+
+	* Makefile: integrate with new distribution preparation changes
+	* clx.cl: incf version number
+
+*******************************************************************************
 MIT R5.0, ACL #4
 
 Mon Oct 20 12:51:01 1997  Kevin Layer  <layer@ultra>
