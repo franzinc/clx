@@ -7,6 +7,13 @@
 *******************************************************************************
 <no version change>
 
+1999-01-12    <layer@HOBART>
+
+	* Makefile: use lispi/dcli to build
+
+*******************************************************************************
+<no version change>
+
 1999-01-07    <layer@HOBART>
 
 	* CHANGES: move contents to CHANGES.mit

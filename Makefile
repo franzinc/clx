@@ -1,10 +1,20 @@
-# $Id: Makefile,v 1.19 1998/04/01 06:44:36 layer Exp $
+# $Id: Makefile,v 1.19.4.1 1999/01/12 18:30:56 layer Exp $
 #  Makefile for CLX
 
 makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
 
 ifeq ($(makefile_top),exists)
 include ../makefile.top
+endif
+
+iacl = yes
+
+ifdef iacl
+lispexe = lispi
+lispdxl = dcli.dxl
+else
+lispexe = lisp
+lispdxl = dcl.dxl
 endif
 
 # For versions prior to ACL 5.0 (and 4.3.2 on Windows), comment out the
@@ -17,9 +27,9 @@ SAVEIMG = yes
 # *************************************************************************
 ifdef SAVEIMG
 ifeq ($(OS_NAME),windows)
-CL		= sh ../src/runlisp.sh -f clx.tmp ../src/lisp -I ../src/dcl.dxl
+CL		= sh ../src/runlisp.sh -f clx.tmp ../src/$(lispexe) -I ../src/$(lispdxl)
 else
-CL		= cat clx.tmp | ../src/lisp -I ../src/dcl.dxl
+CL		= cat clx.tmp | ../src/$(lispexe) -I ../src/$(lispdxl)
 endif
 # Name of dumped lisp
 CLX		= clx.dxl
