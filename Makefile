@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.15 1997/11/18 21:58:22 layer Exp $
+# $Id: Makefile,v 1.15.6.1 1998/02/13 03:56:31 layer Exp $
 #  Makefile for CLX
 
 makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
@@ -248,7 +248,8 @@ clean_OS:
 	rm -f *.o *.so *.sl
 
 clean:
-	rm -f *.fasl *.o *.so *.sl debug/*.fasl $(CLX) core make.out
+	rm -f *.fasl *.o *.so *.sl debug/*.fasl $(CLX) core make.out clx.tmp
+	rm -f so_locations
 
 install_OS:
 	$(MV) *.o $(DEST)
