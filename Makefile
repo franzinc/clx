@@ -1,19 +1,22 @@
-# $Id: Makefile,v 1.21 1999/02/25 08:24:23 layer Exp $
+# $Id: Makefile,v 1.22 1999/05/04 01:21:16 layer Exp $
 #  Makefile for CLX
+
+SHELL = sh
 
 makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
 
 ifeq ($(makefile_top),exists)
 include ../makefile.top
+include ../makefile.defs
 endif
 
 iacl = yes
 
 ifdef iacl
-lispexe = lispi
+lispexe = lispi$(exe)
 lispdxl = dcli.dxl
 else
-lispexe = lisp
+lispexe = lisp$(exe)
 lispdxl = dcl.dxl
 endif
 
@@ -41,11 +44,10 @@ CLX		= clx
 DUMPLISP_ARGS	= :checkpoint nil
 endif
 
-SHELL	= /bin/sh
 ifeq ($(OS_NAME),windows)
 ECHO	= echo
 else
-ECHO	= /bin/echo
+ECHO	= echo
 endif
 MV	= mv
 TAGS	= /usr/local/lib/emacs/etc/etags

@@ -5,6 +5,13 @@
 	* <changes go here...>
 
 *******************************************************************************
+<no version change> join from acl50 branch
+
+- changes from 3/19/99 to 4/14/99
+- cvs command: cvs update -d -j acl50_merge5 -j acl50
+- next merge tag: acl50_merge6
+
+*******************************************************************************
 MIT R5.0, ACL #16 -- join from acl50 branch
 
 - changes from 1/7/99 to 1/21/99
@@ -41,6 +48,14 @@ next merge tag: acl50_merge1
 
 *******************************************************************************
 <no version change>
+
+1999-04-14    <layer@ANT>
+
+	* Makefile: SHELL = sh for Interix
+
+1999-03-19    <layer@OMEGA>
+
+	* Makefile: add $(exe) for Interix
 
 Thu Jan 21 19:48:47 1999  Duane Rettig  <duane@beta>
 
