@@ -5,6 +5,17 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #14 -- join from acl50 branch (just version #13)
+next merge tag: acl50_merge1
+
+*******************************************************************************
+MIT R5.0, ACL #13
+
+Thu Apr 16 22:57:30 1998  Kevin Layer  <layer@ultra>
+
+	* dependent.cl: require :sock not :socket
+
+*******************************************************************************
 Tue Mar 31 19:53:42 1998  Kevin Layer  <layer@ultra>
 
 	* Makefile: move knowledge from cl/makedist.cl into this file on
