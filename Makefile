@@ -88,8 +88,9 @@ compile-no-clos-CLX:	$(C_OBJS)
 	$(ECHO) " \
 	(proclaim '(optimize (speed $(SPEED)) (safety $(SAFETY)))) \
 	#+(version>= 4 0) (pushnew :clx-ansi-common-lisp *features*) \
-	#+(version>= 4 1) (setf *load-source-file-info* nil) \
-	#+(version>= 4 1) (setf *load-xref-info* nil) \
+	#+(version>= 4 1) (setq *load-source-file-info* nil) \
+	#+(version>= 4 1) (setq *load-xref-info* nil) \
+	#+(version>= 4 1) (setq *compile-print* nil) \
 	(load \"defsystem\") \
 	#+allegro (compile-system :clx) \
 	#-allegro (compile-clx) \
@@ -108,8 +109,9 @@ compile-partial-clos-CLX:	$(C_OBJS)
 	    (gc) (gc) \
 	    (setf (sys:gsgc-parameter :generation-spread) spread))) \
 	#+(version>= 4 0) (pushnew :clx-ansi-common-lisp *features*) \
-	#+(version>= 4 1) (setf *load-source-file-info* nil) \
-	#+(version>= 4 1) (setf *load-xref-info* nil) \
+	#+(version>= 4 1) (setq *load-source-file-info* nil) \
+	#+(version>= 4 1) (setq *load-xref-info* nil) \
+	#+(version>= 4 1) (setq *compile-print* nil) \
 	(load \"defsystem\") \
 	(load \"package\") \
 	(setq xlib::*def-clx-class-use-defclass* '(xlib:window xlib:pixmap xlib:drawable)) \
@@ -130,8 +132,9 @@ compile-full-clos-CLX:	$(C_OBJS)
 	    (gc) (gc) \
 	    (setf (sys:gsgc-parameter :generation-spread) spread))) \
 	#+(version>= 4 0) (pushnew :clx-ansi-common-lisp *features*) \
-	#+(version>= 4 1) (setf *load-source-file-info* nil) \
-	#+(version>= 4 1) (setf *load-xref-info* nil) \
+	#+(version>= 4 1) (setq *load-source-file-info* nil) \
+	#+(version>= 4 1) (setq *load-xref-info* nil) \
+	#+(version>= 4 1) (setq *compile-print* nil) \
 	(load \"defsystem\") \
 	(load \"package\") \
 	(setq xlib::*def-clx-class-use-defclass* t) \
