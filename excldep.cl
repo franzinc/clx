@@ -41,7 +41,7 @@
     `(excl::defcmacro ,@args)))
 
 (defmacro correct-case (string)
-  ;; This macro converts the given string to the 
+  ;; This macro converts the given string to the
   ;; current preferred case, or leaves it alone in a case-sensitive mode.
   (let ((str (gensym)))
     `(let ((,str ,string))
@@ -100,12 +100,14 @@
 (unless (ff:get-entry-point (ff:convert-to-lang "fd_wait_for_input"))
   (ff:remove-entry-point (ff:convert-to-lang "fd_wait_for_input"))
   #+dlfcn (load "clx:excldep.so")
-  #-dlfcn (load "clx:excldep.o"))
+  #+dlhp  (load "clx:excldep.sl")
+  #-dynload (load "clx:excldep.o"))
 
 (unless (ff:get-entry-point (ff:convert-to-lang "connect_to_server"))
   (ff:remove-entry-point (ff:convert-to-lang "connect_to_server" :language :c))
   #+dlfcn (load "clx:socket.so")
-  #-dlfcn (load "clx:socket.o"))
+  #+dlhp (load "clx:socket.sl")
+  #-dynload (load "clx:socket.o"))
 
 (ff:defforeign-list `((connect-to-server
 		       :entry-point

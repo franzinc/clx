@@ -79,10 +79,24 @@ excldep.so: excldep.c
 	rm -f excldep.o
 	-mv excldep.ooo excldep.o
 
+excldep.sl: excldep.c
+	-mv excldep.o excldep.ooo
+	cc $(CFLAGS) -c $(PICFLAGS) excldep.c
+	$(MAKE_SHARED) $(SHAREFLAGS) -o excldep.sl excldep.o $(IMPORTS)
+	rm -f excldep.o
+	-mv excldep.ooo excldep.o
+
 socket.so: socket.c
 	-mv socket.o socket.ooo
 	cc $(CFLAGS) -c $(PICFLAGS) socket.c
 	$(MAKE_SHARED) $(SHAREFLAGS) -o socket.so socket.o $(IMPORTS)
+	rm -f socket.o
+	-mv socket.ooo socket.o
+
+socket.sl: socket.c
+	-mv socket.o socket.ooo
+	cc $(CFLAGS) -c $(PICFLAGS) socket.c
+	$(MAKE_SHARED) $(SHAREFLAGS) -o socket.sl socket.o $(IMPORTS)
 	rm -f socket.o
 	-mv socket.ooo socket.o
 
@@ -180,6 +194,9 @@ install_OS:
 	$(MV) *.o $(DEST)
 	if test -f socket.so; then \
 		$(MV) *.so $(DEST); \
+	fi
+	if test -f socket.sl; then \
+		$(MV) *.sl $(DEST); \
 	fi
 
 install: install_OS
