@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.25.2.6.6.4 2002/08/10 14:44:57 duane Exp $
+# $Id: Makefile,v 1.25.2.6.6.5 2003/04/30 20:17:34 layer Exp $
 #  Makefile for CLX
 
 SHELL = sh
@@ -109,6 +109,7 @@ endif
 ifeq ($(OS_NAME),linux)
 PICFLAGS = -fPIC
 MAKE_SHARED = ld -shared
+THREADLIB = -lpthread
 endif
 
 ifeq ($(OS_NAME),freebsd)
@@ -180,7 +181,7 @@ clue:	partial-clos
 
 excldep.so: excldep.c
 	$(CC) $(CFLAGS) -c $(PICFLAGS) excldep.c
-	$(MAKE_SHARED) -o excldep.so excldep.o
+	$(MAKE_SHARED) $(THREADLIB) -o excldep.so excldep.o
 
 excldep.sl: excldep.c
 	$(CC) $(CFLAGS) -c $(PICFLAGS) excldep.c
@@ -192,7 +193,7 @@ excldep.dylib: excldep.c
 
 socket.so: socket.c
 	$(CC) $(CFLAGS) -c $(PICFLAGS) socket.c
-	$(MAKE_SHARED) -o socket.so socket.o
+	$(MAKE_SHARED) $(THREADLIB) -o socket.so socket.o
 
 socket.sl: socket.c
 	$(CC) $(CFLAGS) -c $(PICFLAGS) socket.c
