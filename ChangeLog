@@ -5,6 +5,14 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #25
+
+2002-06-05  Kevin Layer  <layer@crikey>
+
+    from duane:
+	* Makefile: [bug12180]: Revert hps to not use streams
+
+*******************************************************************************
 MIT R5.0, ACL #24
 
 Mon Apr 29 11:49:24 PDT 2002  Duane Rettig  <duane@beta>
