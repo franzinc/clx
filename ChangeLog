@@ -1,3 +1,9 @@
+Wed Oct 01 17:56:10 1997  Tom McClure  <tomj@falcon>
+
+	* new file makeclx.cl to build on NT
+	* new instructions in README for building on NT
+
+*******************************************************************************
 Wed May 14 21:56:57 1997  Kevin Layer  <layer@ultra>
 
 	* Makefile: fixes for ACL 5

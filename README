@@ -1,6 +1,8 @@
      This file contains instructions on how to make CLX work with Franz
 Allegro Common Lisp.  CLX should work on any machine that supports
-ACL version 3.1.10 or greater.
+ACL version 3.1.10 or greater.  For running on Windows NT with X display
+software such as Hummingbird's Exceed or StarNet's XWin32, skip to the
+bottom.
 
  ******************************************************************************
  NOTE:  Normally you will not need to follow the instructions in this file.
@@ -66,3 +68,17 @@ Please report Franz specific CLX bugs to:
 	 bugs@Franz.COM
 	       or
 	ucbvax!franz!bugs
+
+
+
+Building and running on Windows NT
+
+(1) With ACL 4.3.2 or later, :cd to the directory containing the clx
+sources.
+
+(2) :ld makeclx.cl - this should create winclx.fasl in that
+directory.  Feel free to move winclx.fasl to a convenient location.
+
+(3) In a fresh lisp, :ld winclx.fasl.  You should now be able to
+open your display, assuming your X display software is running and
+tcp/ip is installed, with: (xlib:open-display "localhost")

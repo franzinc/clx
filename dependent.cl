@@ -1290,7 +1290,17 @@
 	stream
       (error "Cannot connect to server: ~A:~D" host display))))
 
-#+excl
+#+(and excl mswindows)
+(defun open-x-stream (host display protocol)
+  (declare (ignore protocol)) ;; assume TCP
+  (let ((stream (socket:make-socket :remote-host (string host)
+				    :remote-port (+ *x-tcp-port* display)
+				    :format :binary)))
+    (if (streamp stream)
+	stream
+      (error "Cannot connect to server: ~A:~D" host display))))
+
+#+(and excl (not mswindows))
 ;;
 ;; Note that since we don't use the CL i/o facilities to do i/o, the display
 ;; input and output "stream" is really a file descriptor (fixnum).
@@ -1346,7 +1356,7 @@
   (let* ((howmany (- end start))
 	 (fd (display-input-stream display)))
     (declare (type array-index howmany)
-	     (fixnum fd))
+	     #-mswindows (fixnum fd))
 	  
     (or (cond ((fd-char-avail-p fd) nil)
 	      ((eql timeout 0) :timeout)
@@ -1457,6 +1467,11 @@
 	   (type display display)
 	   (type array-index start end))
   #.(declare-buffun)
+  #+mswindows
+  (let ((stream (display-output-stream display)))
+    (unless (null stream) 
+      (stream:stream-write-sequence stream vector start end)))
+  #-mswindows
   (excl::filesys-write-bytes (display-output-stream display) vector start
 			     (- end start)
 			     display))
@@ -1519,12 +1534,12 @@
 
 ;;; buffer-force-output-default - force output to the X stream
 
-#+excl
+#+(and excl (not mswindows))
 (defun buffer-force-output-default (display)
   ;; buffer-write-default does the actual writing.
   (declare (ignore display)))
 
-#-excl
+#-(and excl (not mswindows))
 (defun buffer-force-output-default (display)
   ;; The default buffer force-output function for use with common-lisp streams
   (declare (type display display))
@@ -1535,7 +1550,7 @@
 
 ;;; BUFFER-CLOSE-DEFAULT - close the X stream
 
-#+excl
+#+(and excl (not mswindows))
 (defun buffer-close-default (display &key abort)
   ;; The default buffer close function for use with common-lisp streams
   (declare (type display display)
@@ -1543,7 +1558,7 @@
   #.(declare-buffun)
   (excl::filesys-checking-close (display-output-stream display)))
 
-#-excl
+#-(and excl (not mswindows))
 (defun buffer-close-default (display &key abort)
   ;; The default buffer close function for use with common-lisp streams
   (declare (type display display))
@@ -1643,8 +1658,9 @@
 	   (type (or null number) timeout))
   (declare (values timeout))
   (let ((fd (display-input-stream display)))
-    (declare (fixnum fd))
-    (when (>= fd 0)
+    #-mswindows (declare (fixnum fd))
+    (when #-mswindows (>= fd 0)
+	  #+mswindows (streamp fd)
       (cond ((fd-char-avail-p fd)
 	     nil)
 	    
@@ -1669,6 +1685,9 @@
 	    ;; to block until input is available.  Note we don't really handle
 	    ;; the interaction of interrupts and (numberp timeout) here.  XX
 	    (t
+	     #+mswindows
+	     (error "scheduler must be running to use CLX on MS Windows")
+	     #-mswindows
 	     (let ((res 0))
 	       (declare (fixnum res))
 	       (with-interrupt-checking-on
@@ -1711,7 +1730,7 @@
 ;;; buffer. This should never block, so it can be called from the scheduler.
 
 ;;; The default implementation is to just use listen.
-#-excl
+#-(and excl (not mswindows))
 (defun buffer-listen-default (display)
   (declare (type display display))
   (let ((stream (display-input-stream display)))
@@ -1720,7 +1739,7 @@
 	t
       (listen stream))))
 
-#+excl 
+#+(and excl (not mswindows))
 (defun buffer-listen-default (display)
   (declare (type display display))
   (let ((fd (display-input-stream display)))
@@ -2537,7 +2556,8 @@
 #+excl
 (defmacro with-underlying-simple-vector
 	  ((variable element-type pixarray) &body body)
-  `(let ((,variable (cdr (excl::ah_data ,pixarray))))
+  `(let ((,variable (cdr (#+mswindows excl::ah-data
+			  #-mswindows excl::ah_data ,pixarray))))
      (declare (type (simple-array ,element-type (*)) ,variable))
      ,@body))
 
