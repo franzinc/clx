@@ -180,7 +180,9 @@
 (deftype overlap32 () '(unsigned-byte 32))
 )
 
+(eval-when (compile eval load)
 (deftype buffer-bytes () `(simple-array (unsigned-byte 8) (*)))
+)
 
 #+clx-overlapping-arrays
 (progn

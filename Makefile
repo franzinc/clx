@@ -1,21 +1,30 @@
-# 
+# $Id: Makefile,v 1.13 1997/10/20 22:51:39 layer Exp $
 #  Makefile for CLX
-#  (X11 R4.4 release, Franz Allegro Common Lisp version)
-#
+
+# For versions prior to ACL 5.0 (and 4.3.2 on Windows), comment out the
+# following line:
+SAVEIMG = yes
 
 # *************************************************************************
 # * Change the next line to point to where you have Common Lisp installed *
 # *        (make sure the Lisp doesn't already have CLX loaded in)        *
 # *************************************************************************
-CL	= ../src/lisp -I ../src/dcl.dxl
+ifdef SAVEIMG
+CL		= ../src/lisp -I ../src/dcl.dxl
+# Name of dumped lisp
+CLX		= clx.dxl
+DUMPLISP_ARGS	=
+else
+CL		= ../src/dcl
+# Name of dumped lisp
+CLX		= clx
+DUMPLISP_ARGS	= :checkpoint nil
+endif
 
 SHELL	= /bin/sh
 ECHO	= /bin/echo
 MV	= /usr/fi/mv-nfs -c
 TAGS	= /usr/local/lib/emacs/etc/etags
-
-# Name of dumped lisp
-CLX	= clx.dxl
 
 CLOPTS	= -qq
 
@@ -28,14 +37,20 @@ CLOPTS	= -qq
 
 CFLAGS	= -O -DUNIXCONN $(XCFLAGS)
 
-# Lisp optimization for compiling
-SPEED	= 3
-SAFETY	= 0
-DEBUG	= 1
-RECORD_XREF_INFO = nil
-RECORD_SOURCE_FILE_INFO = nil
-LOAD_XREF_INFO = nil
-LOAD_SOURCE_FILE_INFO = nil
+# compile options:
+SPEED			= 3
+SAFETY			= 0
+DEBUG			= 1
+RECORD_XREF_INFO	= nil
+RECORD_SOURCE_FILE_INFO	= nil
+SAVE_LOCAL_NAMES	= nil
+LOAD_XREF_INFO		= nil
+LOAD_SOURCE_FILE_INFO	= nil
+LOAD_LOCAL_NAMES_INFO	= nil
+gc_print		= nil
+compile_verbose		= t
+compile_print		= nil
+redef_warning		= t
 
 C_SRC	= excldep.c socket.c
 C_OBJS	= excldep.o socket.o
@@ -60,8 +75,8 @@ L_SRC	= defsystem.cl package.cl excldep.cl depdefs.cl clx.cl \
 	manager.cl image.cl resource.cl
 
 PICFLAGS = -K pic
-SHAREFLAGS = -G
-MAKE_SHARED = ld
+SHAREFLAGS = 
+MAKE_SHARED = ld -G
 IMPORTS =
 
 # default and aliases
@@ -131,30 +146,37 @@ compile-no-clos-CLX:	$(C_OBJS)
 			(debug $(DEBUG)))) \
 	(let ((*record-source-file-info* $(RECORD_SOURCE_FILE_INFO)) \
 	      (*load-source-file-info* $(LOAD_SOURCE_FILE_INFO)) \
+	      (*load-local-names-info* $(LOAD_LOCAL_NAMES_INFO)) \
 	      (*record-xref-info* $(RECORD_XREF_INFO)) \
 	      (*load-xref-info* $(LOAD_XREF_INFO)) \
-	      (*compile-verbose* t) \
-	      (*compile-print* nil)) \
+	      (comp::save-local-names-switch $(SAVE_LOCAL_NAMES)) \
+	      (*compile-print* $(compile_print)) \
+	      (*compile-verbose* $(compile_verbose))) \
+	    (setf (sys:gsgc-switch :print) $(gc_print)) \
 	    (compile-system :clx) \
 	    (compile-system :clx-debug))" | $(CL) $(CLOPTS) -batch
 
 compile-partial-clos-CLX:	$(C_OBJS)
-	$(ECHO) "(ff:get-entry-point (ff:convert-to-lang \"fd_wait_for_input\")) \
+	$(ECHO) "#-mswindows (ff:get-entry-point (ff:convert-to-lang \"fd_wait_for_input\")) \
 	(pushnew :clx-ansi-common-lisp *features*) \
 	(load-logical-pathname-translations \"clx\") \
 	(load \"defsystem\") \
 	(load \"package\") \
-	(setq xlib::*def-clx-class-use-defclass* '(xlib:window xlib:pixmap xlib:drawable)) \
+	(setq xlib::*def-clx-class-use-defclass* \
+	  '(xlib:window xlib:pixmap xlib:drawable)) \
 	(proclaim '(optimize \
 			(safety $(SAFETY)) \
 			(speed $(SPEED)) \
 			(debug $(DEBUG)))) \
 	(let ((*record-source-file-info* $(RECORD_SOURCE_FILE_INFO)) \
 	      (*load-source-file-info* $(LOAD_SOURCE_FILE_INFO)) \
+	      (*load-local-names-info* $(LOAD_LOCAL_NAMES_INFO)) \
 	      (*record-xref-info* $(RECORD_XREF_INFO)) \
 	      (*load-xref-info* $(LOAD_XREF_INFO)) \
-	      (*compile-verbose* t) \
-	      (*compile-print* nil)) \
+	      (comp::save-local-names-switch $(SAVE_LOCAL_NAMES)) \
+	      (*compile-verbose* $(compile_verbose)) \
+	      (*compile-print* $(compile_print))) \
+	    (setf (sys:gsgc-switch :print) $(gc_print)) \
 	    (compile-system :clx) \
 	    (compile-system :clx-debug))" | $(CL) $(CLOPTS) -batch -backtrace-on-error
 
@@ -170,15 +192,18 @@ compile-full-clos-CLX:	$(C_OBJS)
 			(debug $(DEBUG)))) \
 	(let ((*record-source-file-info* $(RECORD_SOURCE_FILE_INFO)) \
 	      (*load-source-file-info* $(LOAD_SOURCE_FILE_INFO)) \
+	      (*load-local-names-info* $(LOAD_LOCAL_NAMES_INFO)) \
 	      (*record-xref-info* $(RECORD_XREF_INFO)) \
 	      (*load-xref-info* $(LOAD_XREF_INFO)) \
-	      (*compile-verbose* t) \
-	      (*compile-print* nil)) \
+	      (comp::save-local-names-switch $(SAVE_LOCAL_NAMES)) \
+	      (*compile-print* $(compile_print)) \
+	      (*compile-verbose* $(compile_verbose))) \
+	    (setf (sys:gsgc-switch :print) $(gc_print)) \
 	    (compile-system :clx) \
 	    (compile-system :clx-debug))" | $(CL) $(CLOPTS) -batch
 
 cat:
-	-cat $(L_NOMACROS_OBJS) > CLX.fasl
+	-cat $(L_NOMACROS_OBJS) > bigclx.fasl
 
 load-CLX:
 	$(ECHO) "\
@@ -186,7 +211,7 @@ load-CLX:
 	(load-application \
 	  (progn (load \"defsystem\") (load-system :clx)) \
 	  :global-gc t :devel nil)" \
-	'(dumplisp :name "$(CLX)" :checkpoint nil)' \
+	'(dumplisp :name "$(CLX)" $(DUMPLISP_ARGS))' \
 	"(exit)" | $(CL) $(CLOPTS)
 
 clean_OS:
@@ -205,7 +230,7 @@ install_OS:
 	fi
 
 install: install_OS
-	$(MV) CLX.fasl $(DEST)/clx.fasl
+	$(MV) bigclx.fasl $(DEST)/clx.fasl
 
 tags:
 	$(TAGS) $(L_SRC) $(C_SRC)

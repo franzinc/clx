@@ -132,3 +132,7 @@
 		       :callback nil
 		       :allow-other-keys t
 		       :arguments (fixnum fixnum))))
+
+(eval-when (compile)
+  (declaim (declaration buffer-bytes))
+  )

@@ -2198,7 +2198,7 @@
 ;;  HOST hacking
 ;;-----------------------------------------------------------------------------
 
-#-(or explorer Genera Minima)
+#-(or explorer Genera Minima (and allegro (version>= 5 0)))
 (defun host-address (host &optional (family :internet))
   ;; Return a list whose car is the family keyword (:internet :DECnet :Chaos)
   ;; and cdr is a list of network address bytes.
@@ -2207,6 +2207,19 @@
   (declare (values list))
   host family
   (error "HOST-ADDRESS not implemented yet."))
+
+#+(and allegro (version>= 5 0))
+(eval-when (compile eval load) (require :socket))
+
+#+(and allegro (version>= 5 0))
+(defun host-address (host &optional (family :internet))
+  (ecase family
+    (:internet
+     (values-list
+      (cons :internet
+	    (multiple-value-list
+		(socket::ipaddr-to-dotted (socket::lookup-hostname host)
+					  :values t)))))))
 
 #+explorer
 (defun host-address (host &optional (family :internet))

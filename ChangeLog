@@ -1,3 +1,20 @@
+*******************************************************************************
+<version for this commit> (incf the #n in clx.cl each commit)
+
+<standard changelog date stamp>
+	* <changes go here...>
+
+*******************************************************************************
+MIT R5.0, ACL #4
+
+Mon Oct 20 12:51:01 1997  Kevin Layer  <layer@ultra>
+
+	* Makefile: local names variables; distribution prep stuff
+	* depdefs.cl: get rid of compile time warning
+	* dependent.cl: fix host-address to use socket package
+	* excldep.cl: get rid of compile time warnings
+	* text.cl: get rid of compile time warnings
+
 Wed Oct 01 17:56:10 1997  Tom McClure  <tomj@falcon>
 
 	* new file makeclx.cl to build on NT

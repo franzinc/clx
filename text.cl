@@ -31,8 +31,8 @@
 ;; returned.
 
 (deftype translation-function ()
-  #+explorer t
-  #-explorer
+  #+(or allegro explorer) t
+  #-(or allegro explorer)
   '(function (sequence array-index array-index (or null font) vector array-index)
 	     (values array-index (or null int16 font) (or null int32))))
 
