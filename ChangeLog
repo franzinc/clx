@@ -5,6 +5,13 @@
 	* <changes go here...>
 
 *******************************************************************************
+<no version change>
+
+2000-07-17  Kevin Layer  <layer@ultra>
+
+	* Makefile: remove SIXTYFOURBIT variable
+
+*******************************************************************************
 MIT R5.0, ACL #21
 
 Fri Jul  7 21:20:18 PDT 2000  Duane Rettig  <duane@beta>
