@@ -113,18 +113,16 @@ compile-no-clos-CLX:	$(C_OBJS)
 	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
 	(load-logical-pathname-translations \"clx\") \
 	(load \"defsystem\") \
-	(si::system-compile-wrapper \
-	 (function \
-	  (lambda () \
+	(proclaim '(optimize \
+			(safety $(SAFETY)) \
+			(speed $(SPEED)) \
+			(debug $(DEBUG)))) \
+	(let ((*record-source-file-info* $(RECORD_SOURCE_FILE_INFO)) \
+	      (*load-source-file-info* $(LOAD_SOURCE_FILE_INFO)) \
+	      (*record-xref-info* $(RECORD_XREF_INFO)) \
+	      (*load-xref-info* $(LOAD_XREF_INFO))) \
 	    (compile-system :clx) \
-	    (compile-system :clx-debug))) \
-	 :speed $(SPEED) :debug $(DEBUG) :safety $(SAFETY) \
-	 :record-source-file-info $(RECORD_SOURCE_FILE_INFO) \
-	 :record-xref-info $(RECORD_XREF_INFO) \
-	 :load-source-file-info $(LOAD_SOURCE_FILE_INFO) \
-	 :load-xref-info $(LOAD_XREF_INFO) \
-	 :compile-print nil :compile-verbose nil \
-	 :redefinition-warnings t :gcprint nil)" | $(CL) $(CLOPTS) -batch
+	    (compile-system :clx-debug))" | $(CL) $(CLOPTS) -batch
 
 compile-partial-clos-CLX:	$(C_OBJS)
 	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
@@ -132,18 +130,16 @@ compile-partial-clos-CLX:	$(C_OBJS)
 	(load \"defsystem\") \
 	(load \"package\") \
 	(setq xlib::*def-clx-class-use-defclass* '(xlib:window xlib:pixmap xlib:drawable)) \
-	(si::system-compile-wrapper \
-	 (function \
-	  (lambda () \
+	(proclaim '(optimize \
+			(safety $(SAFETY)) \
+			(speed $(SPEED)) \
+			(debug $(DEBUG)))) \
+	(let ((*record-source-file-info* $(RECORD_SOURCE_FILE_INFO)) \
+	      (*load-source-file-info* $(LOAD_SOURCE_FILE_INFO)) \
+	      (*record-xref-info* $(RECORD_XREF_INFO)) \
+	      (*load-xref-info* $(LOAD_XREF_INFO))) \
 	    (compile-system :clx) \
-	    (compile-system :clx-debug))) \
-	 :speed $(SPEED) :debug $(DEBUG) :safety $(SAFETY) \
-	 :record-source-file-info $(RECORD_SOURCE_FILE_INFO) \
-	 :record-xref-info $(RECORD_XREF_INFO) \
-	 :load-source-file-info $(LOAD_SOURCE_FILE_INFO) \
-	 :load-xref-info $(LOAD_XREF_INFO) \
-	 :compile-print nil :compile-verbose nil \
-	 :redefinition-warnings t :gcprint nil)" | $(CL) $(CLOPTS) -batch
+	    (compile-system :clx-debug))" | $(CL) $(CLOPTS) -batch
 
 compile-full-clos-CLX:	$(C_OBJS)
 	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
@@ -151,18 +147,16 @@ compile-full-clos-CLX:	$(C_OBJS)
 	(load \"defsystem\") \
 	(load \"package\") \
 	(setq xlib::*def-clx-class-use-defclass* t) \
-	(si::system-compile-wrapper \
-	 (function \
-	  (lambda () \
+	(proclaim '(optimize \
+			(safety $(SAFETY)) \
+			(speed $(SPEED)) \
+			(debug $(DEBUG)))) \
+	(let ((*record-source-file-info* $(RECORD_SOURCE_FILE_INFO)) \
+	      (*load-source-file-info* $(LOAD_SOURCE_FILE_INFO)) \
+	      (*record-xref-info* $(RECORD_XREF_INFO)) \
+	      (*load-xref-info* $(LOAD_XREF_INFO))) \
 	    (compile-system :clx) \
-	    (compile-system :clx-debug))) \
-	 :speed $(SPEED) :debug $(DEBUG) :safety $(SAFETY) \
-	 :record-source-file-info $(RECORD_SOURCE_FILE_INFO) \
-	 :record-xref-info $(RECORD_XREF_INFO) \
-	 :load-source-file-info $(LOAD_SOURCE_FILE_INFO) \
-	 :load-xref-info $(LOAD_XREF_INFO) \
-	 :compile-print nil :compile-verbose nil \
-	 :redefinition-warnings t :gcprint nil)" | $(CL) $(CLOPTS) -batch
+	    (compile-system :clx-debug))" | $(CL) $(CLOPTS) -batch
 
 cat:
 	-cat $(L_NOMACROS_OBJS) > CLX.fasl
