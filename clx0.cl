@@ -83,7 +83,7 @@
 (pushnew :clx *features*)
 (pushnew :xlib *features*)
 
-(defparameter *version* "MIT R5.0, ACL #14")
+(defparameter *version* "MIT R5.0, ACL #15")
 (pushnew :clx-mit-r4 *features*)
 (pushnew :clx-mit-r5 *features*)
 
@@ -180,7 +180,7 @@
 
 #-clx-ansi-common-lisp
 (deftype base-char ()
-  'string-char)
+  'excl::string-char)
 
 ; Note that we are explicitly using a different rgb representation than what
 ; is actually transmitted in the protocol.

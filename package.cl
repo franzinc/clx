@@ -2,7 +2,7 @@
 
 ;;; Copyright 1990 Massachusetts Institute of Technology, Cambridge,
 ;;; Massachusetts.  All Rights Reserved.
-;;; 
+;;;
 ;;; Permission to use, copy, modify, and distribute this software and its
 ;;; documentation for any purpose and without fee is hereby granted, provided
 ;;; that the above copyright notice appear in all copies and that both that
@@ -13,11 +13,11 @@
 
 ;;; The CLtL way
 
-#-clx-ansi-common-lisp 
+#-clx-ansi-common-lisp
 (lisp:in-package :xlib :use '(:lisp))
 
 #+(and (or kcl ibcl) (not clx-ansi-common-lisp))
-(shadow 
+(shadow
   '(
     rational
     ))
@@ -49,7 +49,7 @@
     lucid::type-error-expected-type
     ))
 
-#+(and excl (not clx-ansi-common-lisp)) 
+#+(and excl (not clx-ansi-common-lisp))
 (import
   '(
     excl::arglist
@@ -130,7 +130,7 @@ only be loaded into a case insensitive Allegro CL.")))
     font-name font-p font-path font-plist font-properties
     font-property fontable force-gcontext-changes free-colormap
     free-colors free-cursor free-gcontext free-pixmap gcontext
-    gcontext-arc-mode gcontext-background 
+    gcontext-arc-mode gcontext-background
     gcontext-cache-p gcontext-cap-style
     gcontext-clip-mask gcontext-clip-ordering gcontext-clip-x
     gcontext-clip-y gcontext-dash-offset gcontext-dashes gcontext-display
@@ -239,7 +239,7 @@ only be loaded into a case insensitive Allegro CL.")))
   (:use common-lisp)
   (:size 3000)
   #+(or kcl ibcl) (:shadow rational)
-  #+allegro (:use cltl1)
+  #+ignore (:use cltl1)
   #+allegro (:import-from excl without-interrupts)
   #+(and allegro (not (version>= 4 1))) (:import-from lisp define-compiler-macro)
   #+excl (:import-from excl arglist)

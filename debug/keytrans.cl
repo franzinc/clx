@@ -23,15 +23,15 @@
 (defun list-missing-keysyms ()
   ;; Lists explorer characters which have no keysyms
   (dotimes (i 256)
-    (unless (character->keysyms (int-char i))
-      (format t "~%(define-keysym ~@c ~d)" (int-char i) i))))
+    (unless (character->keysyms (character i))
+      (format t "~%(define-keysym ~@c ~d)" (character i) i))))
 
 (defun list-multiple-keysyms ()
   ;; Lists characters with more than one keysym
   (dotimes (i 256)
-    (when (cdr (character->keysyms (int-char i)))
-      (format t "~%Character ~@c [~d] has keysyms" (int-char i) i)
-      (dolist (keysym (character->keysyms (int-char i)))
+    (when (cdr (character->keysyms (character i)))
+      (format t "~%Character ~@c [~d] has keysyms" (character i) i)
+      (dolist (keysym (character->keysyms (character i)))
 	(format t "  ~d ~d" (ldb (byte 8 8) keysym) (ldb (byte 8 0) keysym))))))
 
 (defun check-lowercase-keysyms ()
@@ -52,7 +52,7 @@
 				 char
 				 (and lowercase (ldb (byte 8 8) lowercase))
 				 (and lowercase (ldb (byte 8 0) lowercase))
-				 (int-char lowercase)
+				 (character lowercase)
 				 (ldb (byte 8 8) (char-int should-be))
 				 (ldb (byte 8 0) (char-int should-be))
 				 should-be)))
@@ -73,7 +73,7 @@
     (maphash #'(lambda (key value) (push (cons key value) all)) *keysym->character-map*)
     (setq all (sort all #'< :key #'car))
     (format t "~%~d keysyms:" (length all))
-    
+
     (dolist (keysym all)
       (format t "~%~3d ~3d~{ ~s~}"
 	      (ldb (byte 8 8) (car keysym))
@@ -156,7 +156,7 @@
 	       :background black
 	       :foreground white)))
     (initialize-extensions display)
-    
+
     (map-window win)				; Map the window
     ;; Handle events
     (unwind-protect
@@ -200,7 +200,7 @@
 	       :background black
 	       :foreground white)))
     (initialize-extensions display)
-    
+
     (map-window win)				; Map the window
     ;; Handle events
     (unwind-protect

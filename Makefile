@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.19 1998/04/01 06:44:36 layer Exp $
+# $Id: Makefile,v 1.20 1998/09/29 21:04:36 duane Exp $
 #  Makefile for CLX
 
 makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
@@ -186,7 +186,7 @@ compile-no-clos-CLX:	$(C_OBJS)
 	$(CL) $(CLOPTS) -batch
 
 compile-partial-clos-CLX:	$(C_OBJS)
-	$(ECHO) "#-mswindows (ff:get-entry-point (ff:convert-to-lang \"fd_wait_for_input\")) \
+	$(ECHO) "#-mswindows (ff:get-entry-point (ff:convert-foreign-name \"fd_wait_for_input\")) \
 	(pushnew :clx-ansi-common-lisp *features*) \
 	(load-logical-pathname-translations \"clx\") \
 	(load \"defsystem\") \

@@ -67,7 +67,7 @@
 |#
       ))
 
-;; This (if (and ...) t nil) stuff has a purpose -- it lets the old 
+;; This (if (and ...) t nil) stuff has a purpose -- it lets the old
 ;; sun4 compiler opencode the `and'.
 
 #-(version>= 4 1 devel 16)
@@ -230,11 +230,11 @@
 
 (define-compiler-macro char->card8 (char)
   `(locally ,(declare-bufmac)
-     (the card8 (char-code (the string-char ,char)))))
+     (the card8 (char-code (the excl::string-char ,char)))))
 
 (define-compiler-macro card8->char (card8)
   `(locally ,(declare-bufmac)
-     (the string-char (code-char (the card8 ,card8)))))
+     (the excl::string-char (code-char (the card8 ,card8)))))
 
 
 ;;
@@ -246,7 +246,7 @@
 			    #.(sys::mdparam 'comp::md-svector-data0-norm)
 			    (the array-index ,i)
 			    :unsigned-byte))))
-  
+
 (define-compiler-macro aset-card8 (v a i)
   `(locally ,(declare-bufmac)
      (setf (sys:memref (the buffer-bytes ,a)
@@ -254,14 +254,14 @@
 		       (the array-index ,i)
 		       :unsigned-byte)
 	   (the card8 ,v))))
-  
+
 (define-compiler-macro aref-int8 (a i)
   `(locally ,(declare-bufmac)
      (the int8 (sys:memref (the buffer-bytes ,a)
 			   #.(sys::mdparam 'comp::md-svector-data0-norm)
 			   (the array-index ,i)
 			   :signed-byte))))
-  
+
 (define-compiler-macro aset-int8 (v a i)
   `(locally ,(declare-bufmac)
      (setf (sys:memref (the buffer-bytes ,a)
@@ -276,7 +276,7 @@
 			     #.(sys::mdparam 'comp::md-svector-data0-norm)
 			     (the array-index ,i)
 			     :unsigned-word))))
-  
+
 (define-compiler-macro aset-card16 (v a i)
   `(locally ,(declare-bufmac)
      (setf (sys:memref (the buffer-bytes ,a)
@@ -284,14 +284,14 @@
 		       (the array-index ,i)
 		       :unsigned-word)
 	   (the card16 ,v))))
-  
+
 (define-compiler-macro aref-int16 (a i)
   `(locally ,(declare-bufmac)
      (the int16 (sys:memref (the buffer-bytes ,a)
 			    #.(sys::mdparam 'comp::md-svector-data0-norm)
 			    (the array-index ,i)
 			    :signed-word))))
-  
+
 (define-compiler-macro aset-int16 (v a i)
   `(locally ,(declare-bufmac)
      (setf (sys:memref (the buffer-bytes ,a)
@@ -299,14 +299,14 @@
 		       (the array-index ,i)
 		       :signed-word)
        (the int16 ,v))))
-  
+
 (define-compiler-macro aref-card32 (a i)
   `(locally ,(declare-bufmac)
      (the card32 (sys:memref (the buffer-bytes ,a)
 			     #.(sys::mdparam 'comp::md-svector-data0-norm)
 			     (the array-index ,i)
 			     :unsigned-long32))))
-    
+
 (define-compiler-macro aset-card32 (v a i)
   `(locally ,(declare-bufmac)
      (setf (sys:memref (the buffer-bytes ,a)
@@ -321,7 +321,7 @@
 			    #.(sys::mdparam 'comp::md-svector-data0-norm)
 			    (the array-index ,i)
 			    :signed-long))))
-    
+
 (define-compiler-macro aset-int32 (v a i)
   `(locally ,(declare-bufmac)
      (setf (sys:memref (the buffer-bytes ,a)

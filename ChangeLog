@@ -5,6 +5,20 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #14 -- join from acl50 branch (just version #13)
+
+Tue Sep 29 10:55:59 1998  Duane Rettig  <duane@beta>
+
+	* Makefile: Change to new ff system
+	* clx0.cl: Increment version; use internal string-char
+	* dependent.cl: Fix to allow non-dcl compilation
+	* exclmac.cl: Use internal string-char
+	* package.cl: Don't use cltl1 package
+	* sockcl.cl: Use internal string-char
+	* describe.cl: int-char -> character
+	* keytrans.cl: int-char -> character
+
+*******************************************************************************
 join from acl50 branch
 next merge tag: acl50_merge2
 (version number not changed because only the file `TAGS' was cvs removed)

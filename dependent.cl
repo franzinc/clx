@@ -27,7 +27,7 @@
 (zwei:define-indentation event-case (1 1))
 
 ;;; Number of seconds to wait for a reply to a server request
-(defparameter *reply-timeout* nil) 
+(defparameter *reply-timeout* nil)
 
 #-(or clx-overlapping-arrays (not clx-little-endian))
 (progn
@@ -281,7 +281,7 @@
 
 #+excl
 (progn
-  
+
 (defun aref-card8 (a i)
   (declare (type buffer-bytes a)
 	   (type array-index i))
@@ -321,7 +321,7 @@
   #.(declare-buffun)
   (the card16 (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 			  :unsigned-word)))
-  
+
 (defun aset-card16 (v a i)
   (declare (type card16 v)
 	   (type buffer-bytes a)
@@ -329,7 +329,7 @@
   #.(declare-buffun)
   (setf (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 		    :unsigned-word) v))
-  
+
 (defun aref-int16 (a i)
   (declare (type buffer-bytes a)
 	   (type array-index i))
@@ -337,7 +337,7 @@
   #.(declare-buffun)
   (the int16 (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 			 :signed-word)))
-  
+
 (defun aset-int16 (v a i)
   (declare (type int16 v)
 	   (type buffer-bytes a)
@@ -345,7 +345,7 @@
   #.(declare-buffun)
   (setf (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 		    :signed-word) v))
-  
+
 (defun aref-card32 (a i)
   (declare (type buffer-bytes a)
 	   (type array-index i))
@@ -353,7 +353,7 @@
   #.(declare-buffun)
   (the card32 (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 			  :unsigned-long32)))
-    
+
 (defun aset-card32 (v a i)
   (declare (type card32 v)
 	   (type buffer-bytes a)
@@ -369,7 +369,7 @@
   #.(declare-buffun)
   (the int32 (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 			 :signed-long)))
-    
+
 (defun aset-int32 (v a i)
   (declare (type int32 v)
 	   (type buffer-bytes a)
@@ -393,7 +393,7 @@
   #.(declare-buffun)
   (setf (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 		    :unsigned-long32) v))
-  
+
 )
 
 #+lcl3.0
@@ -433,21 +433,21 @@
 	   (values card16))
   #.(declare-buffun)
   (the card16 (lucid::%svref-16bit a (index-ash i -1))))
-  
+
 (defun aset-card16 (v a i)
   (declare (type card16 v)
 	   (type buffer-bytes a)
 	   (type array-index i))
   #.(declare-buffun)
   (setf (lucid::%svref-16bit a (index-ash i -1)) v))
-  
+
 (defun aref-int16 (a i)
   (declare (type buffer-bytes a)
 	   (type array-index i)
 	   (values int16))
   #.(declare-buffun)
   (the int16 (lucid::%svref-signed-16bit a (index-ash i -1))))
-  
+
 (defun aset-int16 (v a i)
   (declare (type int16 v)
 	   (type buffer-bytes a)
@@ -461,7 +461,7 @@
 	   (values card32))
   #.(declare-buffun)
   (the card32 (lucid::%svref-32bit a (index-ash i -2))))
-    
+
 (defun aset-card32 (v a i)
   (declare (type card32 v)
 	   (type buffer-bytes a)
@@ -475,7 +475,7 @@
 	   (values int32))
   #.(declare-buffun)
   (the int32 (lucid::%svref-signed-32bit a (index-ash i -2))))
-    
+
 (defun aset-int32 (v a i)
   (declare (type int32 v)
 	   (type buffer-bytes a)
@@ -655,7 +655,7 @@
   ;; Convert VALUE from float to card16
   (the card16 (values (round (the rgb-val value) #.(/ 1.0s0 #xffff)))))
 
-(defun card16->rgb-val (value) 
+(defun card16->rgb-val (value)
   ;; Short floats are good enough
   (declare (type card16 value))
   (declare (values short-float))
@@ -884,7 +884,7 @@
     `(let* ((,lock (zl:locf (svref ,locator 0)))
 	    (,have-lock (eq (car ,lock) sys:current-process))
 	    (,timeo ,timeout))
-       (unwind-protect 
+       (unwind-protect
 	   (when (cond (,have-lock)
 		       ((#+explorer si:%store-conditional
 			 #-explorer sys:store-conditional
@@ -927,7 +927,7 @@
 			  (setf .have-lock. :abort)
 			  nil))
 	       ,@body)
-	   (unless .have-lock. 
+	   (unless .have-lock.
 	     (lcl:process-unlock ,locator))))
     `(lcl:with-process-lock (,locator)
        ,@body)))
@@ -1000,7 +1000,7 @@
 #+excl
 (defmacro without-aborts (&body body)
   `(without-interrupts ,@body))
-    
+
 #+lcl3.0
 (defmacro without-aborts (&body body)
   `(lcl:with-interruptions-inhibited ,@body))
@@ -1029,7 +1029,7 @@
   (declare (type function predicate)
 	   #+clx-ansi-common-lisp
 	   (dynamic-extent predicate)
-	   #-clx-ansi-common-lisp 
+	   #-clx-ansi-common-lisp
 	   (sys:downward-funarg predicate))
   (apply #'global:process-wait whostate predicate predicate-args))
 
@@ -1160,7 +1160,7 @@
        (scl:condition-bind
 	 (((sys:network-error)
 	   #'(lambda (error)
-	       (scl:condition-case () 
+	       (scl:condition-case ()
 		    (funcall (buffer-close-function .buffer.) .buffer. :abort t)
 		  (sys:network-error))
 	       (setf (buffer-dead .buffer.) error)
@@ -1182,7 +1182,7 @@
      (scl:condition-bind
        (((sys:network-error)
 	 #'(lambda (error)
-	     (scl:condition-case () 
+	     (scl:condition-case ()
 		  (funcall (buffer-close-function .buffer.) .buffer. :abort t)
 		(sys:network-error))
 	     (setf (buffer-dead .buffer.) error)
@@ -1194,7 +1194,7 @@
 
 ;;;----------------------------------------------------------------------------
 ;;; System dependent IO primitives
-;;;	Functions for opening, reading writing forcing-output and closing 
+;;;	Functions for opening, reading writing forcing-output and closing
 ;;;	the stream to the server.
 ;;;----------------------------------------------------------------------------
 
@@ -1354,12 +1354,12 @@
 	   (type array-index start end)
 	   (type (or null number) timeout))
   #.(declare-buffun)
-    
+
   (let* ((howmany (- end start))
 	 (fd (display-input-stream display)))
     (declare (type array-index howmany)
 	     #-mswindows (fixnum fd))
-	  
+
     (or (cond ((fd-char-avail-p fd) nil)
 	      ((eql timeout 0) :timeout)
 	      ((buffer-input-wait-default display timeout)))
@@ -1460,7 +1460,7 @@
   #.(declare-buffun)
   (let ((stream (display-output-stream display)))
     (declare (type (or null stream) stream))
-    (unless (null stream) 
+    (unless (null stream)
       (write-string vector stream :start start :end end))))
 
 #+excl
@@ -1471,13 +1471,13 @@
   #.(declare-buffun)
   #+mswindows
   (let ((stream (display-output-stream display)))
-    (unless (null stream) 
+    (unless (null stream)
       (stream:stream-write-sequence stream vector start end)))
   #-mswindows
   (excl::filesys-write-bytes (display-output-stream display) vector start
 			     (- end start)
 			     display))
-  
+
 #+lcl3.0
 (defun buffer-write-default (vector display start end)
   ;;We used to inhibit scheduling because there were races in Lucid's
@@ -1490,7 +1490,7 @@
   #.(declare-buffun)
   (let ((stream (display-output-stream display)))
     (declare (type (or null stream) stream))
-    (unless (null stream) 
+    (unless (null stream)
       (with-underlying-stream (stream stream display output)
 	(lcl:write-array stream vector start end)))))
 
@@ -1503,7 +1503,7 @@
   #.(declare-buffun)
   (let ((stream (display-output-stream display)))
     (declare (type (or null stream) stream))
-    (unless (null stream) 
+    (unless (null stream)
       (loop while (< start end) do
 	(multiple-value-bind (buffer bstart bend)
 	    (minima:get-output-buffer stream)
@@ -1586,7 +1586,7 @@
   (declare (type display display)
 	   (type (or null number) timeout))
   (declare (values timeout))
-  
+
   (let ((stream (display-input-stream display)))
     (declare (type (or null stream) stream))
     (cond ((null stream))
@@ -1665,12 +1665,12 @@
 	  #+mswindows (streamp fd)
       (cond ((fd-char-avail-p fd)
 	     nil)
-	    
+
 	    ;; Otherwise no bytes were available on the socket
 	    ((and timeout (zerop timeout))
 	     ;; If there aren't enough and timeout == 0, timeout.
 	     :timeout)
-	  
+
 	    ;; If the scheduler is running let it do timeouts.
 	    (mp::*scheduler-stack-group*
 	     #+allegro
@@ -1682,7 +1682,7 @@
 	     #-allegro
 	     (mp::wait-for-input-available fd :whostate *read-whostate*
 					   :wait-function #'fd-char-avail-p))
-	    
+
 	    ;; Otherwise we have to handle timeouts by hand, and call select()
 	    ;; to block until input is available.  Note we don't really handle
 	    ;; the interaction of interrupts and (numberp timeout) here.  XX
@@ -1705,7 +1705,7 @@
 			;; Otherwise we got an interrupt -- go around again.
 			)))))))))
 
-	   
+
 #+lcl3.0
 (defun buffer-input-wait-default (display timeout)
   (declare (type display display)
@@ -1797,10 +1797,10 @@
   (declare (type buffer-bytes target-sequence source-sequence)
 	   (type array-index target-start target-end source-start)
 	   (optimize (speed 3) (safety 0)))
-  
+
   (let ((source-end (length source-sequence)))
     (declare (type array-index source-end))
-    
+
     (excl:if* (and (eq target-sequence source-sequence)
 		   (> target-start source-start))
        then (let ((nelts (min (- target-end target-start)
@@ -1809,7 +1809,7 @@
 		   (source-index (+ source-start nelts -1) (1- source-index)))
 		  ((= target-index (1- target-start)) target-sequence)
 		(declare (type array-index target-index source-index))
-		
+
 		(setf (aref target-sequence target-index)
 		  (aref source-sequence source-index))))
        else (do ((target-index target-start (1+ target-index))
@@ -1916,25 +1916,25 @@
 ;;; Several levels are possible:
 ;;;
 ;;; 1. Do the equivalent of check-type on every argument.
-;;; 
+;;;
 ;;; 2. Simply report TYPE-ERROR.  This eliminates overhead of all the format
 ;;;    strings generated by check-type.
-;;; 
+;;;
 ;;; 3. Do error checking only on arguments that are likely to have errors
 ;;;    (like keyword names)
-;;; 
+;;;
 ;;; 4. Do error checking only where not doing so may dammage the envirnment
 ;;;    on a non-tagged machine (i.e. when storing into a structure that has
 ;;;    been passed in)
-;;; 
+;;;
 ;;; 5. No extra error detection code.  On lispm's, ASET may barf trying to
-;;;    store a non-integer into a number array. 
-;;; 
+;;;    store a non-integer into a number array.
+;;;
 ;;; How extensive should the error checking be?  For example, if the server
 ;;; expects a CARD16, is is sufficient for CLX to check for integer, or
 ;;; should it also check for non-negative and less than 65536?
 ;;;----------------------------------------------------------------------------
- 
+
 ;; The *TYPE-CHECK?* constant controls how much error checking is done.
 ;; Possible values are:
 ;;    NIL      - Don't do any error checking
@@ -1991,7 +1991,7 @@
 
 ;;-----------------------------------------------------------------------------
 ;; Error handlers
-;;    Hack up KMP error signaling using zetalisp until the real thing comes 
+;;    Hack up KMP error signaling using zetalisp until the real thing comes
 ;;    along
 ;;-----------------------------------------------------------------------------
 
@@ -2049,7 +2049,7 @@
 ;; Where option is one of: (:documentation doc-string) (:conc-name symbol-or-string)
 ;; or (:report exp)
 
-#+lcl3.0 
+#+lcl3.0
 (defmacro define-condition (name parent-types &optional slots &rest args)
   `(lcl:define-condition
      ,name (,(first parent-types))
@@ -2071,7 +2071,7 @@
 	  (mapcar #'(lambda (slot) (if (consp slot) (car slot) slot))
 		  (pop options)))
 	(documentation nil)
-	(conc-name (concatenate 'string (string name) "-"))	       
+	(conc-name (concatenate 'string (string name) "-"))
 	(reporter nil))
     (dolist (item options)
       (ecase (first item)
@@ -2140,7 +2140,7 @@
 	    (mapcar #'(lambda (slot) (if (consp slot) (car slot) slot))
 		    (pop options)))
 	  (documentation nil)
-	  (conc-name (concatenate 'string (string name) "-"))	       
+	  (conc-name (concatenate 'string (string name) "-"))
 	  (reporter nil)
 	  (condition (gensym))
 	  (stream (gensym))
@@ -2177,7 +2177,7 @@
       (print-unreadable-object (condition stream :type t))
     (funcall (x-error-report-function condition) condition stream))
   condition)
-  
+
 #-(or lispm clx-ansi-common-lisp excl lcl3.0)
 (defun make-condition (type &rest slot-initializations)
   (declare (dynamic-extent slot-initializations))
@@ -2322,7 +2322,7 @@
   (declare (type list host-object))
   (declare (values string family))
   (let ((family (first host-object)))
-    (values (sys:send (net:get-host-from-address 
+    (values (sys:send (net:get-host-from-address
 			(ecase family
 			  (:internet
 			    (apply #'tcp:build-internet-address (rest host-object)))
@@ -2377,7 +2377,7 @@
 	    (pathname string)))
 	(merge-pathnames
 	  (user-homedir-pathname)
-	  (pathname 
+	  (pathname
 	    (concatenate 'simple-string ".Xdefaults-"
 			 #+excl (short-site-name)
 			 #-excl (machine-instance)))))))
@@ -2542,7 +2542,7 @@
 (deftype bitmap ()
   'pixarray-1)
 
-;;; WITH-UNDERLYING-SIMPLE-VECTOR 
+;;; WITH-UNDERLYING-SIMPLE-VECTOR
 
 #+Genera
 (defmacro with-underlying-simple-vector
@@ -2571,8 +2571,7 @@
 #+excl
 (defmacro with-underlying-simple-vector
 	  ((variable element-type pixarray) &body body)
-  `(let ((,variable (cdr (#+mswindows excl::ah-data
-			  #-mswindows excl::ah_data ,pixarray))))
+  `(let ((,variable (cdr (excl::ah-data ,pixarray))))
      (declare (type (simple-array ,element-type (*)) ,variable))
      ,@body))
 
@@ -2596,7 +2595,7 @@
 	(count 0))
     (dolist (byte (rest bytes))
       (setq it
-	    `(#-Genera dpb #+Genera sys:%logdpb 
+	    `(#-Genera dpb #+Genera sys:%logdpb
 	      (the card8 ,byte)
 	      (byte 8 ,(incf count 8))
 	      (the (unsigned-byte ,count) ,it))))
@@ -2642,7 +2641,7 @@
 ;;; 31, where bit 0 should be leftmost on the display.  For a given byte
 ;;; labelled A-B, A is for the most significant bit of the byte, and B is
 ;;; for the least significant bit.
-;;; 
+;;;
 ;;; legend:
 ;;; 	1   scanline-unit = 8
 ;;; 	2   scanline-unit = 16
@@ -2651,10 +2650,10 @@
 ;;; 	L   byte-order = LeastSignificant
 ;;; 	m   bit-order = MostSignificant
 ;;; 	l   bit-order = LeastSignificant
-;;; 
-;;; 
+;;;
+;;;
 ;;; format	ordering
-;;; 
+;;;
 ;;; 1Mm	00-07 08-15 16-23 24-31
 ;;; 2Mm	00-07 08-15 16-23 24-31
 ;;; 4Mm	00-07 08-15 16-23 24-31
@@ -2668,7 +2667,7 @@
 ;;; 2Ll	07-00 15-08 23-16 31-24
 ;;; 4Ll	07-00 15-08 23-16 31-24
 
-#+(or Genera lcl3.0 excl) 
+#+(or Genera lcl3.0 excl)
 (defconstant
   *image-bit-ordering-table*
   '(((1 (00 07) (08 15) (16 23) (24 31)) (nil nil))
@@ -2683,11 +2682,11 @@
     ((1 (07 00) (15 08) (23 16) (31 24)) (t   t))
     ((2 (07 00) (15 08) (23 16) (31 24)) (t   t))
     ((4 (07 00) (15 08) (23 16) (31 24)) (t   t))))
-  
-#+(or Genera lcl3.0 excl) 
+
+#+(or Genera lcl3.0 excl)
 (defun compute-image-byte-and-bit-ordering ()
   (declare (values image-byte-lsb-first-p image-bit-lsb-first-p))
-  ;; First compute the ordering 
+  ;; First compute the ordering
   (let ((ordering nil)
 	(a (make-array '(1 32) :element-type 'bit :initial-element 0)))
     (dotimes (i 4)
@@ -2716,7 +2715,7 @@
 	       ordering))
       (values-list byte-and-bit-ordering))))
 
-#+(or Genera lcl3.0 excl) 
+#+(or Genera lcl3.0 excl)
 (multiple-value-setq
   (*computed-image-byte-lsb-first-p* *computed-image-bit-lsb-first-p*)
   (compute-image-byte-and-bit-ordering))
@@ -2729,7 +2728,7 @@
 ;;; FAST-READ-PIXARRAY - fill part of a pixarray from a buffer of card8s
 
 #+(or lcl3.0 excl)
-(defun fast-read-pixarray-1 (buffer-bbuf index array x y width height  
+(defun fast-read-pixarray-1 (buffer-bbuf index array x y width height
 			     padded-bytes-per-line bits-per-pixel)
   (declare (type buffer-bytes buffer-bbuf)
 	   (type pixarray-1 array)
@@ -2867,7 +2866,7 @@
 ;; >>> with only a fuzzy idea of what's really happening.
 ;; >>> "quarter" used here to mean half a nibble (two bits)
 #+(or lcl3.0 excl)
-(defun fast-read-pixarray-2 (buffer-bbuf index array x y width height 
+(defun fast-read-pixarray-2 (buffer-bbuf index array x y width height
 			     padded-bytes-per-line bits-per-pixel)
   (declare (type buffer-bytes buffer-bbuf)
 	   (type pixarray-2 array)
@@ -2957,7 +2956,7 @@
   t)
 
 #+(or lcl3.0 excl)
-(defun fast-read-pixarray-4 (buffer-bbuf index array x y width height 
+(defun fast-read-pixarray-4 (buffer-bbuf index array x y width height
 			     padded-bytes-per-line bits-per-pixel)
   (declare (type buffer-bytes buffer-bbuf)
 	   (type pixarray-4 array)
@@ -3002,7 +3001,7 @@
   t)
 
 #+(or Genera lcl3.0 excl)
-(defun fast-read-pixarray-24 (buffer-bbuf index array x y width height 
+(defun fast-read-pixarray-24 (buffer-bbuf index array x y width height
 			      padded-bytes-per-line bits-per-pixel)
   (declare (type buffer-bytes buffer-bbuf)
 	   (type pixarray-24 array)
@@ -3074,7 +3073,7 @@
 		   (index-zerop (index-mod x-bits *image-unit*))))
 	(multiple-value-bind (image-swap-function image-swap-lsb-first-p)
 	    (image-swap-function
-	      bits-per-pixel 
+	      bits-per-pixel
 	      unit byte-lsb-first-p bit-lsb-first-p
 	      *image-unit* *computed-image-byte-lsb-first-p*
 	      *computed-image-bit-lsb-first-p*)

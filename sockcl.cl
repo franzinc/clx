@@ -2,7 +2,7 @@
 
 ;;;; Server Connection for kcl and ibcl
 
-;;; Copyright (C) 1987, 1989 Massachussetts Institute of Technology 
+;;; Copyright (C) 1987, 1989 Massachussetts Institute of Technology
 ;;;
 ;;; Permission is granted to any individual or institution to use, copy,
 ;;; modify, and distribute this software, provided that this complete
@@ -43,7 +43,7 @@ enum smmode {			/*  stream mode  */
 	smm_echo,		/*  echo  */
 	smm_string_input,	/*  string input  */
 	smm_string_output,	/*  string output  */
-	smm_user_defined        /*  for user defined */ 
+	smm_user_defined        /*  for user defined */
 };
 ")
 
@@ -101,7 +101,7 @@ konnect_stream(host,fd,flag,elem)
      object host;		/* not really used */
      int fd;			/* file descriptor */
      int flag;			/* 0 input, 1 output */
-     object elem;		/* 'string-char */
+     object elem;		/* 'excl::string-char */
 {
    struct stream *stream;
    char *mode;			/* file open mode */
@@ -121,7 +121,7 @@ konnect_stream(host,fd,flag,elem)
     default:
       FEerror(\"konnect_stream : wrong mode\");
    }
-   
+
    fp = fdopen(fd,mode);
 
    if (fp == NULL) {
@@ -155,8 +155,8 @@ konnect_stream(host,fd,flag,elem)
   (let ((fd (konnect-to-server host display)))	; get a file discriptor
     (if (< fd 0)
 	NIL
-	(let ((stream-in  (konnect-stream host fd 0 'string-char))	; input
-	      (stream-out (konnect-stream host fd 1 'string-char)))	; output
+      (let ((stream-in  (konnect-stream host fd 0 'excl::string-char)) ; input
+	    (stream-out (konnect-stream host fd 1 'excl::string-char))) ; output
 	  (if (or (null stream-in) (null stream-out))
 	      (error "Could not make i/o streams for fd ~d." fd))
 	  (make-two-way-stream stream-in stream-out))

@@ -43,7 +43,7 @@
       (when (>= request (length *request-parameters*))
 	(setq request 0))
       (do ((parms (aref *request-parameters* request) (cdddr parms))
-	   (j start))	  
+	   (j start))
 	  ((or (endp parms) (>= j length)))
 	(let ((len (first parms))
 	      (type (second parms))
@@ -58,7 +58,7 @@
 	      (progn
 		(print-value j value type doc)
 		     (incf j len))
-	    (progn 
+	    (progn
 	      (format t "~2d ~10a ~a"
 		      j type doc)
 	      (case type
@@ -76,7 +76,7 @@
 		(string8
 		 (format t " Bytes:~%~v@t" margin)
 		 (dotimes (k (- length (- j start)))
-		   (format t "~a" (int-char (card8-get j)))
+		   (format t "~a" (character (card8-get j)))
 		   (incf j)))
 		(otherwise
 		 (format t " Bytes:~%~v@t" margin)
