@@ -5,6 +5,12 @@
 	* <changes go here...>
 
 *******************************************************************************
+Tue Mar 31 19:53:42 1998  Kevin Layer  <layer@ultra>
+
+	* Makefile: move knowledge from cl/makedist.cl into this file on
+	making share libraries
+
+*******************************************************************************
 MIT R5.0, ACL #12
 
 Wed Mar 18 10:28:26 1998  Kevin Layer  <layer@ultra>

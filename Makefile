@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.17 1998/03/18 20:28:09 layer Exp $
+# $Id: Makefile,v 1.18 1998/04/01 03:54:35 layer Exp $
 #  Makefile for CLX
 
 makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
@@ -42,12 +42,36 @@ TAGS	= /usr/local/lib/emacs/etc/etags
 
 CLOPTS	= -qq
 
-# Use this one for Silicon Graphics & Mips Inc MIPS based machines
-#   XCFLAGS = -G 0 -I/usr/include/bsd
-# Use this one for DEC MIPS based machines
-#   XCFLAGS = -G 0
-# Use this one for HP machines
-#   XCFLAGS = -DSYSV
+SO = so
+
+ifeq ($(OS_NAME),aix)
+XCFLAGS = -D_BSD -D_NO_PROTO -D_NONSTD_TYPES -D_MBI=void
+MAKE_SHARED = make_shared
+endif
+
+ifeq ($(OS_NAME),hp-ux)
+XCFLAGS = -O -Ae +DA1.1
+SO = sl
+MAKE_SHARED = make_shared
+PICFLAGS = +z
+endif
+
+ifeq ($(OS_NAME),sunos)
+XCFLAGS = -I/usr/openwin/include
+PICFLAGS = -K pic
+MAKE_SHARED = ld -G
+endif
+
+ifeq ($(OS_NAME),osf1)
+XCFLAGS = -G 0 -taso -xtaso -xtaso_short -resumption_safe
+MAKE_SHARED = make_shared
+endif
+
+ifeq ($(OS_NAME),irix)
+XCFLAGS = -G 0 -ansi -n32
+PICFLAGS = -KPIC
+MAKE_SHARED = ld -n32 -shared -all
+endif
 
 CFLAGS	= -O -DUNIXCONN $(XCFLAGS)
 
@@ -69,7 +93,7 @@ redef_warning		= t
 C_SRC	= excldep.c socket.c
 ifneq ($(OS_NAME),windows)
 C_OBJS	= excldep.o socket.o
-C_SOBJS	= excldep.so socket.so
+C_SOBJS	= excldep.$(SO) socket.$(SO)
 endif
 
 L_OBJS	= defsystem.fasl package.fasl excldep.fasl depdefs.fasl clx0.fasl \
@@ -90,44 +114,26 @@ L_SRC	= defsystem.cl package.cl excldep.cl depdefs.cl clx0.cl \
 	graphics.cl text.cl attributes.cl translate.cl keysyms.cl \
 	manager.cl image.cl resource.cl
 
-PICFLAGS = -K pic
-SHAREFLAGS = 
-MAKE_SHARED = ld -G
-IMPORTS =
+all:	$(C_SOBJS) partial-clos
 
-# default and aliases
-# all:	no-clos
-all:	partial-clos
 compile-CLX-for-CLUE:	compile-partial-clos-CLX
 clue:	partial-clos
 
 excldep.so: excldep.c
-	-mv excldep.o excldep.ooo
 	cc $(CFLAGS) -c $(PICFLAGS) excldep.c
-	$(MAKE_SHARED) $(SHAREFLAGS) -o excldep.so excldep.o $(IMPORTS)
-	rm -f excldep.o
-	-mv excldep.ooo excldep.o
+	$(MAKE_SHARED) -o excldep.so excldep.o
 
 excldep.sl: excldep.c
-	-mv excldep.o excldep.ooo
 	cc $(CFLAGS) -c $(PICFLAGS) excldep.c
-	$(MAKE_SHARED) $(SHAREFLAGS) -o excldep.sl excldep.o $(IMPORTS)
-	rm -f excldep.o
-	-mv excldep.ooo excldep.o
+	$(MAKE_SHARED) -o excldep.sl excldep.o
 
 socket.so: socket.c
-	-mv socket.o socket.ooo
 	cc $(CFLAGS) -c $(PICFLAGS) socket.c
-	$(MAKE_SHARED) $(SHAREFLAGS) -o socket.so socket.o $(IMPORTS)
-	rm -f socket.o
-	-mv socket.ooo socket.o
+	$(MAKE_SHARED) -o socket.so socket.o
 
 socket.sl: socket.c
-	-mv socket.o socket.ooo
 	cc $(CFLAGS) -c $(PICFLAGS) socket.c
-	$(MAKE_SHARED) $(SHAREFLAGS) -o socket.sl socket.o $(IMPORTS)
-	rm -f socket.o
-	-mv socket.ooo socket.o
+	$(MAKE_SHARED) -o socket.sl socket.o
 
 #
 # Three build rules are provided: no-clos, partial-clos, and full-clos.
