@@ -7,6 +7,10 @@
 *******************************************************************************
 <no version change>
 
+1999-04-14    <layer@ANT>
+
+	* Makefile: SHELL = sh for Interix
+
 1999-03-19    <layer@OMEGA>
 
 	* Makefile: add $(exe) for Interix

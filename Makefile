@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.19.4.3 1999/03/19 18:50:02 layer Exp $
+# $Id: Makefile,v 1.19.4.4 1999/04/14 23:08:51 layer Exp $
 #  Makefile for CLX
 
 makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
@@ -42,11 +42,11 @@ CLX		= clx
 DUMPLISP_ARGS	= :checkpoint nil
 endif
 
-SHELL	= /bin/sh
+SHELL	= sh
 ifeq ($(OS_NAME),windows)
 ECHO	= echo
 else
-ECHO	= /bin/echo
+ECHO	= echo
 endif
 MV	= mv
 TAGS	= /usr/local/lib/emacs/etc/etags
