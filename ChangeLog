@@ -7,6 +7,13 @@
 *******************************************************************************
 <no version change>
 
+Thu Jan 21 19:48:47 1999  Duane Rettig  <duane@beta>
+
+	* Makefile: Fix for linuxppc and freebsd
+
+*******************************************************************************
+<no version change>
+
 1999-01-12    <layer@HOBART>
 
 	* Makefile: use lispi/dcli to build

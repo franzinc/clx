@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.19.4.1 1999/01/12 18:30:56 layer Exp $
+# $Id: Makefile,v 1.19.4.2 1999/01/23 00:43:54 duane Exp $
 #  Makefile for CLX
 
 makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
@@ -73,8 +73,13 @@ MAKE_SHARED = ld -G
 endif
 
 ifeq ($(OS_NAME),linux)
-PICFLAGS = 
-MAKE_SHARED = ld -G
+PICFLAGS = -fPIC
+MAKE_SHARED = ld -shared
+endif
+
+ifeq ($(OS_NAME),freebsd)
+PICFLAGS = -fPIC -DPIC
+MAKE_SHARED = ld -Bshareable -Bdynamic
 endif
 
 ifeq ($(OS_NAME),osf1)
