@@ -1948,6 +1948,7 @@
 	       `(,(second predicate) ,object))
 	      ((eq type 'boolean)
 	       't)			; Everything is a boolean.
+	      #-excl
 	      (*type-check?*
 	       `(locally (declare (optimize safety)) (typep ,object ',type)))
 	      (t
