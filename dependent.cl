@@ -2217,11 +2217,10 @@
 (defun host-address (host &optional (family :internet))
   (ecase family
     (:internet
-     (values-list
-      (cons :internet
-	    (multiple-value-list
-		(socket::ipaddr-to-dotted (socket::lookup-hostname host)
-					  :values t)))))))
+     (cons :internet
+	   (multiple-value-list
+	    (socket::ipaddr-to-dotted (socket::lookup-hostname host)
+				      :values t))))))
 
 #+explorer
 (defun host-address (host &optional (family :internet))
