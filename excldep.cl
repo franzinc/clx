@@ -89,7 +89,7 @@
 ;; Read from the given fd into 'vector', which has element type card8.
 ;; Start storing at index 'start-index' and read exactly 'length' bytes.
 ;; Return t if an error or eof occurred, nil otherwise.
-#-(version>= 6)
+#-(and mswindows (version>= 6))
 (defun fd-read-bytes (fd vector start-index length)
   (declare (fixnum #-mswindows fd start-index length)
 	   (type (simple-array (unsigned-byte 8) (*)) vector))
@@ -122,7 +122,7 @@
 	  else (decf rest numread)
 	       (incf start-index numread))))))
 
-#+(version>= 6)
+#+(and mswindows (version>= 6))
 (defun fd-read-bytes (fd vector start-index length)
   ;; Read from the given stream fd into 'vector', which has element type card8.
   ;; Start storing at index 'start-index' and read exactly 'length' bytes.
