@@ -1,10 +1,20 @@
-# $Id: Makefile,v 1.20 1998/09/29 21:04:36 duane Exp $
+# $Id: Makefile,v 1.21 1999/02/25 08:24:23 layer Exp $
 #  Makefile for CLX
 
 makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
 
 ifeq ($(makefile_top),exists)
 include ../makefile.top
+endif
+
+iacl = yes
+
+ifdef iacl
+lispexe = lispi
+lispdxl = dcli.dxl
+else
+lispexe = lisp
+lispdxl = dcl.dxl
 endif
 
 # For versions prior to ACL 5.0 (and 4.3.2 on Windows), comment out the
@@ -17,9 +27,9 @@ SAVEIMG = yes
 # *************************************************************************
 ifdef SAVEIMG
 ifeq ($(OS_NAME),windows)
-CL		= sh ../src/runlisp.sh -f clx.tmp ../src/lisp -I ../src/dcl.dxl
+CL		= sh ../src/runlisp.sh -f clx.tmp ../src/$(lispexe) -I ../src/$(lispdxl)
 else
-CL		= cat clx.tmp | ../src/lisp -I ../src/dcl.dxl
+CL		= cat clx.tmp | ../src/$(lispexe) -I ../src/$(lispdxl)
 endif
 # Name of dumped lisp
 CLX		= clx.dxl
@@ -63,8 +73,13 @@ MAKE_SHARED = ld -G
 endif
 
 ifeq ($(OS_NAME),linux)
-PICFLAGS = 
-MAKE_SHARED = ld -G
+PICFLAGS = -fPIC
+MAKE_SHARED = ld -shared
+endif
+
+ifeq ($(OS_NAME),freebsd)
+PICFLAGS = -fPIC -DPIC
+MAKE_SHARED = ld -Bshareable -Bdynamic
 endif
 
 ifeq ($(OS_NAME),osf1)

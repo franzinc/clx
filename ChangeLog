@@ -5,6 +5,13 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #16 -- join from acl50 branch
+
+- changes from 1/7/99 to 1/21/99
+- cvs command: cvs update -d -j acl50_merge4 -j acl50
+- next merge tag: acl50_merge5
+
+*******************************************************************************
 MIT R5.0, ACL #16
 join from acl50 branch (version #14, the oldest one)
 next merge tag: acl50_merge4
@@ -31,6 +38,27 @@ next merge tag: acl50_merge2
 *******************************************************************************
 MIT R5.0, ACL #14 -- join from acl50 branch (just version #13)
 next merge tag: acl50_merge1
+
+*******************************************************************************
+<no version change>
+
+Thu Jan 21 19:48:47 1999  Duane Rettig  <duane@beta>
+
+	* Makefile: Fix for linuxppc and freebsd
+
+*******************************************************************************
+<no version change>
+
+1999-01-12    <layer@HOBART>
+
+	* Makefile: use lispi/dcli to build
+
+*******************************************************************************
+<no version change>
+
+1999-01-07    <layer@HOBART>
+
+	* CHANGES: move contents to CHANGES.mit
 
 *******************************************************************************
 MIT R5.0, ACL #14
