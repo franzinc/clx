@@ -5,6 +5,13 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #26
+
+2002-06-10  Kevin Layer  <layer@crikey>
+
+	* Makefile: revert streams usage on all but windows
+
+*******************************************************************************
 MIT R5.0, ACL #25
 
 2002-06-05  Kevin Layer  <layer@crikey>
