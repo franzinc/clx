@@ -286,7 +286,6 @@
 	   (type reply-buffer reply-buffer)
 	   (type card16 sequence))
   (tagbody
-    start
        (with-event-queue-internal (display)
 	 (let ((command 
 		 ;; Find any pending command with this sequence number.
@@ -1464,7 +1463,7 @@
      font-error					; 7  parameter not a Font
      match-error				; 8  parameter mismatch
      drawable-error				; 9  parameter not a Pixmap or Window
-     access-error				; 10 attempt to access private resource"
+     access-error				; 10 attempt to access private resource
      alloc-error				; 11 insufficient resources
      colormap-error				; 12 no such colormap
      gcontext-error				; 13 parameter not a GContext

@@ -53,11 +53,13 @@
 	 ((:case-sensitive-lower :case-sensitive-upper)
 	  ,str)))))
 
+(comp::include-file "../src/code/iodefs.cl")
+
 ;; Return t if there is a character available for reading or on error,
 ;; otherwise return nil.
 (defun fd-char-avail-p (fd)
   (multiple-value-bind (available-p errcode)
-      (comp::.primcall-sargs 'sys::filesys excl::fs-char-avail fd)
+      (comp::.primcall-sargs 'sys::filesys #.excl::fs-char-avail fd)
     (excl:if* errcode
        then t
        else available-p)))
@@ -77,7 +79,7 @@
        ((eq 0 rest) nil)
      (declare (fixnum rest))
      (multiple-value-bind (numread errcode)
-	 (comp::.primcall-sargs 'sys::filesys excl::fs-read-bytes fd vector
+	 (comp::.primcall-sargs 'sys::filesys #.excl::fs-read-bytes fd vector
 				start-index rest)
        (declare (fixnum numread))
        (excl:if* errcode

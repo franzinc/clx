@@ -32,6 +32,7 @@ CFLAGS	= -O -DUNIXCONN $(XCFLAGS)
 # Lisp optimization for compiling
 SPEED	= 3
 SAFETY	= 0
+DEBUG	= 1
 
 
 C_SRC	= excldep.c socket.c
@@ -85,90 +86,65 @@ c:	$(C_OBJS)
 
 
 compile-no-clos-CLX:	$(C_OBJS)
-	$(ECHO) " \
-	(proclaim '(optimize (speed $(SPEED)) (safety $(SAFETY)))) \
-	#+(version>= 4 0) (pushnew :clx-ansi-common-lisp *features*) \
-	#+(version>= 4 1) (setq *load-source-file-info* nil) \
-	#+(version>= 4 1) (setq *load-xref-info* nil) \
-	#+(version>= 4 1) (setq *compile-print* nil) \
+	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
 	(load \"defsystem\") \
-	#+allegro (compile-system :clx) \
-	#-allegro (compile-clx) \
-	#+allegro (compile-system :clx-debug)" \
-	| $(CL) $(CLOPTS) -batch
+	(si::system-compile-wrapper \
+	 (function \
+	  (lambda () \
+	    (compile-system :clx) \
+	    (compile-system :clx-debug))) \
+	 :speed $(SPEED) :debug $(DEBUG) :safety $(SAFETY) \
+	 :record-source-file-info nil :record-xref-info nil \
+	 :compile-print nil :compile-verbose nil \
+	 :redefinition-warnings t :gcprint nil)" | $(CL) $(CLOPTS) -batch
 
 compile-partial-clos-CLX:	$(C_OBJS)
-	$(ECHO) " \
-	#-clos (setq excl::*print-nickname* t) \
-	(proclaim '(optimize (speed $(SPEED)) (safety $(SAFETY)))) \
-	(unless (or (find-package 'clos) (find-package 'pcl)) \
-	  (let ((spread (sys:gsgc-parameter :generation-spread))) \
-	    (setf (sys:gsgc-parameter :generation-spread) 1) \
-	    (require :pcl) \
-	    (provide :pcl) \
-	    (gc) (gc) \
-	    (setf (sys:gsgc-parameter :generation-spread) spread))) \
-	#+(version>= 4 0) (pushnew :clx-ansi-common-lisp *features*) \
-	#+(version>= 4 1) (setq *load-source-file-info* nil) \
-	#+(version>= 4 1) (setq *load-xref-info* nil) \
-	#+(version>= 4 1) (setq *compile-print* nil) \
+	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
 	(load \"defsystem\") \
 	(load \"package\") \
 	(setq xlib::*def-clx-class-use-defclass* '(xlib:window xlib:pixmap xlib:drawable)) \
-	#+allegro (compile-system :clx) \
-	#-allegro (compile-clx \"\" \"\" :for-clue t) \
-	#+allegro (compile-system :clx-debug)" \
-	| $(CL) $(CLOPTS) -batch
+	(si::system-compile-wrapper \
+	 (function \
+	  (lambda () \
+	    (compile-system :clx) \
+	    (compile-system :clx-debug))) \
+	 :speed $(SPEED) :debug $(DEBUG) :safety $(SAFETY) \
+	 :record-source-file-info nil :record-xref-info nil \
+	 :compile-print nil :compile-verbose nil \
+	 :redefinition-warnings t :gcprint nil)" | $(CL) $(CLOPTS) -batch
 
 compile-full-clos-CLX:	$(C_OBJS)
-	$(ECHO) " \
-	#-clos (setq excl::*print-nickname* t) \
-	(proclaim '(optimize (speed $(SPEED)) (safety $(SAFETY)))) \
-	(unless (or (find-package 'clos) (find-package 'pcl)) \
-	  (let ((spread (sys:gsgc-parameter :generation-spread))) \
-	    (setf (sys:gsgc-parameter :generation-spread) 1) \
-	    (require :pcl) \
-	    (provide :pcl) \
-	    (gc) (gc) \
-	    (setf (sys:gsgc-parameter :generation-spread) spread))) \
-	#+(version>= 4 0) (pushnew :clx-ansi-common-lisp *features*) \
-	#+(version>= 4 1) (setq *load-source-file-info* nil) \
-	#+(version>= 4 1) (setq *load-xref-info* nil) \
-	#+(version>= 4 1) (setq *compile-print* nil) \
+	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
 	(load \"defsystem\") \
 	(load \"package\") \
 	(setq xlib::*def-clx-class-use-defclass* t) \
-	#+allegro (compile-system :clx) \
-	#-allegro (compile-clx \"\" \"\" :for-clue t) \
-	#+allegro (compile-system :clx-debug)" \
-	| $(CL) $(CLOPTS) -batch
-
+	(si::system-compile-wrapper \
+	 (function \
+	  (lambda () \
+	    (compile-system :clx) \
+	    (compile-system :clx-debug))) \
+	 :speed $(SPEED) :debug $(DEBUG) :safety $(SAFETY) \
+	 :record-source-file-info nil :record-xref-info nil \
+	 :compile-print nil :compile-verbose nil \
+	 :redefinition-warnings t :gcprint nil)" | $(CL) $(CLOPTS) -batch
 
 cat:
 	-cat $(L_NOMACROS_OBJS) > CLX.fasl
 
-
 load-CLX:
-	$(ECHO) " \
-	(let ((spread (sys:gsgc-parameter :generation-spread))) \
-	  (setf (sys:gsgc-parameter :generation-spread) 1) \
-	  (load \"defsystem\") \
-	  #+allegro (load-system :clx) \
-	  #-allegro (load-clx) \
-	  (gc :tenure) \
-	  (setf (sys:gsgc-parameter :generation-spread) spread)) \
-	(gc t)" \
-	'(dumplisp :name "$(CLX)" #+allegro :checkpoint #+allegro nil)' \
+	$(ECHO) "\
+	(load-application \
+	  (progn (load \"defsystem\") (load-system :clx)) \
+	  :global-gc t :devel nil)" \
+	'(dumplisp :name "$(CLX)" :checkpoint nil)' \
 	"(exit)" | $(CL) $(CLOPTS)
 
 clean:
 	$(RM) -f *.fasl debug/*.fasl $(CLX) core $(C_OBJS) make.out
 
-
 install:
 	mv CLX.fasl $(DEST)/clx.fasl
 	mv *.o $(DEST)
-
 
 tags:
 	$(TAGS) $(L_SRC) $(C_SRC)
