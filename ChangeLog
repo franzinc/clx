@@ -1,4 +1,17 @@
 *******************************************************************************
+4.3.devel.12
+
+Mon Jan 22 22:06:56 1996  Duane Rettig  (duane at clay)
+
+	* dependent.cl: 
+	* exclmac.cl: Use long32 accessor
+
+	* excldep.c: 
+	* socket.c: Add Dec Alpha pragmas
+
+	* excldep.cl: Use get-entry-point
+
+*******************************************************************************
 4.3.devel.9
 
 Tue Nov  7 16:55:36 1995  George Jacob  (georgej@lava)

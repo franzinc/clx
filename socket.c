@@ -8,6 +8,11 @@
  *                    % cc -c socket.c -DUNIXCONN
  */
 
+# ifdef __alpha
+#   pragma pointer_size (save)
+#   pragma pointer_size (long)
+# endif
+
 #include <stdio.h>
 #include <X11/Xos.h>
 #include <X11/Xproto.h>
@@ -34,6 +39,10 @@ extern int errno;		/* Certain (broken) OS's don't have this */
 #endif /* hpux */
 #endif /* X_UNIX_PATH */
 #endif /* UNIXCONN */
+
+# ifdef m_alpha
+#   pragma pointer_size (restore)
+# endif
 
 #if 0
 void bcopy();

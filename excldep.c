@@ -8,10 +8,19 @@
  * of Unix with select and interval timers added.
  */
 
+# ifdef __alpha
+#   pragma pointer_size (save)
+#   pragma pointer_size (long)
+# endif
+
 #include <sys/types.h>
 #include <sys/errno.h>
 #include <sys/time.h>
 #include <stdio.h>
+
+# ifdef m_alpha
+#   pragma pointer_size (restore)
+# endif
 
 #define ERROR -1
 #define INTERRUPT -2

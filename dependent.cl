@@ -352,7 +352,7 @@
   (declare (values card32))
   #.(declare-buffun)
   (the card32 (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
-			  :unsigned-long)))
+			  :unsigned-long32)))
     
 (defun aset-card32 (v a i)
   (declare (type card32 v)
@@ -360,7 +360,7 @@
 	   (type array-index i))
   #.(declare-buffun)
   (setf (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
-		    :unsigned-long) v))
+		    :unsigned-long32) v))
 
 (defun aref-int32 (a i)
   (declare (type buffer-bytes a)
@@ -384,7 +384,7 @@
   (declare (values card29))
   #.(declare-buffun)
   (the card29 (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
-			  :unsigned-long)))
+			  :unsigned-long32)))
 
 (defun aset-card29 (v a i)
   (declare (type card29 v)
@@ -392,7 +392,7 @@
 	   (type array-index i))
   #.(declare-buffun)
   (setf (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
-		    :unsigned-long) v))
+		    :unsigned-long32) v))
   
 )
 

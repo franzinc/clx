@@ -305,14 +305,14 @@
      (the card32 (sys:memref (the buffer-bytes ,a)
 			     #.(sys::mdparam 'comp::md-svector-data0-norm)
 			     (the array-index ,i)
-			     :unsigned-long))))
+			     :unsigned-long32))))
     
 (define-compiler-macro aset-card32 (v a i)
   `(locally ,(declare-bufmac)
      (setf (sys:memref (the buffer-bytes ,a)
 		       #.(sys::mdparam 'comp::md-svector-data0-norm)
 		       (the array-index ,i)
-		       :unsigned-long)
+		       :unsigned-long32)
        (the card32 ,v))))
 
 (define-compiler-macro aref-int32 (a i)
@@ -336,7 +336,7 @@
      (the card29 (sys:memref (the buffer-bytes ,a)
 			     #.(sys::mdparam 'comp::md-svector-data0-norm)
 			     (the array-index ,i)
-			     :unsigned-long))))
+			     :unsigned-long32))))
 
 (define-compiler-macro aset-card29 (v a i)
   ;; I also assume here Lisp is passing a number that fits in 29 bits.
@@ -344,7 +344,7 @@
      (setf (sys:memref (the buffer-bytes ,a)
 		       #.(sys::mdparam 'comp::md-svector-data0-norm)
 		       (the array-index ,i)
-		       :unsigned-long)
+		       :unsigned-long32)
        (the card29 ,v))))
 
 ;;
