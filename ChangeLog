@@ -7,6 +7,10 @@
 *******************************************************************************
 <no version change>
 
+1999-03-19    <layer@OMEGA>
+
+	* Makefile: add $(exe) for Interix
+
 Thu Jan 21 19:48:47 1999  Duane Rettig  <duane@beta>
 
 	* Makefile: Fix for linuxppc and freebsd

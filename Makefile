@@ -1,19 +1,20 @@
-# $Id: Makefile,v 1.19.4.2 1999/01/23 00:43:54 duane Exp $
+# $Id: Makefile,v 1.19.4.3 1999/03/19 18:50:02 layer Exp $
 #  Makefile for CLX
 
 makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
 
 ifeq ($(makefile_top),exists)
 include ../makefile.top
+include ../makefile.defs
 endif
 
 iacl = yes
 
 ifdef iacl
-lispexe = lispi
+lispexe = lispi$(exe)
 lispdxl = dcli.dxl
 else
-lispexe = lisp
+lispexe = lisp$(exe)
 lispdxl = dcl.dxl
 endif
 
