@@ -5,6 +5,11 @@
 	* <changes go here...>
 
 *******************************************************************************
+2000-02-25  Charles A. Cox  <cox@freezer>
+
+	* excldep.cl: add ':strings-convert nil' to some def-foreign-calls.
+
+*******************************************************************************
 2000-01-27  Charles A. Cox  <cox@delta>
 
 	* excldep.cl: wait for input when whole buffer doesn't get filled at

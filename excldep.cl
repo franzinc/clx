@@ -135,6 +135,7 @@
 		       ,(ff:convert-to-lang "connect_to_server")
 		       :return-type :fixnum
 		       :arg-checking nil
+		       :strings-convert nil ; cac 25feb00
 		       :arguments (string fixnum))
 		      (fd-wait-for-input
 		       :entry-point ,(ff:convert-to-lang "fd_wait_for_input")
@@ -156,6 +157,7 @@
   (ff:def-foreign-call (connect-to-server "connect_to_server")
       ((host (* :char) simple-string) (display :int fixnum))
     :returning (:int fixnum)
+    :strings-convert nil		; cac 25feb00
     :arg-checking nil)
 
   (ff:def-foreign-call (fd-wait-for-input "fd_wait_for_input")
