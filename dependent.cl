@@ -2214,7 +2214,7 @@
 (eval-when (compile eval load)
   #+(version>= 6 0 pre-beta 0)
   (progn
-    (require :ssock)
+    (require :sock)
     (require :gray-compat))
   #-(version>= 6 0 pre-beta 0)
   (require :sock))
