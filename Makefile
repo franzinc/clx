@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.29 2003/07/03 21:04:30 layer Exp $
+# $Id: Makefile,v 1.30 2003/11/11 05:32:17 layer Exp $
 #  Makefile for CLX
 
 SHELL = sh
@@ -113,6 +113,7 @@ THREADLIB = -lpthread
 endif
 
 ifeq ($(OS_NAME),freebsd)
+XCFLAGS = -I/usr/X11R6/include
 PICFLAGS = -fPIC -DPIC
 MAKE_SHARED = ld -Bshareable -Bdynamic
 endif

@@ -5,6 +5,13 @@
 	* <changes go here...>
 
 *******************************************************************************
+<no version change>
+
+2003-11-10  Kevin Layer  <layer@crikey>
+
+	* Makefile: freebsd XCFLAGS for location of X11 include files
+
+*******************************************************************************
 join from acl62 to trunk on 7/3/03
 command:
   join.sh acl62 acl62_to_trunk_merge3 acl62_to_trunk_merge_070303 clx
