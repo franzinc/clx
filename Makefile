@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.14 1997/11/06 20:51:12 layer Exp $
+# $Id: Makefile,v 1.15 1997/11/18 21:58:22 layer Exp $
 #  Makefile for CLX
 
 makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
@@ -72,19 +72,19 @@ C_OBJS	= excldep.o socket.o
 C_SOBJS	= excldep.so socket.so
 endif
 
-L_OBJS	= defsystem.fasl package.fasl excldep.fasl depdefs.fasl clx.fasl \
+L_OBJS	= defsystem.fasl package.fasl excldep.fasl depdefs.fasl clx0.fasl \
 	dependent.fasl exclcmac.fasl macros.fasl bufmac.fasl buffer.fasl \
 	display.fasl gcontext.fasl requests.fasl input.fasl fonts.fasl \
 	graphics.fasl text.fasl attributes.fasl translate.fasl keysyms.fasl \
 	manager.fasl image.fasl resource.fasl
 
-L_NOMACROS_OBJS	= package.fasl excldep.fasl depdefs.fasl clx.fasl \
+L_NOMACROS_OBJS	= package.fasl excldep.fasl depdefs.fasl clx0.fasl \
 	dependent.fasl exclcmac.fasl buffer.fasl display.fasl gcontext.fasl \
 	requests.fasl input.fasl fonts.fasl graphics.fasl text.fasl \
 	attributes.fasl translate.fasl keysyms.fasl manager.fasl image.fasl \
 	resource.fasl
 
-L_SRC	= defsystem.cl package.cl excldep.cl depdefs.cl clx.cl \
+L_SRC	= defsystem.cl package.cl excldep.cl depdefs.cl clx0.cl \
 	dependent.cl exclcmac.cl macros.cl bufmac.cl buffer.cl \
 	display.cl gcontext.cl requests.cl input.cl fonts.cl \
 	graphics.cl text.cl attributes.cl translate.cl keysyms.cl \
@@ -139,14 +139,14 @@ socket.sl: socket.c
 # (note that the :clos feature implies native CLOS *not* PCL).
 #
 
-no-clos:	$(C_OBJS) compile-no-clos-CLX bigclx.fasl
+no-clos:	$(C_OBJS) compile-no-clos-CLX clx.fasl
 
 #
 # This rule is used to compile CLX to be used with XCW version 2, or CLUE.
 #
-partial-clos:	$(C_OBJS) compile-partial-clos-CLX bigclx.fasl
+partial-clos:	$(C_OBJS) compile-partial-clos-CLX clx.fasl
 
-full-clos:	$(C_OBJS) compile-full-clos-CLX bigclx.fasl
+full-clos:	$(C_OBJS) compile-full-clos-CLX clx.fasl
 
 
 c:	$(C_OBJS)
@@ -224,13 +224,13 @@ compile-full-clos-CLX:	$(C_OBJS)
 	    (exit 0))" > clx.tmp
 	$(CL) $(CLOPTS) -batch
 
-bigclx.fasl:
+clx.fasl:
 #The following doesn't work on Windows, so use concatenate-system instead.
-#	-cat $(L_NOMACROS_OBJS) > bigclx.fasl
+#	-cat $(L_NOMACROS_OBJS) > clx.fasl
 #The following contains a little more than the above does (same as L_OBJS).
 	$(ECHO) "(load-logical-pathname-translations \"clx\") \
 	(load \"defsystem\") \
-	(concatenate-system :clx \"bigclx.fasl\") \
+	(concatenate-system :clx \"clx.fasl\") \
 	(exit 0)" > clx.tmp
 	$(CL) $(CLOPTS) -batch
 
@@ -260,7 +260,7 @@ install_OS:
 	fi
 
 install: install_OS
-	$(MV) bigclx.fasl $(DEST)/clx.fasl
+	$(MV) clx.fasl $(DEST)/clx.fasl
 
 tags:
 	$(TAGS) $(L_SRC) $(C_SRC)

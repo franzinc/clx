@@ -1,8 +1,17 @@
 *******************************************************************************
-<version for this commit> (incf the #n in clx.cl each commit)
+<version for this commit> (incf the #n in clx0.cl each commit)
 
 <standard changelog date stamp>
 	* <changes go here...>
+
+*******************************************************************************
+MIT R5.0, ACL #6
+
+Tue Nov 18 11:40:23 1997  Kevin Layer  <layer@ultra>
+
+	* clx.cl renamed to clx0.cl so clx.fasl can be the real deal
+	* Makefile: bigclx.fasl hack removed
+	* defsystem.cl: clx -> clx0
 
 *******************************************************************************
 MIT R5.0, ACL #5

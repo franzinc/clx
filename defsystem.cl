@@ -56,7 +56,7 @@
 
   (:module package "package")
   (:module depdefs "depdefs")
-  (:module clx "clx")
+  (:module clx "clx0")
   (:module dependent "dependent")
   (:module macros "macros")
   (:module bufmac "bufmac")
@@ -137,7 +137,7 @@
   (:module doc ("doc")
 	   (:type :lisp-example))
   (:serial
-    "package" "depdefs" "generalock" "clx" "dependent" "macros" "bufmac"
+    "package" "depdefs" "generalock" "clx0" "dependent" "macros" "bufmac"
     "buffer" "display" "gcontext" "input" "requests" "fonts" "graphics"
     "text" "attributes" "translate" "keysyms" "manager" "image" "resource"))
 
@@ -271,55 +271,55 @@
    ("depdefs"
     (:load-before-compile "package" "excldep")
     (:recompile-on "excldep"))
-   ("clx"
+   ("clx0"
     (:load-before-compile "package" "excldep" "depdefs")
     (:recompile-on "package" "excldep" "depdefs"))
    ("dependent"
-    (:load-before-compile "package" "excldep" "depdefs" "clx")
-    (:recompile-on "clx"))
+    (:load-before-compile "package" "excldep" "depdefs" "clx0")
+    (:recompile-on "clx0"))
    ("exclcmac"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent")
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent")
     (:recompile-on "dependent"))
    ("macros"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac")
     (:recompile-on "exclcmac"))
    ("bufmac"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros")
     (:recompile-on "macros"))
    ("buffer"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros" "bufmac")
     (:recompile-on "bufmac"))
    ("display"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros" "bufmac" "buffer")
     (:recompile-on "buffer"))
    ("gcontext"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros" "bufmac" "buffer" "display")
     (:recompile-on "display"))
    ("input"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros" "bufmac" "buffer" "display")
     (:recompile-on "display"))
    ("requests"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros" "bufmac" "buffer" "display"
 				    "input")
     (:recompile-on "display"))
    ("fonts"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros" "bufmac" "buffer" "display")
     (:recompile-on "display"))
    ("graphics"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros" "bufmac" "buffer" "display"
 				    "fonts")
     (:recompile-on "fonts"))
    ("text"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros" "bufmac" "buffer" "display"
 				    "gcontext" "fonts")
     (:recompile-on "gcontext" "fonts")
@@ -327,31 +327,31 @@
    ;; The above line gets around a compiler macro expansion bug.
   
    ("attributes"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros" "bufmac" "buffer" "display")
     (:recompile-on "display"))
    ("translate"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros" "bufmac" "buffer" "display"
 				    "text")
     (:recompile-on "display"))
    ("keysyms"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros" "bufmac" "buffer" "display"
 				    "translate")
     (:recompile-on "translate"))
    ("manager"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros" "bufmac" "buffer" "display")
     (:recompile-on "display"))
    ("image"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros" "bufmac" "buffer" "display")
     (:recompile-on "display"))
   
    ;; Don't know if l-b-c list is correct.  XX
    ("resource"
-    (:load-before-compile "package" "excldep" "depdefs" "clx" "dependent"
+    (:load-before-compile "package" "excldep" "depdefs" "clx0" "dependent"
 				    "exclcmac" "macros" "bufmac" "buffer" "display")
     (:recompile-on "display"))))
 
@@ -524,7 +524,7 @@
        #+(or lucid kcl ibcl) (clx-foreign-files binary-path)
        #+excl (compile-and-load "excldep")
        (compile-and-load "depdefs")
-       (compile-and-load "clx")
+       (compile-and-load "clx0")
        (compile-and-load "dependent")
        #+excl (compile-and-load "exclcmac")	; these are just macros
        (compile-and-load "macros")		; these are just macros
@@ -589,7 +589,7 @@
       #+(or lucid kcl ibcl) (clx-foreign-files binary-path)
       #+excl (load-binary "excldep")
       (load-binary "depdefs")
-      (load-binary "clx")
+      (load-binary "clx0")
       (load-binary "dependent")
       (when macrosp
 	#+excl (load-binary "exclcmac")
