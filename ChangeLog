@@ -1,8 +1,15 @@
 *******************************************************************************
-<version for this commit> (incf the #n in clx0.cl each commit)
+<version for this commit> (see *version* in clx0.cl each commit)
 
 <standard changelog date stamp>
 	* <changes go here...>
+
+*******************************************************************************
+MIT R5.0, ACL #7
+
+Mon Dec 22 13:13:25 1997  Kevin Layer  <layer@ultra>
+
+	* clx0.cl: put version in dribble-bug
 
 *******************************************************************************
 MIT R5.0, ACL #6
