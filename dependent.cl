@@ -2212,8 +2212,12 @@
 
 #+(and allegro (version>= 5 0))
 (eval-when (compile eval load)
-  #+(version>= 6 0 pre-beta 0) (require :ssock)
-  #-(version>= 6 0 pre-beta 0) (require :sock))
+  #+(version>= 6 0 pre-beta 0)
+  (progn
+    (require :ssock)
+    (require :gray-compat))
+  #-(version>= 6 0 pre-beta 0)
+  (require :sock))
 
 #+(and allegro (version>= 5 0))
 (defun host-address (host &optional (family :internet))

@@ -5,6 +5,14 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #19 (where are the others?)
+
+Sat Apr  8 20:47:21 PST 2000  Duane Rettig  <duane@beta>
+
+	* clx0.cl: Incf version
+	* dependent.cl: Require :gray-compat
+
+*******************************************************************************
 MIT R5.0, ACL #16
 
 2000-03-10  Kevin Layer  <layer@ultra>
