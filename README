@@ -1,0 +1,68 @@
+     This file contains instructions on how to make CLX work with Franz
+Allegro Common Lisp.  CLX should work on any machine that supports
+ACL version 3.1.10 or greater.
+
+ ******************************************************************************
+ NOTE:  Normally you will not need to follow the instructions in this file.
+	We supply a pre-built copy of CLX with your Allegro CL tape.  You
+	should only need to rebuild CLX if you make changes to the source,
+	or load patches that change the behaviour of the Allegro compiler.
+	(If we send you any such patches, we will let you know so that you
+	can recompile your application).
+ ******************************************************************************
+
+ ******************************************************************************
+ NOTE:  We now include the TI CLX documentation -- see the doc/ directory.
+ ******************************************************************************
+
+ ******************************************************************************
+ NOTE:  This distribution is not exactly the same as the one provided by MIT.
+	Specifically, this distribution will *ONLY* work with Allegro versions
+	greater than 3.1.10 (includes most released versions of 3.1, 4.0, and
+	4.1).  If you need CLX for an older version of Allegro, please use
+	the one available from the X Consortium at MIT.
+ ******************************************************************************
+
+     There are two steps to compile and install CLX.  The first is compiling
+the source files into fasl files.  The fasl files will be combined into one
+big fasl file, CLX.fasl.  This file is then installed in your Common Lisp
+library directory in the next step.  You may need to edit the Makefile to
+select the proper CFLAGS for your machine -- look in Makefile for examples.
+Then just:
+
+% make
+
+     Now you must move the CLX.fasl file into the standard CL library.
+This is normally "/usr/local/lib/cl/code", but you can find out for sure
+by typing:
+
+<cl> (directory-namestring excl::*library-code-pathname*)
+
+to a running Lisp.  If it prints something other than "/usr/local/lib/cl/code"
+substitute what it prints in the below instructions.
+
+% mv CLX.fasl /usr/local/lib/cl/code/clx.fasl
+% mv *.o /usr/local/lib/cl/code
+
+Now you can just start up Lisp and type:
+
+<cl> (load "clx")
+
+to load in CLX.  You may want to dump a lisp at this point since CLX is a large
+package and can take some time to load into Lisp.  You probably also want to
+set the :generation-spread to 1 while loading CLX.  Please see your Allegro CL
+User Guide for more information on :generation-spread.
+
+
+     Sophisticated users may wish to peruse the Makefile and defsystem.cl
+and note how things are set up.  For example we hardwire the compiler
+interrupt check switch on, so that CL can still be interrupted while it
+is reading from the X11 socket.  Please see chapter 7 of the CL User's
+guide for more information on compiler switches and their effects.
+
+
+Please report Franz specific CLX bugs to:
+
+	 bugs@Franz.COM
+	       or
+	ucbvax!franz!bugs
