@@ -7,6 +7,13 @@
 *******************************************************************************
 <no version change>
 
+Sat Sep 23 20:47:21 PST 2000  Duane Rettig  <duane@beta>
+
+	* Makefile: Add hp 64-bit
+
+*******************************************************************************
+<no version change>
+
 2000-07-23  Kevin Layer  <layer@ultra>
 
 	* Makefile: fix MAKE_SHARED for ibm

@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.25.2.1 2000/07/23 17:58:51 layer Exp $
+# $Id: Makefile,v 1.25.2.2 2000/09/23 21:43:37 duane Exp $
 #  Makefile for CLX
 
 SHELL = sh
@@ -55,6 +55,7 @@ TAGS	= /usr/local/lib/emacs/etc/etags
 CLOPTS	= -qq
 
 SO = so
+CC = cc
 
 ifeq ($(OS_NAME),aix)
 XCFLAGS = -D_BSD -D_NO_PROTO -D_NONSTD_TYPES -D_MBI=void
@@ -62,10 +63,17 @@ MAKE_SHARED = ../src/bin/make_shared.ibm -make_exp ../src/bin/make_exp
 endif
 
 ifeq ($(OS_NAME),hp-ux)
+ifeq ($(SIXTYFOURBIT),yes)
+XCFLAGS = -O -Ae +DA2.0W -DAcl64Bit
+MAKE_SHARED = ../src/bin/make_shared.hp64
+PICFLAGS = +Z
+#CC = aCC
+else
 XCFLAGS = -O -Ae +DA1.1
 SO = sl
 MAKE_SHARED = ../src/bin/make_shared.hp
 PICFLAGS = +z
+endif
 endif
 
 ifeq ($(OS_NAME),sunos)
@@ -147,19 +155,19 @@ compile-CLX-for-CLUE:	compile-partial-clos-CLX
 clue:	partial-clos
 
 excldep.so: excldep.c
-	cc $(CFLAGS) -c $(PICFLAGS) excldep.c
+	$(CC) $(CFLAGS) -c $(PICFLAGS) excldep.c
 	$(MAKE_SHARED) -o excldep.so excldep.o
 
 excldep.sl: excldep.c
-	cc $(CFLAGS) -c $(PICFLAGS) excldep.c
+	$(CC) $(CFLAGS) -c $(PICFLAGS) excldep.c
 	$(MAKE_SHARED) -o excldep.sl excldep.o
 
 socket.so: socket.c
-	cc $(CFLAGS) -c $(PICFLAGS) socket.c
+	$(CC) $(CFLAGS) -c $(PICFLAGS) socket.c
 	$(MAKE_SHARED) -o socket.so socket.o
 
 socket.sl: socket.c
-	cc $(CFLAGS) -c $(PICFLAGS) socket.c
+	$(CC) $(CFLAGS) -c $(PICFLAGS) socket.c
 	$(MAKE_SHARED) -o socket.sl socket.o
 
 #
