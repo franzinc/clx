@@ -83,7 +83,7 @@
 (pushnew :clx *features*)
 (pushnew :xlib *features*)
 
-(defparameter *version* "MIT R5.0, ACL #7")
+(defparameter *version* "MIT R5.0, ACL #8")
 (pushnew :clx-mit-r4 *features*)
 (pushnew :clx-mit-r5 *features*)
 
@@ -314,7 +314,7 @@
   ;; These slots are used to manage multi-process input.
   (input-in-progress nil)			; Some process reading from the stream.
 						; Updated with CONDITIONAL-STORE.
-  (pending-commands nil)			; Threaded list of PENDING-COMMAND objects 
+  (pending-commands nil)			; Threaded list of PENDING-COMMAND objects
 						; for all commands awaiting replies.
 						; Protected by WITH-EVENT-QUEUE-INTERNAL.
   (asynchronous-errors nil)			; Threaded list of REPLY-BUFFER objects
@@ -322,7 +322,7 @@
 						; which did not expect replies.
 						; Protected by WITH-EVENT-QUEUE-INTERNAL.
   (report-asynchronous-errors			; When to report asynchronous errors
-    '(:immediately) :type list)			; The keywords that can be on this list 
+    '(:immediately) :type list)			; The keywords that can be on this list
 						; are :IMMEDIATELY, :BEFORE-EVENT-HANDLING,
 						; and :AFTER-FINISH-OUTPUT
   (event-process nil)				; Process ID of process awaiting events.
@@ -330,7 +330,7 @@
   (new-events nil :type (or null reply-buffer))	; Pointer to the first new event in the
 						; event queue.
 						; Protected by WITH-EVENT-QUEUE.
-  (current-event-symbol				; Bound with PROGV by event handling macros 
+  (current-event-symbol				; Bound with PROGV by event handling macros
     (list (gensym) (gensym)) :type cons)
   (atom-id-map (make-hash-table :test (resource-id-map-test)
 				:size *atom-cache-size*)
@@ -846,7 +846,7 @@
   (do ((m mask (ash m -1))
        (bit 0 (1+ bit))
        (len (length key-vector))
-       (result nil))       
+       (result nil))
       ((or (zerop m) (>= bit len)) result)
     (declare (type mask32 m)
 	     (fixnum bit len)

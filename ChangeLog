@@ -5,6 +5,14 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #8
+
+Tue Dec 23 14:43:20 1997  duane@beta
+
+	* clx0.cl: incf version
+	* excldep.c: Use FD_SET et all for newer C compilers
+
+*******************************************************************************
 MIT R5.0, ACL #7
 
 Mon Dec 22 13:13:25 1997  Kevin Layer  <layer@ultra>

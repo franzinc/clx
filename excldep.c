@@ -18,7 +18,7 @@
 #include <sys/time.h>
 #include <stdio.h>
 
-# ifdef m_alpha
+# ifdef __alpha
 #   pragma pointer_size (restore)
 # endif
 
@@ -51,13 +51,28 @@ int fd_wait_for_input(fd, timeout)
 {
     struct timeval timer;
     register int i;
+#ifdef FD_SETSIZE
+    fd_set checkfds;
+#else
     int checkfds[CHECKLEN];
+#endif
 
     if (fd < 0 || fd >= NUMBER_OF_FDS) {
 	fprintf(stderr, "Bad file descriptor argument: %d to fd_wait_for_input\n", fd);
 	fflush(stderr);
     }
 
+#ifdef FD_SETSIZE
+    FD_ZERO(&checkfds);
+    FD_SET(fd, &checkfds);
+
+    if (timeout) {
+	timer.tv_sec = timeout;
+	timer.tv_usec = 0;
+	i = select(NUMBER_OF_FDS, &checkfds, (fd_set *)0, (fd_set *)0, &timer);
+    } else
+      i = select(NUMBER_OF_FDS, &checkfds, (fd_set *)0, (fd_set *)0, (struct timeval *)0);
+#else
     for (i = 0; i < CHECKLEN; i++)
       checkfds[i] = 0;
     checkfds[fd / (8 * sizeof(int))] |= 1 << (fd % (8 * sizeof(int)));
@@ -68,6 +83,8 @@ int fd_wait_for_input(fd, timeout)
 	i = select(32, checkfds, (int *)0, (int *)0, &timer);
     } else
       i = select(32, checkfds, (int *)0, (int *)0, (struct timeval *)0);
+#endif
+
 
     if (i < 0)
       /* error condition */
