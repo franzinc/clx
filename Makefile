@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.23 2000/03/04 05:14:44 duane Exp $
+# $Id: Makefile,v 1.24 2000/03/13 00:31:30 layer Exp $
 #  Makefile for CLX
 
 SHELL = sh
@@ -60,13 +60,13 @@ SIXTYFOURBIT = $(shell cd ../src; make -s echo-64bit)
 
 ifeq ($(OS_NAME),aix)
 XCFLAGS = -D_BSD -D_NO_PROTO -D_NONSTD_TYPES -D_MBI=void
-MAKE_SHARED = make_shared
+MAKE_SHARED = ../src/bin/make_shared.ibm
 endif
 
 ifeq ($(OS_NAME),hp-ux)
 XCFLAGS = -O -Ae +DA1.1
 SO = sl
-MAKE_SHARED = make_shared
+MAKE_SHARED = ../src/bin/make_shared.hp
 PICFLAGS = +z
 endif
 
