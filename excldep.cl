@@ -59,6 +59,9 @@
 
 ;; Return t if there is a character available for reading or on error,
 ;; otherwise return nil.
+#-(version>= 6 0)
+(progn
+
 #-(or (version>= 4 2) mswindows)
 (defun fd-char-avail-p (fd)
   (multiple-value-bind (available-p errcode)
@@ -74,6 +77,10 @@
 #+mswindows
 (defun fd-char-avail-p (socket-stream)
   (listen socket-stream))
+)
+#+(version>= 6 0)
+(defun fd-char-avail-p (socket-stream)
+  (excl::read-no-hang-p socket-stream))
 
 (defmacro with-interrupt-checking-on (&body body)
   `(locally (declare (optimize (safety 1)))
@@ -94,9 +101,8 @@
      ;; doesn't get filled all at once.  Probably should
      ;; make more robust in light of possible failing sockets.
      (loop
-       (when #+mswindows (listen fd)
-	     #-mswindows (excl::filesys-character-available-p fd)
-	     (return)))
+       (when (fd-char-avail-p fd)
+	 (return)))
      (multiple-value-bind (numread errcode)
 	 #-(version>= 4 2)
 	 (comp::.primcall-sargs 'sys::filesys #.excl::fs-read-bytes fd vector

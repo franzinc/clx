@@ -37,7 +37,7 @@
 
 
 (defmacro correct-case (string)
-  ;; This macro converts the given string to the 
+  ;; This macro converts the given string to the
   ;; current preferred case, or leaves it alone in a case-sensitive mode.
   (let ((str (gensym)))
     `(let ((,str ,string))
@@ -96,7 +96,7 @@
       (wm-size-hints . wm-size-hints-p)
       ))
 
-;; This (if (and ...) t nil) stuff has a purpose -- it lets the old 
+;; This (if (and ...) t nil) stuff has a purpose -- it lets the old
 ;; sun4 compiler opencode the `and'.
 
 #-(version>= 4 1 devel 16)
@@ -184,12 +184,17 @@
 
 ;; Return t if there is a character available for reading or on error,
 ;; otherwise return nil.
+#-(version>= 6 0)
 (defun fd-char-avail-p (fd)
   (multiple-value-bind (available-p errcode)
       (comp::.primcall-sargs 'sys::filesys excl::fs-char-avail fd)
     (excl:if* errcode
        then t
        else available-p)))
+
+#+(version>= 6 0)
+(defun fd-char-avail-p (socket-stream)
+  (excl::read-no-hang-p socket-stream))
 
 (defmacro with-interrupt-checking-on (&body body)
   `(locally (declare (optimize (safety 1)))
@@ -210,9 +215,8 @@
      ;; doesn't get filled all at once.  Probably should
      ;; make more robust in light of possible failing sockets.
      (loop
-       (when #+mswindows (listen fd)
-	     #-mswindows (excl::filesys-character-available-p fd)
-	     (return)))
+       (when (fd-char-avail-p  fd)
+	 (return)))
      (multiple-value-bind (numread errcode)
 	 (comp::.primcall-sargs 'sys::filesys excl::fs-read-bytes fd vector
 				start-index rest)
