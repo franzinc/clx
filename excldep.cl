@@ -179,6 +179,15 @@
   (unless (excl::get-entry-point (excl::convert-foreign-name "fd_wait_for_input"))
     (load (format nil "clx:excldep.~a" (car excl::*load-foreign-types*))))
 
+  (ff:def-foreign-call (fd-wait-for-input "fd_wait_for_input")
+      ((fd :int fixnum) (timeout :int fixnum))
+    :returning (:int fixnum)
+    :call-direct t
+    :arg-checking nil)
+  )
+
+#+(and (version>= 5 0) (not clx-use-allegro-streams))
+(progn
   (unless (excl::get-entry-point (excl::convert-foreign-name "connect_to_server"))
     (load (format nil "clx:socket.~a" (car excl::*load-foreign-types*))))
 
@@ -186,12 +195,6 @@
       ((host (* :char) simple-string) (display :int fixnum))
     :returning (:int fixnum)
     :strings-convert nil		; cac 25feb00
-    :arg-checking nil)
-
-  (ff:def-foreign-call (fd-wait-for-input "fd_wait_for_input")
-      ((fd :int fixnum) (timeout :int fixnum))
-    :returning (:int fixnum)
-    :call-direct t
     :arg-checking nil)
   )
 

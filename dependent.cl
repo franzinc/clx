@@ -1687,9 +1687,9 @@
 	    ;; to block until input is available.  Note we don't really handle
 	    ;; the interaction of interrupts and (numberp timeout) here.  XX
 	    (t
-	     #+clx-use-allegro-streams
+	     #+mswindows
 	     (error "scheduler must be running to use CLX on MS Windows")
-	     #-clx-use-allegro-streams
+	     #-mswindows
 	     (let ((res 0))
 	       (declare (fixnum res))
 	       (with-interrupt-checking-on
