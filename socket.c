@@ -35,7 +35,7 @@ extern int errno;		/* Certain (broken) OS's don't have this */
 #endif /* X_UNIX_PATH */
 #endif /* UNIXCONN */
 
-#ifndef hpux
+#if 0
 void bcopy();
 #endif /* hpux */
 
@@ -105,15 +105,15 @@ int connect_to_server (host, display)
 	    }
 	  /* Set up the socket data. */
 	  inaddr.sin_family = host_ptr->h_addrtype;
-#ifdef hpux
+
 	  (void) memcpy((char *)&inaddr.sin_addr, 
 			(char *)host_ptr->h_addr, 
 			sizeof(inaddr.sin_addr));
-#else /* hpux */
+#if 0
 	  (void) bcopy((char *)host_ptr->h_addr, 
 		       (char *)&inaddr.sin_addr, 
 		       sizeof(inaddr.sin_addr));
-#endif /* hpux */
+#endif /* 0 */
 	} 
       else 
 	{

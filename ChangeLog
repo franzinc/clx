@@ -1,3 +1,21 @@
+(for 4.2.devel.28 merge):
+
+Sat Dec 17 22:47:39 1994  Duane Rettig  (duane at clay)
+
+	* Makefile: Parameterize for rs/6000; copy, don't move, files to
+	destination dire, so that they are still available in current
+	directory
+
+	* dependent.cl: Move comp::mdparam to sys package
+
+	* exclcmac.cl: Move comp::mdparam to sys package
+
+	* excldep.cl: Move comp::mdparam to sys package; svr4 -> dlfcn
+
+	* package.cl: Move comp::mdparam to sys package
+
+	* socket.c: Fix non-standard #endif comment syntax 
+
 Wed Sep 28 01:15:38 1994  Steve Haflich  (smh@vapor)
 
 	* dependent.cl:

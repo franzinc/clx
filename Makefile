@@ -12,6 +12,7 @@ CL	= /usr/local/bin/cl
 RM	= /bin/rm
 SHELL	= /bin/sh
 ECHO	= /bin/echo
+MV	= /usr/fi/mv-nfs -c
 TAGS	= /usr/local/lib/emacs/etc/etags
 
 # Name of dumped lisp
@@ -62,6 +63,8 @@ L_SRC	= defsystem.cl package.cl excldep.cl depdefs.cl clx.cl \
 
 PICFLAGS = -K pic
 SHAREFLAGS = -G
+MAKE_SHARED = ld
+IMPORTS =
 
 # default and aliases
 # all:	no-clos
@@ -72,14 +75,14 @@ clue:	partial-clos
 excldep.so: excldep.c
 	-mv excldep.o excldep.ooo
 	cc $(CFLAGS) -c $(PICFLAGS) excldep.c
-	ld $(SHAREFLAGS) -o excldep.so excldep.o
+	$(MAKE_SHARED) $(SHAREFLAGS) -o excldep.so excldep.o $(IMPORTS)
 	rm -f excldep.o
 	-mv excldep.ooo excldep.o
 
 socket.so: socket.c
 	-mv socket.o socket.ooo
-	cc $(CFLAGS) -c $(PICFLAGS) -I/usr/openwin/include socket.c
-	ld $(SHAREFLAGS) -o socket.so socket.o
+	cc $(CFLAGS) -c $(PICFLAGS) socket.c
+	$(MAKE_SHARED) $(SHAREFLAGS) -o socket.so socket.o $(IMPORTS)
 	rm -f socket.o
 	-mv socket.ooo socket.o
 
@@ -176,13 +179,13 @@ clean:
 	$(RM) -f *.fasl debug/*.fasl $(CLX) core $(C_OBJS) $(C_SOBJS) make.out
 
 install_OS:
-	mv *.o $(DEST)
+	$(MV) *.o $(DEST)
 	if test -f socket.so; then \
-		mv *.so $(DEST); \
+		$(MV) *.so $(DEST); \
 	fi
 
 install: install_OS
-	mv CLX.fasl $(DEST)/clx.fasl
+	$(MV) CLX.fasl $(DEST)/clx.fasl
 
 tags:
 	$(TAGS) $(L_SRC) $(C_SRC)

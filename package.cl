@@ -61,9 +61,9 @@
 
 #+allegro
 (eval-when (load)
-  (when (and (franz:memq #.excl:*current-case-mode*
+  (when (and (franz::memq #.excl:*current-case-mode*
 			 '(:case-insensitive-upper :case-insensitive-lower))
-	     (franz:memq excl:*current-case-mode*
+	     (franz::memq excl:*current-case-mode*
 			 '(:case-sensitive-lower :case-sensitive-upper)))
     (error "This CLX was compiled in a case insensitive Allegro CL and can ~
 only be loaded into a case insensitive Allegro CL.")))

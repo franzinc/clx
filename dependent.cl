@@ -287,7 +287,7 @@
 	   (type array-index i))
   (declare (values card8))
   #.(declare-buffun)
-  (the card8 (sys:memref a #.(comp::mdparam 'comp::md-svector-data0-norm) i
+  (the card8 (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 			 :unsigned-byte)))
 
 (defun aset-card8 (v a i)
@@ -295,7 +295,7 @@
 	   (type buffer-bytes a)
 	   (type array-index i))
   #.(declare-buffun)
-  (setf (sys:memref a #.(comp::mdparam 'comp::md-svector-data0-norm) i
+  (setf (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 		    :unsigned-byte) v))
 
 (defun aref-int8 (a i)
@@ -303,7 +303,7 @@
 	   (type array-index i))
   (declare (values int8))
   #.(declare-buffun)
-  (the int8 (sys:memref a #.(comp::mdparam 'comp::md-svector-data0-norm) i
+  (the int8 (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 			:signed-byte)))
 
 (defun aset-int8 (v a i)
@@ -311,7 +311,7 @@
 	   (type buffer-bytes a)
 	   (type array-index i))
   #.(declare-buffun)
-  (setf (sys:memref a #.(comp::mdparam 'comp::md-svector-data0-norm) i
+  (setf (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 		    :signed-byte) v))
 
 (defun aref-card16 (a i)
@@ -319,7 +319,7 @@
 	   (type array-index i))
   (declare (values card16))
   #.(declare-buffun)
-  (the card16 (sys:memref a #.(comp::mdparam 'comp::md-svector-data0-norm) i
+  (the card16 (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 			  :unsigned-word)))
   
 (defun aset-card16 (v a i)
@@ -327,7 +327,7 @@
 	   (type buffer-bytes a)
 	   (type array-index i))
   #.(declare-buffun)
-  (setf (sys:memref a #.(comp::mdparam 'comp::md-svector-data0-norm) i
+  (setf (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 		    :unsigned-word) v))
   
 (defun aref-int16 (a i)
@@ -335,7 +335,7 @@
 	   (type array-index i))
   (declare (values int16))
   #.(declare-buffun)
-  (the int16 (sys:memref a #.(comp::mdparam 'comp::md-svector-data0-norm) i
+  (the int16 (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 			 :signed-word)))
   
 (defun aset-int16 (v a i)
@@ -343,7 +343,7 @@
 	   (type buffer-bytes a)
 	   (type array-index i))
   #.(declare-buffun)
-  (setf (sys:memref a #.(comp::mdparam 'comp::md-svector-data0-norm) i
+  (setf (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 		    :signed-word) v))
   
 (defun aref-card32 (a i)
@@ -351,7 +351,7 @@
 	   (type array-index i))
   (declare (values card32))
   #.(declare-buffun)
-  (the card32 (sys:memref a #.(comp::mdparam 'comp::md-svector-data0-norm) i
+  (the card32 (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 			  :unsigned-long)))
     
 (defun aset-card32 (v a i)
@@ -359,7 +359,7 @@
 	   (type buffer-bytes a)
 	   (type array-index i))
   #.(declare-buffun)
-  (setf (sys:memref a #.(comp::mdparam 'comp::md-svector-data0-norm) i
+  (setf (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 		    :unsigned-long) v))
 
 (defun aref-int32 (a i)
@@ -367,7 +367,7 @@
 	   (type array-index i))
   (declare (values int32))
   #.(declare-buffun)
-  (the int32 (sys:memref a #.(comp::mdparam 'comp::md-svector-data0-norm) i
+  (the int32 (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 			 :signed-long)))
     
 (defun aset-int32 (v a i)
@@ -375,7 +375,7 @@
 	   (type buffer-bytes a)
 	   (type array-index i))
   #.(declare-buffun)
-  (setf (sys:memref a #.(comp::mdparam 'comp::md-svector-data0-norm) i
+  (setf (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 		    :signed-long) v))
 
 (defun aref-card29 (a i)
@@ -383,7 +383,7 @@
 	   (type array-index i))
   (declare (values card29))
   #.(declare-buffun)
-  (the card29 (sys:memref a #.(comp::mdparam 'comp::md-svector-data0-norm) i
+  (the card29 (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 			  :unsigned-long)))
 
 (defun aset-card29 (v a i)
@@ -391,7 +391,7 @@
 	   (type buffer-bytes a)
 	   (type array-index i))
   #.(declare-buffun)
-  (setf (sys:memref a #.(comp::mdparam 'comp::md-svector-data0-norm) i
+  (setf (sys:memref a #.(sys::mdparam 'comp::md-svector-data0-norm) i
 		    :unsigned-long) v))
   
 )
