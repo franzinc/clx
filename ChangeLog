@@ -7,6 +7,10 @@
 *******************************************************************************
 MIT R5.0, ACL #22
 
+2001-06-26  Kevin Layer  <layer@crikey>
+
+	* package.cl (xlib): from smh: bug10928: import char-bit from cltl1
+
 2001-06-18  Kevin Layer  <layer@crikey>
 
 	* excldep.cl: bug10812: from jkf: tweak fix
