@@ -3,7 +3,8 @@
 ;;; CLX -- exclcmac.cl
 ;;;           This file provides for inline expansion of some functions.
 ;;;
-;;; Copyright (c) 1989 Franz Inc, Berkeley, Ca.
+;;; copyright (c) 1989 Franz Inc, Berkeley, CA - All rights reserved.
+;; copyright (c) 1989-2004 Franz Inc, Oakland, CA - All rights reserved.
 ;;;
 ;;; Permission is granted to any individual or institution to use, copy,
 ;;; modify, and distribute this software, provided that this complete

@@ -2,7 +2,8 @@
 ;;;
 ;;; CLX -- excldep.cl
 ;;;
-;;; Copyright (c) 1987, 1988, 1989 Franz Inc, Berkeley, Ca.
+;;; copyright (c) 1987-1989 Franz Inc, Berkeley, CA - All rights reserved.
+;; copyright (c) 1989-2004 Franz Inc, Oakland, CA - All rights reserved.
 ;;;
 ;;; Permission is granted to any individual or institution to use, copy,
 ;;; modify, and distribute this software, provided that this complete
