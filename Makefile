@@ -60,6 +60,9 @@ L_SRC	= defsystem.cl package.cl excldep.cl depdefs.cl clx.cl \
 	graphics.cl text.cl attributes.cl translate.cl keysyms.cl \
 	manager.cl image.cl resource.cl
 
+PICFLAGS = -K pic
+SHAREFLAGS = -G
+
 # default and aliases
 # all:	no-clos
 all:	partial-clos
@@ -68,15 +71,15 @@ clue:	partial-clos
 
 excldep.so: excldep.c
 	-mv excldep.o excldep.ooo
-	cc $(CFLAGS) -c -K pic excldep.c
-	ld -G -o excldep.so excldep.o
+	cc $(CFLAGS) -c $(PICFLAGS) excldep.c
+	ld $(SHAREFLAGS) -o excldep.so excldep.o
 	rm -f excldep.o
 	-mv excldep.ooo excldep.o
 
 socket.so: socket.c
 	-mv socket.o socket.ooo
-	cc $(CFLAGS) -c -K pic -I/usr/openwin/include socket.c
-	ld -G -o socket.so socket.o
+	cc $(CFLAGS) -c $(PICFLAGS) -I/usr/openwin/include socket.c
+	ld $(SHAREFLAGS) -o socket.so socket.o
 	rm -f socket.o
 	-mv socket.ooo socket.o
 

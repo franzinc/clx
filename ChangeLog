@@ -1,3 +1,14 @@
+Tue Nov 23 11:39:58 1993  Duane Rettig  (duane at clay)
+
+(for 4.2.devel.21 merge):
+
+	* clx/Makefile: Add PICFLAGS, SHAREFLAGS for different svr4
+	versions
+
+	* clx/dependent.cl: Change md-svector-data0-adj to
+	* clx/exclcmac.cl: Change md-svector-data0-adj to
+	md-svector-data0-norm
+
 Mon Aug 23 11:57:09 1993  Kevin Layer  (layer@sole)
 
 	* add clean_OS and install_OS
