@@ -11,8 +11,10 @@ This CLX is different in two main areas:
 
 General changes, applicable to all ports:
 ----------------------------------------
-Version string updated to "MIT R5.0 (Franz ACL4.1)".
-	-- *version*					clx.l
+Support for 2 bit deep images.  This is somewhat controversial as 2
+bit deep images are an extension to the X protocol (used by Pencom
+in their Next X11 server).
+	-- lots
 
 Added parse-geometry and parse-color functions.  See C Xlib manual, sections
 10.3 and 10.4 for details
@@ -26,6 +28,13 @@ Added wm-client-window function, analagous to C's XmuClientWindow function.
 
 Added perror() messages to socket code.
 	--						socket.c
+
+Fixed bug in trace-error-print -- must provide :asynchronous keyword
+to make-condition
+	-- trace-error-print				trace.cl
+
+Version string updated to "MIT R5.0 (Franz ACL4.1)".
+	-- *version*					clx.l
 
 ===============================================================================
 Franz specific changes, applicable to Allegro and Extended Common Lisps:
@@ -56,3 +65,6 @@ also now loaded into CLX.fasl.
 	-- define-compiler-macro			excldep.cl
 	-- import list in defpackage			package.cl
 	-- cat list					Makefile
+
+New defsystem for ACL 4.1
+	--						defsystem.cl
