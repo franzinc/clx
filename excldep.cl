@@ -232,8 +232,13 @@
 	    then (if* (or (eq errcode (fast *error-code-would-block*))
 			  (eq errcode (fast *error-code-eagain*)))
 		    then (let* ((fnn (- -1 handle))
+				#-process7
 				(sys::*stack-group-watchfor-fds*
-				 (cons fnn sys::*stack-group-watchfor-fds*)))
+				 (cons fnn sys::*stack-group-watchfor-fds*))
+				#+process7
+				(sys::*thread-watchfor-fds*
+				 (cons fnn sys::*thread-watchfor-fds*))
+				)
 			   (excl::funcall-in-package
 			    :process-wait :multiprocessing "Blocked on output to socket"
 			    #'write-no-hang-p handle)) ;; [bug11901], [bug12195]

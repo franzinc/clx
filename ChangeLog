@@ -5,6 +5,15 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #28
+
+	* dependent.cl: eval scheduler-running-p instead of
+	  looking at *scheduler-stack-group*
+	* exclcmac.cl: eval scheduler-running-p instead of
+	* excldep.cl: conditionalize (process7) changes
+	* MITdist/excldep.cl: conditionalize (process7) changes
+
+*******************************************************************************
 <no version change>
 
 2003-11-10  Kevin Layer  <layer@crikey>

@@ -375,7 +375,8 @@
 ;; Miscellaneous
 ;;
 (define-compiler-macro current-process ()
-  `(the (or mp::process null) (and mp::*scheduler-stack-group*
+  `(the (or mp::process null) (and #-process7 mp::*scheduler-stack-group*
+				   #+process7 (si:scheduler-running-p)
 				  mp::*current-process*)))
 
 (define-compiler-macro process-wakeup (process)

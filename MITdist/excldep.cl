@@ -294,7 +294,9 @@
 
 #+clx-r4-process-patches
 (defun with-timeout-event (seconds fnc args)
-  (unless *scheduler-stack-group* (start-scheduler)) ;[spr670]
+  (unless #-process7 *scheduler-stack-group*
+	  #+process7 (si:scheduler-running-p)
+	  (start-scheduler)) ;[spr670]
   (let ((clock-event (make-clock-event)))
     (when (<= seconds 0) (setq seconds 0))
     (multiple-value-bind (secs msecs) (truncate seconds)
