@@ -5,6 +5,13 @@
 	* <changes go here...>
 
 *******************************************************************************
+<no version change>
+
+2002-02-08  Kevin Layer  <layer@crikey>
+
+	* Makefile: don't assume shell scripts are executable
+
+*******************************************************************************
 MIT R5.0, ACL #23
 
 2001-12-11  Kevin Layer  <layer@crikey>

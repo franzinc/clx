@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.25.2.5 2001/12/12 00:51:53 layer Exp $
+# $Id: Makefile,v 1.25.2.6 2002/02/08 19:10:08 layer Exp $
 #  Makefile for CLX
 
 SHELL = sh
@@ -64,19 +64,19 @@ endif
 
 ifeq ($(OS_NAME),aix)
 XCFLAGS = -D_BSD -D_NO_PROTO -D_NONSTD_TYPES -D_MBI=void
-MAKE_SHARED = ../src/bin/make_shared.ibm -make_exp ../src/bin/make_exp
+MAKE_SHARED = sh ../src/bin/make_shared.ibm -make_exp ../src/bin/make_exp
 endif
 
 ifeq ($(OS_NAME),hp-ux)
 ifeq ($(SIXTYFOURBIT),yes)
 XCFLAGS = -O -Ae +DA2.0W -DAcl64Bit
-MAKE_SHARED = ../src/bin/make_shared.hp64
+MAKE_SHARED = sh ../src/bin/make_shared.hp64
 PICFLAGS = +Z
 #CC = aCC
 else
 XCFLAGS = -O -Ae +DA1.1
 SO = sl
-MAKE_SHARED = ../src/bin/make_shared.hp
+MAKE_SHARED = sh ../src/bin/make_shared.hp
 PICFLAGS = +z
 endif
 endif
@@ -85,7 +85,7 @@ ifeq ($(OS_NAME),darwin)
 XCFLAGS = -I/usr/X11R6/include
 PICFLAGS = 
 SHAREFLAGS = 
-MAKE_SHARED = ../src/bin/make_shared.mac
+MAKE_SHARED = sh ../src/bin/make_shared.mac
 SO = dylib
 endif
 
@@ -114,10 +114,10 @@ endif
 ifeq ($(OS_NAME),osf1)
 ifeq ($(SIXTYFOURBIT),yes)
 XCFLAGS = -G 0 -DAcl64Bit -resumption_safe
-MAKE_SHARED = ../src/bin/make_shared.dec64
+MAKE_SHARED = sh ../src/bin/make_shared.dec64
 else
 XCFLAGS = -G 0 -taso -xtaso -xtaso_short -resumption_safe
-MAKE_SHARED = ../src/bin/make_shared.dec
+MAKE_SHARED = sh ../src/bin/make_shared.dec
 endif
 endif
 
