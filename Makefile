@@ -111,6 +111,7 @@ c:	$(C_OBJS)
 
 compile-no-clos-CLX:	$(C_OBJS)
 	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
+	(load-logical-pathname-translations \"clx\") \
 	(load \"defsystem\") \
 	(si::system-compile-wrapper \
 	 (function \
@@ -127,6 +128,7 @@ compile-no-clos-CLX:	$(C_OBJS)
 
 compile-partial-clos-CLX:	$(C_OBJS)
 	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
+	(load-logical-pathname-translations \"clx\") \
 	(load \"defsystem\") \
 	(load \"package\") \
 	(setq xlib::*def-clx-class-use-defclass* '(xlib:window xlib:pixmap xlib:drawable)) \
@@ -145,6 +147,7 @@ compile-partial-clos-CLX:	$(C_OBJS)
 
 compile-full-clos-CLX:	$(C_OBJS)
 	$(ECHO) "(pushnew :clx-ansi-common-lisp *features*) \
+	(load-logical-pathname-translations \"clx\") \
 	(load \"defsystem\") \
 	(load \"package\") \
 	(setq xlib::*def-clx-class-use-defclass* t) \
@@ -166,6 +169,7 @@ cat:
 
 load-CLX:
 	$(ECHO) "\
+	(load-logical-pathname-translations \"clx\") \
 	(load-application \
 	  (progn (load \"defsystem\") (load-system :clx)) \
 	  :global-gc t :devel nil)" \
