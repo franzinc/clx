@@ -9,7 +9,7 @@ MIT R5.0, ACL #9.1
 
 Thu Feb 12 19:55:44 1998  Kevin Layer  <layer@ultra>
 
-	* Makefile.generic: add to `clean'
+	* Makefile: add to `clean'
 
 *******************************************************************************
 MIT R5.0, ACL #9
