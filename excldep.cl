@@ -53,16 +53,19 @@
 	 ((:case-sensitive-lower :case-sensitive-upper)
 	  ,str)))))
 
-(comp::include-file "../src/code/iodefs.cl")
-
 ;; Return t if there is a character available for reading or on error,
 ;; otherwise return nil.
+#-(version>= 4 2)
 (defun fd-char-avail-p (fd)
   (multiple-value-bind (available-p errcode)
       (comp::.primcall-sargs 'sys::filesys #.excl::fs-char-avail fd)
     (excl:if* errcode
        then t
        else available-p)))
+
+#+(version>= 4 2)
+(defun fd-char-avail-p (fd)
+  (excl::filesys-character-available-p fd))
 
 (defmacro with-interrupt-checking-on (&body body)
   `(locally (declare (optimize (safety 1)))
@@ -79,8 +82,11 @@
        ((eq 0 rest) nil)
      (declare (fixnum rest))
      (multiple-value-bind (numread errcode)
+	 #-(version>= 4 2)
 	 (comp::.primcall-sargs 'sys::filesys #.excl::fs-read-bytes fd vector
 				start-index rest)
+	 #+(version>= 4 2)
+	 (excl::fill-read-buffer fd vector start-index rest)
        (declare (fixnum numread))
        (excl:if* errcode
 	  then (if (not (eq errcode
@@ -90,7 +96,6 @@
 	  then (return t)
 	  else (decf rest numread)
 	       (incf start-index numread))))))
-
 
 (when (plusp (ff:get-entry-points
 	      (make-array 1 :initial-contents

@@ -166,15 +166,20 @@ load-CLX:
 	'(dumplisp :name "$(CLX)" :checkpoint nil)' \
 	"(exit)" | $(CL) $(CLOPTS)
 
+clean_OS:
+	rm -f $(C_OBJS) $(C_SOBJS) 
+
 clean:
 	$(RM) -f *.fasl debug/*.fasl $(CLX) core $(C_OBJS) $(C_SOBJS) make.out
 
-install:
-	mv CLX.fasl $(DEST)/clx.fasl
+install_OS:
 	mv *.o $(DEST)
 	if test -f socket.so; then \
 		mv *.so $(DEST); \
 	fi
+
+install: install_OS
+	mv CLX.fasl $(DEST)/clx.fasl
 
 tags:
 	$(TAGS) $(L_SRC) $(C_SRC)

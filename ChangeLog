@@ -1,3 +1,10 @@
+Mon Aug 23 11:57:09 1993  Kevin Layer  (layer@sole)
+
+	* add clean_OS and install_OS
+
+	* don't include "../src/code/iodefs.cl" because customers will not
+	have it
+
 Fri Jun 25 09:00:09 1993  Kevin Layer  (layer@sole)
 
 	* Makefile: new args :load-xref-info and :load-source-file-info to
