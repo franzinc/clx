@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.25.2.2 2000/09/23 21:43:37 duane Exp $
+# $Id: Makefile,v 1.25.2.3 2001/05/23 19:51:17 duane Exp $
 #  Makefile for CLX
 
 SHELL = sh
@@ -76,10 +76,24 @@ PICFLAGS = +z
 endif
 endif
 
+ifeq ($(OS_NAME),darwin)
+XCFLAGS = -I/usr/X11R6/include
+PICFLAGS = 
+SHAREFLAGS = 
+MAKE_SHARED = ../src/bin/make_shared.mac
+SO = dylib
+endif
+
 ifeq ($(OS_NAME),sunos)
+ifeq ($(SIXTYFOURBIT),yes)
+XCFLAGS = -xarch=v9 -DAcl64Bit
+PICFLAGS = -K pic
+MAKE_SHARED = ld -G
+else
 XCFLAGS = -I/usr/openwin/include
 PICFLAGS = -K pic
 MAKE_SHARED = ld -G
+endif
 endif
 
 ifeq ($(OS_NAME),linux)
@@ -162,6 +176,10 @@ excldep.sl: excldep.c
 	$(CC) $(CFLAGS) -c $(PICFLAGS) excldep.c
 	$(MAKE_SHARED) -o excldep.sl excldep.o
 
+excldep.dylib: excldep.c
+	$(CC) $(CFLAGS) -c $(PICFLAGS) excldep.c
+	$(MAKE_SHARED) -o excldep.dylib excldep.o
+
 socket.so: socket.c
 	$(CC) $(CFLAGS) -c $(PICFLAGS) socket.c
 	$(MAKE_SHARED) -o socket.so socket.o
@@ -169,6 +187,10 @@ socket.so: socket.c
 socket.sl: socket.c
 	$(CC) $(CFLAGS) -c $(PICFLAGS) socket.c
 	$(MAKE_SHARED) -o socket.sl socket.o
+
+socket.dylib: socket.c
+	$(CC) $(CFLAGS) -c $(PICFLAGS) socket.c
+	$(MAKE_SHARED) -o socket.dylib socket.o
 
 #
 # Three build rules are provided: no-clos, partial-clos, and full-clos.

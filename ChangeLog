@@ -7,6 +7,13 @@
 *******************************************************************************
 <no version change>
 
+Wed May 22 12:50:10 PDT 2001  Duane Rettig  <duane@beta>
+
+	* Makefile: Add MacOSX
+
+*******************************************************************************
+<no version change>
+
 Sat Sep 23 20:47:21 PST 2000  Duane Rettig  <duane@beta>
 
 	* Makefile: Add hp 64-bit
