@@ -5,7 +5,109 @@
 	* <changes go here...>
 
 *******************************************************************************
+join from acl62 to trunk on 8/14/2002
+command:
+   *********** THE FOLLOWING COMMAND IS WRONG:
+  ./join.sh acl62 acl62_to_trunk_merge1 acl62_to_trunk_merge1 clx
+   *********** IT SHOULD HAVE BEEN:
+  ./join.sh acl62 acl62_to_trunk_merge1 acl62_to_trunk_merge2 clx
+
+*******************************************************************************
 join from acl62 to trunk on 7/9/02
+
+*******************************************************************************
+MIT R5.0, ACL #26
+
+2002-06-10  Kevin Layer  <layer@crikey>
+
+	* Makefile: revert streams usage on all but windows
+
+*******************************************************************************
+MIT R5.0, ACL #25
+
+2002-06-05  Kevin Layer  <layer@crikey>
+
+    from duane:
+	* Makefile: [bug12180]: Revert hps to not use streams
+
+*******************************************************************************
+MIT R5.0, ACL #24
+
+Mon Apr 29 11:49:24 PDT 2002  Duane Rettig  <duane@beta>
+	
+	* Makefile: Make all prots use allegro streams
+	* dependent.cl: Fix some conditionalizations
+	* excldep.cl: Fix FF wait function
+	* clx0.cl: incf version
+	
+*******************************************************************************
+<no version change>
+	
+2002-02-08  Kevin Layer  <layer@crikey>
+
+	* Makefile: don't assume shell scripts are executable
+
+*******************************************************************************
+MIT R5.0, ACL #23
+
+2001-12-11  Kevin Layer  <layer@crikey>
+
+	* Makefile: push (on windows only) :clx-use-allegro-streams onto
+	*features*.  The hope is to someday use this on UNIX, too.  See
+	rfe5052 for more discussion.
+	* dependent.cl,
+	* excldep.cl: use clx-use-allegro-streams feature instead of mswindows
+
+*******************************************************************************
+MIT R5.0, ACL #22
+
+2001-06-26  Kevin Layer  <layer@crikey>
+
+	* package.cl (xlib): from smh: bug10928: import char-bit from cltl1
+
+2001-06-18  Kevin Layer  <layer@crikey>
+
+	* excldep.cl: bug10812: from jkf: tweak fix
+
+2001-06-01  Kevin Layer  <layer@crikey>
+
+	* excldep.cl: bug10812: from jkf: fix xlib:open-display (bug only
+	showed up on windows, but the fix was generic)
+
+*******************************************************************************
+<no version change>
+
+2001-05-29  Kevin Layer  <layer@crikey>
+
+	* Makefile: fix C compile time env on HP
+
+*******************************************************************************
+<no version change>
+
+Wed May 22 12:50:10 PDT 2001  Duane Rettig  <duane@beta>
+
+	* Makefile: Add MacOSX
+
+*******************************************************************************
+<no version change>
+
+Sat Sep 23 20:47:21 PST 2000  Duane Rettig  <duane@beta>
+
+	* Makefile: Add hp 64-bit
+
+*******************************************************************************
+<no version change>
+
+2000-07-23  Kevin Layer  <layer@ultra>
+
+	* Makefile: fix MAKE_SHARED for ibm
+
+*******************************************************************************
+<no version change>
+
+2002-08-09  Duane Rettig  <duane@beta>
+
+	* Makefile: Added power64 port
 
 *******************************************************************************
 MIT R5.0, ACL #26
