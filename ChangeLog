@@ -5,6 +5,11 @@
 	* <changes go here...>
 
 *******************************************************************************
+join from acl50 branch
+next merge tag: acl50_merge2
+(version number not changed because only the file `TAGS' was cvs removed)
+
+*******************************************************************************
 MIT R5.0, ACL #14 -- join from acl50 branch (just version #13)
 next merge tag: acl50_merge1
 
