@@ -5,6 +5,13 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #30
+
+Fri Jun 03 19:32:15 PST 2005  Duane Rettig  <duane@gemini>
+
+	* Makefile: Add Solaris/AMD64, MacOSX/64 ports
+
+*******************************************************************************
 MIT R5.0, ACL #29
 
 Wed Mar 25 01:52:15 PST 2004  Duane Rettig  <duane@gemini>
