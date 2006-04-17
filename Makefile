@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.31 2005/08/03 05:06:37 layer Exp $
+# $Id: Makefile,v 1.32 2006/04/17 21:16:53 layer Exp $
 #  Makefile for CLX
 
 SHELL = sh
@@ -87,18 +87,18 @@ endif
 endif
 
 ifeq ($(OS_NAME),darwin)
+XCFLAGS = -I/usr/X11R6/include
+PICFLAGS = 
+SHAREFLAGS = 
+SO = dylib
 ifeq ($(SIXTYFOURBIT),yes)
-XCFLAGS = -I/usr/X11R6/include
-PICFLAGS = 
-SHAREFLAGS = 
 MAKE_SHARED = sh ../src/bin/make_shared.mac64
-SO = dylib
 else
-XCFLAGS = -I/usr/X11R6/include
-PICFLAGS = 
-SHAREFLAGS = 
+ifeq ($(MACHINE),x86)
+MAKE_SHARED = sh ../src/bin/make_shared.mac86
+else
 MAKE_SHARED = sh ../src/bin/make_shared.mac
-SO = dylib
+endif
 endif
 endif
 
