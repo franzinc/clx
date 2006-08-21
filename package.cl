@@ -1,3 +1,9 @@
+#+(version= 8 0)
+(sys:defpatch "clx" 1
+  "v1: support unix domain socket connections"
+  :type :system
+  :post-loadable t)
+
 ;;; -*- Mode: LISP; Syntax: Common-lisp; Base: 10; Lowercase: Yes;  -*-
 
 ;;; Copyright 1990 Massachusetts Institute of Technology, Cambridge,

@@ -5,6 +5,14 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #32
+
+2006-08-21  Kevin Layer  <layer@gemini>
+
+	* dependent.cl: rfe6637: from mikel: support unix domain socket
+	  connections
+
+*******************************************************************************
 MIT R5.0, ACL #31
 
 2006-04-11  Duane Rettig  <duane@gemini>
