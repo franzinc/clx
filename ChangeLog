@@ -9,6 +9,7 @@ MIT R5.0, ACL #32
 
 2006-08-21  Kevin Layer  <layer@gemini>
 
+	* package.cl: defpatch for 8.0
 	* dependent.cl: rfe6637: from mikel: support unix domain socket
 	  connections
 
