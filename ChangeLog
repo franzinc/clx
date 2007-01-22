@@ -5,6 +5,19 @@
 	* <changes go here...>
 
 *******************************************************************************
+join from acl8 to trunk, changes from
+	2006-08-21  Kevin Layer  <layer@gemini>
+
+*******************************************************************************
+MIT R5.0, ACL #32
+
+2006-08-21  Kevin Layer  <layer@gemini>
+
+	* package.cl: defpatch for 8.0
+	* dependent.cl: rfe6637: from mikel: support unix domain socket
+	  connections
+
+*******************************************************************************
 MIT R5.0, ACL #31
 
 2006-04-11  Duane Rettig  <duane@gemini>
