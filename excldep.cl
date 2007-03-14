@@ -128,7 +128,7 @@
   ;; Read from the given stream fd into 'vector', which has element type card8.
   ;; Start storing at index 'start-index' and read exactly 'length' bytes.
   ;; Return t if an error or eof occurred, nil otherwise.
-  (declare (fixnum next-index start-index length))
+  (declare (fixnum start-index length))
   (with-interrupt-checking-on
       (let ((end-index (+ start-index length)))
 	(loop

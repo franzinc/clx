@@ -5,6 +5,14 @@
 	* <changes go here...>
 
 *******************************************************************************
+MIT R5.0, ACL #33
+
+2007-03-14  Duane Rettig  <duane@gemini>
+
+	* clx0.cl: Incf version
+	* excldep.cl: Remove bogus declaration
+
+*******************************************************************************
 join from acl8 to trunk, changes from
 	2006-08-21  Kevin Layer  <layer@gemini>
 
