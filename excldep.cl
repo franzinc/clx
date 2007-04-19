@@ -219,7 +219,8 @@
   ;; alarm signals can cause a write that has been blocked to return EINTR.
   (declare (optimize speed)
 	   (type adim start-index length))
-  (let ((*stream-for-sigpipe* (or *stream-for-sigpipe* stream)))
+  (let ( ;; [bug16880]:
+	#+ignore (*stream-for-sigpipe* (or *stream-for-sigpipe* stream)))
     (fast
      (loop
        (multiple-value-bind (written errcode)
@@ -243,6 +244,12 @@
 			   (excl::funcall-in-package
 			    :process-wait :multiprocessing "Blocked on output to socket"
 			    #'write-no-hang-p handle)) ;; [bug11901], [bug12195]
+		  elseif (eql errcode
+			      #-mswindows 32 ; sigpipe
+			      #+mswindows 10053 ; WSAECONNABORTED
+			      )
+		    then ;; [bug16880]: indicate that this stream can't be written to any more
+			 (xlib::close-buffer stream)
 		  elseif (not (eq errcode *error-code-interrupted-system-call*))
 		    then (.errno-stream-error "writing bytes to" handle errcode))
 		 (setq written 0)	; if error assume 0 written
