@@ -7,6 +7,11 @@
 *******************************************************************************
 MIT R5.0, ACL #34
 
+2007-09-07  Duane Rettig  <duane@franz.com>
+
+	* Makefile: Add 64-bit Intel Mac; have clean target remove .dylib
+	files
+
 2007-04-19  Duane Rettig  <duane@franz.com>
 
 	* excldep.cl: bug16880: Fix sigpipe handling

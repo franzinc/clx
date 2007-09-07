@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.32 2006/04/17 21:16:53 layer Exp $
+# $Id: Makefile,v 1.32.24.1 2007/09/07 17:30:53 layer Exp $
 #  Makefile for CLX
 
 SHELL = sh
@@ -87,13 +87,18 @@ endif
 endif
 
 ifeq ($(OS_NAME),darwin)
-XCFLAGS = -I/usr/X11R6/include
 PICFLAGS = 
 SHAREFLAGS = 
 SO = dylib
 ifeq ($(SIXTYFOURBIT),yes)
 MAKE_SHARED = sh ../src/bin/make_shared.mac64
+ifeq ($(MACHINE),x86)
+XCFLAGS = -I/usr/X11R6/include -m64 -arch x86_64
 else
+XCFLAGS = -I/usr/X11R6/include
+endif
+else
+XCFLAGS = -I/usr/X11R6/include
 ifeq ($(MACHINE),x86)
 MAKE_SHARED = sh ../src/bin/make_shared.mac86
 else
@@ -340,7 +345,7 @@ clean_OS:
 	rm -f *.o *.so *.sl
 
 clean:
-	rm -f *.fasl *.o *.so *.sl debug/*.fasl $(CLX) core make.out clx.tmp
+	rm -f *.fasl *.o *.so *.sl *.dylib debug/*.fasl $(CLX) core make.out clx.tmp
 	rm -f so_locations
 
 install_OS:
