@@ -1,3 +1,9 @@
+2007-09-14  Duane Rettig  <duane@franz.com>
+
+ 	* Makefile: Add 64-bit Intel Mac; have clean target remove .dylib
+	files
+
+
 *******************************************************************************
 <version for this commit> (see *version* in clx0.cl each commit)
 
