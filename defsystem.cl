@@ -150,12 +150,12 @@
 ;; prepared for possible deadlock, since no interrupts will be recognized
 ;; while reading from the X socket if the scheduler is not running.
 ;;
-#+excl
+;; [bug18431]:
 (setq compiler::generate-interrupt-checks-switch
-      (compile nil
-	       '(lambda (safety size speed &optional debug)
-		  (declare (ignore size debug))
-		  (or (< speed 3) (> safety 0)))))
+  (compile nil
+	   '(lambda (safety size speed &optional debug compilation-speed)
+	     (declare (ignore size debug compilation-speed))
+	     (or (< speed 3) (> safety 0)))))
 
 
 ;;; Allegro

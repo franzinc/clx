@@ -5,6 +5,11 @@
 	* <changes go here...>
 
 *******************************************************************************
+2009-05-04  Duane Rettig  <duane@franz.com>
+
+	* defsystem.cl: bug18431: Fix compiler-switch for 8.2
+
+*******************************************************************************
 merge from acl81 to master, changes from
 	2007-09-07  Duane Rettig  <duane@franz.com>
 
