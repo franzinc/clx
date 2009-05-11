@@ -5,6 +5,14 @@
 	* <changes go here...>
 
 *******************************************************************************
+2009-05-11  Duane Rettig  <duane@franz.com>
+
+	* MITdist/excldep.cl: 
+	* dependent.cl: 
+	* exclcmac.cl: 
+	* excldep.cl: Remove :process7 feature dependencies
+
+*******************************************************************************
 2009-05-04  Duane Rettig  <duane@franz.com>
 
 	* defsystem.cl: bug18431: Fix compiler-switch for 8.2

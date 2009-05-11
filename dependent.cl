@@ -941,8 +941,7 @@
      (unwind-protect
 	 (block .hl-doit.
 	   (when ; fast test for scheduler running
-	       #-process7 mp::*scheduler-stack-group*
-	       #+process7 (si:scheduler-running-p)
+	       (si:scheduler-running-p)
 	     (setq .hl-lock. ,locator
 		   .hl-curproc. mp::*current-process*)
 	     (when (and .hl-curproc.	; nil if in process-wait fun
@@ -1037,8 +1036,7 @@
 
 #+excl
 (defun process-block (whostate predicate &rest predicate-args)
-  (if #-process7 mp::*scheduler-stack-group*
-      #+process7 (si:scheduler-running-p)
+  (if (si:scheduler-running-p)
       (apply #'mp::process-wait whostate predicate predicate-args)
       (or (apply predicate predicate-args)
 	  (error "Program tried to wait with no scheduler."))))
@@ -1099,8 +1097,7 @@
 
 #+excl
 (defun current-process ()
-  (and #-process7 mp::*scheduler-stack-group*
-       #+process7 (si:scheduler-running-p)
+  (and (si:scheduler-running-p)
        mp::*current-process*))
 
 #+lcl3.0
@@ -1681,8 +1678,7 @@
 	     :timeout)
 
 	    ;; If the scheduler is running let it do timeouts.
-	    (#-process7 mp::*scheduler-stack-group*
-	     #+process7 (si:scheduler-running-p)
+	    ((si:scheduler-running-p)
 	     #+allegro
 	     (if (not
 		  (mp:wait-for-input-available fd :whostate *read-whostate*
