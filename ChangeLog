@@ -5,6 +5,10 @@
 	* <changes go here...>
 
 *******************************************************************************
+2009-10-08  Kevin Layer  <layer@gemini.franz.com>
+
+	* Makefile: bug18657: smpcompat workaround
+
 2009-05-11  Duane Rettig  <duane@franz.com>
 
 	* MITdist/excldep.cl: 
@@ -12,16 +16,13 @@
 	* exclcmac.cl: 
 	* excldep.cl: Remove :process7 feature dependencies
 
-*******************************************************************************
 2009-05-04  Duane Rettig  <duane@franz.com>
 
 	* defsystem.cl: bug18431: Fix compiler-switch for 8.2
 
-*******************************************************************************
 merge from acl81 to master, changes from
 	2007-09-07  Duane Rettig  <duane@franz.com>
 
-*******************************************************************************
 2007-09-14  Duane Rettig  <duane@franz.com>
 
  	* Makefile: Add 64-bit Intel Mac; have clean target remove .dylib

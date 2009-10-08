@@ -264,6 +264,7 @@ compile-no-clos-CLX:	$(C_OBJS)
 	      (*compile-print* $(compile_print)) \
 	      (*compile-verbose* $(compile_verbose))) \
 	    (setf (sys:gsgc-switch :print) $(gc_print)) \
+	    (setq excl::*warn-smp-usage* nil) \
 	    (compile-system :clx) \
 	    (compile-system :clx-debug) \
 	    (exit 0))" > clx.tmp
@@ -291,6 +292,7 @@ compile-partial-clos-CLX:	$(C_OBJS)
 	      (*compile-verbose* $(compile_verbose)) \
 	      (*compile-print* $(compile_print))) \
 	    (setf (sys:gsgc-switch :print) $(gc_print)) \
+	    (setq excl::*warn-smp-usage* nil) \
 	    (compile-system :clx) \
 	    (compile-system :clx-debug) \
 	    (exit 0))" > clx.tmp
@@ -316,6 +318,7 @@ compile-full-clos-CLX:	$(C_OBJS)
 	      (*compile-print* $(compile_print)) \
 	      (*compile-verbose* $(compile_verbose))) \
 	    (setf (sys:gsgc-switch :print) $(gc_print)) \
+	    (setq excl::*warn-smp-usage* nil) \
 	    (compile-system :clx) \
 	    (compile-system :clx-debug) \
 	    (exit 0))" > clx.tmp
