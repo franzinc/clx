@@ -11,6 +11,10 @@
 	try again with github ssh key
 
 2009-12-15  mm  <mm@franz.com>
+
+	try again with github ssh key
+
+2009-12-15  mm  <mm@franz.com>
 	
 	    Prepare for transition to SMP Lisp {bug18657]
 	    Conditional changes are tagged with #+-allegro-pre-smp
