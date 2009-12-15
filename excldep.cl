@@ -253,3 +253,294 @@
 		 (if* (<= length 0)
 		    then (return t)
 		    else (incf start-index written))))))))
+
+
+
+#+(version>= 8 2)
+(in-package :excl)
+
+#+(version>= 8 2)
+(eval-when (compile load eval)
+  (pushnew :allegro-pre-smp *features*)
+  (or (fboundp 'excl::with-strong-spin-consistent-bindings)
+      (pushnew :strong-spin-lock *features*)))
+
+#+strong-spin-lock
+(eval-when (compile load eval)
+(defpackage :excl
+  (:export
+   ;; Use spin-lock to serialize readers and writers.
+   ;; Garanteed bounded delay to any writer or reader.
+   #:with-strong-spin-consistent-bindings
+   #:with-strong-consistency-spin-lock
+   ))
+
+;;; When #+smp-coarse-monitor generate code that counts total number
+;;;  times an atomic operation had to branch back to try again.
+;;; Count is kept in *smp-loop-count* and *smp-loop-back-count*.
+(defvar *smp-loop-count* 0)
+(defvar *smp-loop-back-count* 0)
+
+;;; When #+smp-detailed-monitor generate code that counts the number of
+;;;  times each smp atomic update loop had to branch back to try again.
+;;; Counts are kept in vectors *smp-loop-counts* and *smp-loop-back-counts*.
+;;; Index to counts vectors is in *smp-loop-names*.
+(defvar *smp-loop-index* 0)
+(defvar *smp-loop-counts* (make-array 1000 :initial-element 0))
+(defvar *smp-loop-back-counts* (make-array 1000 :initial-element 0))
+(defvar *smp-loop-names* nil)
+
+
+(defmacro smploop (name sub-name &body body &aux index newlen)
+  "Generate a loop with debug counter on branch back"
+  (declare (ignorable index newlen))
+
+  (when (and (member :smp-coarse-monitor *features* :test #'string-equal)
+	     (member :smp-detailed-monitor *features* :test #'string-equal))
+    (error "Conflicting features: smp-coarse-monitor smp-detailed-monitor"))
+
+  (or (and sub-name (symbolp sub-name))
+      (error "Sub-name must be a non-nil symbol: ~S ~S" name sub-name))
+  (setf name (intern (format nil "~A-~A" (or name (gensym)) sub-name)))
+
+  (when (member :smp-detailed-monitor *features* :test #'string-equal)
+    (let ((place (assoc name *smp-loop-names*)))
+      (if place
+	  (setf index (cdr place))
+	(push (setf place (cons name (setf index *smp-loop-index*)))
+	      *smp-loop-names*))
+      (incf *smp-loop-index*)
+      (when (not (< *smp-loop-index* (length *smp-loop-counts*)))
+	(setf newlen (+ 1000 (length *smp-loop-back-counts*)))
+	(setf *smp-loop-counts* (make-array newlen :initial-element 0))
+	(setf *smp-loop-back-counts* (make-array newlen :initial-element 0))
+	)))
+  `(loop
+
+    ,@(when (member :smp-coarse-monitor *features* :test #'string-equal)
+	`((incf (the fixnum *smp-loop-count*))))
+
+    ,@(when (member :smp-detailed-monitor *features* :test #'string-equal)
+	`((incf (the fixnum (svref (the simple-vector *smp-loop-counts*)
+			     (the fixnum ,index))))))
+
+    ,@body
+    
+    ,@(when (member :smp-coarse-monitor *features* :test #'string-equal)
+	`((incf (the fixnum *smp-loop-back-count*))))
+
+    ,@(when (member :smp-detailed-monitor *features* :test #'string-equal)
+	`((incf (the fixnum (svref (the simple-vector *smp-loop-back-counts*)
+			     (the fixnum ,index))))))
+
+    ))
+    
+(defmacro with-strong-spin-consistent-bindings ((&rest bindings)
+					 (control-place ;; incf-atomic place
+					  ;; room for more keyword args
+					  &key
+					  (max-readers 20)
+					  name
+					  )
+					 &body body &environment env)
+  " Evaluate body with vars bound to a consistent set of values.
+It is assumed that the body code does not modify the value of
+control-place, or any of the locations used to bind the variables.
+It is assumed that modifications are made inside the body of a
+with-consistency-spin-lock expressionand 
+modifications will change the value of control-place atomically.
+
+The variables are bound in a let form.
+
+The value(s) returned are the value(s) returned by the last
+form in the body.  This macro generates a loop context;  therefore,
+an unnamed return will cause unexpected behavior.
+
+The control-place argument must be a place suitable for
+incf-atomic.
+
+The max-readers argument specifies the maximum number of simultaneous readers
+allowed at any time.  This number is the upper bound on the delay a writer can suffer.
+The default is 20.  If a value is specified, it must be a number visible at 
+compile time.
+
+This macro generates more light-weight code than the with-lock-consistent-bindings macro,
+but with a more limited behavior.  If there are many more threads than processors,
+then the spin loops may take a whole scheduling quantum to recover from a 
+collision.  If any reader threads are running, a writing thread will spin until
+the readers are done.  If a writer thread is running, any reader threads will 
+spin until the writing is done.  Both the reader and the writer bodies should complete
+in a short time since all the bodies will run sequentially.
+
+A writer thread
+will only be delayed by readers that were active at the moment the writer inidicated
+a need to write.  
+"
+  (multiple-value-bind (subform-vars subform-forms
+				     oldval-var newval-var
+				     cw-form r-form)
+      (get-atomic-modify-expansion control-place env nil)
+    (flet ((tvarname (b)
+		     (gensym (symbol-name (if (consp b) (car b) b))))
+	   (tvar-setq (tv b)
+		      `(setq ,tv ,(and (consp b) (cadr b))))
+	   (bind-from-tvar (tv b)
+			   `(,(if (consp b) (car b) b) ,tv)))
+      (let ((tvars (mapcar #'tvarname bindings)))
+
+	;; MORE STRICT SPIN CONSISTENCY 
+	;; 
+	;;  control-place-content -> r...rwp
+	;;    r...r -> high-order bits can be 0...0 or 
+	;;                 b...b where at least one of the b bits is 1
+	;;  Reader logic:
+	;;      spin until we can update to s...sx0
+	;;           where s...s is r...r + 1 and x is 0 or 1
+	;;           AND r...r < max-readers
+	;;      spin until w-bit is zero
+	;;      read values
+	;;      r-1 atomically
+	;;  Writer logic:
+	;;      update wp from 00 to 01 atomically
+	;;      spin until r...rwp is 0...001
+	;;      set r...rwp to 0...010 atomically
+	;;      make changes
+	;;      decrement atomically r...rwp by 2 to set wp to 0p
+	;;              p may have been set to 1 by another writer
+	;;              if r...r bits are non zero, readers are spinning
+	;;              if p is 1, the next writer will spin until
+	;;                   the new batch of readers is done, then run
+	;;  Once a writer has signalled the need to write, new readers
+	;;   will not start, so writer is delayed only by the fixed
+	;;   number of readers active at the moment the writer is entered.
+	;;  Multiple writer threads cannot block readers indefinitely
+	;;   either.  Pending readers get a chance to run between
+	;;   writer slices.
+
+
+	`(let (,oldval-var
+	       ,newval-var
+	       ,@(mapcar 'list subform-vars subform-forms)
+	       ,@tvars)
+	   (declare (fixnum ,oldval-var ,newval-var)) 
+	   (smploop
+	    ,name strong-inc
+	    ;; Spin until we can update the reader count.
+	    ;;   Reader count can be incremented only whne there
+	    ;;   are no pending writers.
+	    (setq ,oldval-var 
+		  (logand #xfffffc ,r-form) ;;; zero out wp bits
+		  ,newval-var 
+		  (+ 4 ,oldval-var) ;;; increment r...r bits to s...s
+		  )
+	    (when (< ,oldval-var ,(* 4 max-readers))
+	      ;; First, try to set from r...r00 to s...s00
+	      (when ,cw-form (return))
+	      ;; Then, try to set from r...r10 to s...s10
+	      ;; since we do not care about the w bit at this point.
+	      (setq ,oldval-var  (+ 2 ,oldval-var)
+		    ,newval-var  (+ 2 ,newval-var))
+	      (when ,cw-form (return))))
+	   (unwind-protect
+	       (progn
+		 (smploop
+		  ,name strong-write-done
+		  ;; Spin until a writer, if any, is done.
+		  ;; At this point r...r bits, incremented to s...s,
+		  ;; may now be incremented or decremented further 
+		  ;; to t...t
+		  (setq ,oldval-var 
+			(logand #xfffffc ,r-form) ;;; zero out wp bits
+			,newval-var ,oldval-var)
+		  ;; First, try to set from t...t00 to t...t00
+		  (when ,cw-form (return))
+		  ;; Then, try to set from t...t01 to t...t01
+		  ;; since we do not care about the p bit at this point.
+		  (setq ,oldval-var  (+ 1 ,oldval-var)
+			,newval-var  (+ 1 ,newval-var))
+		  (when ,cw-form (return)))
+		 ;; Grab our bindings
+		 ,@(mapcar #'tvar-setq tvars bindings))
+	     ;; uwp cleanup: release our hold on the controlled source
+	     ;;   r-1 atomically
+	     (smploop
+	      ,name strong-dec
+	      (setq ,oldval-var ,r-form
+		    ,newval-var (- ,oldval-var 4))
+	      (when ,cw-form
+		(return))))
+	   (let ,(mapcar #'bind-from-tvar tvars bindings)
+	     ,@body))))))
+
+(defmacro with-strong-consistency-spin-lock ((control-place &key name) 
+					     &rest body &environment env)
+  "This macro must enclose any modifications to data that is used in the
+bindings of a with-strong-spin-consistent-bindings form.
+
+The value(s) returned are the value(s) returned by the last
+form in the body.
+"
+  (multiple-value-bind (subform-vars subform-forms
+				     oldval-var newval-var
+				     cw-form r-form)
+      (get-atomic-modify-expansion control-place env nil)
+    `(let (,oldval-var ,newval-var
+		       ,@(mapcar 'list subform-vars subform-forms))
+       (declare (fixnum ,oldval-var ,newval-var))
+	;; MORE STRICT SPIN CONSISTENCY 
+	;; 
+	;;  control-place-content -> r...rwp
+	;;    r...r -> high-order bits can be 0...0 or 
+	;;                 b...b where at least one of the b bits is 1
+	;;  Reader logic:
+	;;      spin until we can update to s...sx0
+	;;           where s...s is r...r + 1
+	;;      spin until w-bit is zero
+	;;      read values
+	;;      r-1 atomically
+	;;  Writer logic:
+	;;      update wp from 00 to 01 atomically
+	;;      spin until r...rwp is 0...001
+	;;      r...rwp set to 0...010 atomically
+	;;      make changes
+	;;      decrement atomically r...rwp by 2 to set wp to 0p
+	;;              p may have been set to 1 by another writer
+	;;              if r...r bits are non zero, readers are spinning
+	;;              if p is 1, the next writer will spin until
+	;;                   the new batch of readers is done, then run
+	;;  Once a writer has signalled the need to write, new readers
+	;;   will not start, so writer is delayed only by the fixed
+	;;   number of readers active at the moment the writer is entered.
+	;;  Multiple writer threads cannot block readers indefinitely
+	;;   either.  Pending readers get a chance to run between
+	;;   writer slices.
+
+
+       ;; get a lock on the control
+       (smploop
+	,name strong-write-start
+	;; update wp from 00 to 01 atomically
+	(setq ,oldval-var ,r-form
+	      ,newval-var (1+ (logand #xfffffc ,oldval-var)))
+	(when ,cw-form  (return)))
+       ;; spin until r...rwp is 0...001
+       ;; r...rwp set to 0...010 atomically
+       (setq ,oldval-var 1 ,newval-var 2)
+       (smploop 
+	,name strong-write-sync
+	(when ,cw-form (return)))
+       (unwind-protect
+	   (progn ,@body)
+	 ;; Release the lock no matter what.
+	 (smploop
+	  ,name strong-write-end
+	  ;; decrement atomically r...rwp by 2 to set wp to 0p
+	  (setq ,oldval-var ,r-form
+		,newval-var (- ,oldval-var 2))
+	  (when ,cw-form
+	    (return)))))))
+)
+
+
+
+

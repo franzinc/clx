@@ -89,7 +89,9 @@
 
 #+allegro
 (when (boundp 'excl::*version-info*)
-  (push (cons "CLX" *version*) excl::*version-info*))
+  (locally
+   #+(version>= 8 2) (declare (special excl::*version-info*))
+   (push (cons "CLX" *version*) excl::*version-info*)))
 
 (defparameter *protocol-major-version* 11.)
 (defparameter *protocol-minor-version* 0)
@@ -526,6 +528,13 @@
   (local-state (allocate-gcontext-state) :type gcontext-state)
   (plist nil :type list)			; Extension hook
   (next nil #-explorer :type #-explorer (or null gcontext))
+
+  #+allegro-pre-smp
+  (smpcontrol 
+   ;; The control place that synchronizes serial access to gcontext state slots.
+   ;; There is only one control for bot serer and local-state becoause sometimes
+   ;;  we need to lock both at the same time.
+   (make-array 1 :initial-element 0) :type simple-vector)
   )
 
 (defun print-gcontext (gcontext stream depth)

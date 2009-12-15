@@ -5,6 +5,52 @@
 	* <changes go here...>
 
 *******************************************************************************
+
+2009-12-15  mm  <mm@franz.com>
+
+	    Prepare for transition to SMP Lisp {bug18657]
+	    Conditional changes are tagged with #+-allegro-pre-smp
+	    This feature is added in excldep.cl.
+
+	* attributes.cl: 
+            Change defvar to defvar-nonbindable: *context-free-list*	    
+	* buffer.cl: 
+	    Add defun-proto to suppress compiler warnings:
+	    read-sequence-card8 write-sequence-card8
+	* clx0.cl: 
+	    gcontext class: add smpcontrol slot spin-lock to
+            synchronizes serial access to gcontext state slots
+	* dependent.cl: 
+	    without-aborts: without-interrupts -> with-delayed-interrupts
+	    conditional-store: use atomic-conditional-setf
+	    Change defvar to defvar-nonbindable:
+	     *gcontext-local-state-cache* *temp-gcontext-cache*
+	     *event-free-list* *pending-command-free-list*
+	* excldep.cl: 
+	    Push allegro-pre-smp on *features* 
+	    Define strong-spin-lock macros (until they are defined in
+	      the base ACL)
+	* gcontext.cl: 
+	    with-gcontext-values: new macro to generate smp-safe read
+	     access to gcontext state values
+	    gcontext-atomically: new macro assumes smp lockig is done 
+	     above in modify-gcontext
+	    Drop defvar because defvar-nonbindable is elsewhere:
+	     *gcontext-local-state-cache* *temp-gcontext-cache*
+	    allocate-temp-gcontext:
+             gen code using spin-lock
+	* input.cl: 
+	    Drop defvar because defvar-nonbindable is elsewhere:
+	     *event-free-list* *pending-command-free-list*
+	* macros.cl: 
+	    Add defun-proto to suppress compiler warnings:
+	     get-put-items 
+	* text.cl:
+	    Add defun-proto to suppress compiler warnings:
+  	     draw-glyphs8 draw-image-glyphs8 draw-image-glyphs16 
+	    draw-glyphs:
+	     use spin-lock instead of without-interrupts
+
 2009-05-11  Duane Rettig  <duane@franz.com>
 
 	* MITdist/excldep.cl: 

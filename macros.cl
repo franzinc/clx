@@ -519,6 +519,16 @@
 	   (,(putify type-name (get type-name 'predicating-put)) ,index ,value ,@args))
 	 result)))))
 
+
+;;; 2009-12-01 mm: Declare this function before any uses.
+#+(and allegro (version>= 8 2))
+(excl:defun-proto get-put-items (index type-args putp &optional body-function)
+  (declare (type (or null function) body-function)
+	   #+clx-ansi-common-lisp
+	   (dynamic-extent body-function)
+	   #+(and lispm (not clx-ansi-common-lisp))
+	   (sys:downward-funarg body-function)))
+
 ;;
 ;; the MASK type...
 ;;     is used to specify a subset of a collection of "optional" arguments.
@@ -674,6 +684,7 @@
 		     (incf index increment)
 		     (when (and increment (zerop increment)) (setq increment 1))
 		     (pushnew (* increment 8) sizes)))))))))
+
 
 (defmacro with-buffer-request-internal
 	  ((buffer opcode &key length sizes &allow-other-keys)

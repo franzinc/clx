@@ -28,6 +28,7 @@
 (in-package :xlib)
 
 ;; Event Resource
+#-allegro-pre-smp
 (defvar *event-free-list* nil) ;; List of unused (processed) events
 
 (eval-when (eval compile load)
@@ -211,6 +212,7 @@
 ;; Reply handlers
 ;;
 
+#-allegro-pre-smp
 (defvar *pending-command-free-list* nil)
 
 (defun start-pending-command (display)

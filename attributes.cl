@@ -50,7 +50,10 @@
 (defvar *window-attributes* nil) ;; Bound to an alist of (drawable . state) within WITH-STATE
 
 ;; Window Attribute reply buffer resource
+#-allegro-pre-smp
 (defvar *context-free-list* nil) ;; resource of free reply buffers
+#+allegro-pre-smp
+(excl:defvar-nonbindable *context-free-list* nil)
 
 (defun allocate-context ()
   (or (threaded-atomic-pop *context-free-list* reply-next reply-buffer)

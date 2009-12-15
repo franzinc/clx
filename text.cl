@@ -499,6 +499,72 @@
 	(card8 (ldb (byte 8 0) elt))
 	(card8 (ldb (byte 8 8) elt)))
       (values t width))))
+
+#+(and allegro (version>= 8 2))
+(excl:defun-proto
+ draw-glyphs8 (drawable gcontext x y sequence start end translate width)
+  (declare (type drawable drawable)
+	   (type gcontext gcontext)
+	   (type int16 x y)
+	   (type array-index start)
+	   (type sequence sequence)
+	   (type (or null array-index) end)
+	   (type (or null int32) width))
+  (declare (values (or null array-index) (or null int32)))
+  (declare (type translation-function translate)
+	   #+clx-ansi-common-lisp
+	   (dynamic-extent translate)
+	   #+(and lispm (not clx-ansi-common-lisp))
+	   (sys:downward-funarg translate)) )
+#+(and allegro (version>= 8 2))
+(excl:defun-proto
+ draw-glyphs16 (drawable gcontext x y sequence start end translate width)
+  (declare (type drawable drawable)
+	   (type gcontext gcontext)
+	   (type int16 x y)
+	   (type array-index start)
+	   (type sequence sequence)
+	   (type (or null array-index) end)
+	   (type (or null int32) width))
+  (declare (values (or null array-index) (or null int32)))
+  (declare (type translation-function translate)
+	   #+clx-ansi-common-lisp
+	   (dynamic-extent translate)
+	   #+(and lispm (not clx-ansi-common-lisp))
+	   (sys:downward-funarg translate)))
+#+(and allegro (version>= 8 2))
+(excl:defun-proto
+ draw-image-glyphs8 (drawable gcontext x y sequence start end translate width)
+ (declare (type drawable drawable)
+	  (type gcontext gcontext)
+	  (type int16 x y)
+	  (type array-index start)
+	  (type sequence sequence)
+	  (type (or null array-index) end)
+	  (type (or null int32) width)) 
+ (declare (type (or null translation-function) translate)
+	  #+clx-ansi-common-lisp
+	  (dynamic-extent translate)
+	  #+(and lispm (not clx-ansi-common-lisp))
+	  (sys:downward-funarg translate))
+ (declare (values (or null array-index) (or null int32))))
+#+(and allegro (version>= 8 2))
+(excl:defun-proto
+  draw-image-glyphs16 (drawable gcontext x y sequence start end translate width)
+  (declare (type drawable drawable)
+	   (type gcontext gcontext)
+	   (type int16 x y)
+	   (type array-index start)
+	   (type sequence sequence)
+	   (type (or null array-index) end)
+	   (type (or null int32) width))
+  (declare (type (or null translation-function) translate)
+	   #+clx-ansi-common-lisp
+	   (dynamic-extent translate)
+	   #+(and lispm (not clx-ansi-common-lisp))
+	   (sys:downward-funarg translate))
+  (declare (values (or null array-index) (or null int32))))
+
   
 (defun draw-glyphs (drawable gcontext x y sequence
 		    &key (start 0) end translate width (size :default))
@@ -612,11 +678,17 @@
 		       (let ((local-state (gcontext-local-state gcontext))
 			     (server-state (gcontext-server-state gcontext)))
 			 (declare (type gcontext-state local-state server-state))
-			 (setf (gcontext-internal-font-obj server-state) font
-			       (gcontext-internal-font server-state) font-id)
-			 (without-interrupts
-			   (setf (gcontext-internal-font-obj local-state) font
-				 (gcontext-internal-font local-state) font-id)))
+			 (#-allegro-pre-smp
+			  without-interrupts
+			  #+allegro-pre-smp
+			  excl:with-strong-consistency-spin-lock
+			  #+allegro-pre-smp
+			  ((svref (gcontext-smpcontrol gcontext) 0) :name draw-glyphs8)
+
+			  (setf (gcontext-internal-font-obj server-state) font
+				(gcontext-internal-font server-state) font-id)
+			  (setf (gcontext-internal-font-obj local-state) font
+				(gcontext-internal-font local-state) font-id)))
 		       (card8-put 0 #xff)
 		       (card8-put 1 (ldb (byte 8 24) font-id))
 		       (card8-put 2 (ldb (byte 8 16) font-id))
@@ -718,11 +790,17 @@
 		       (let ((local-state (gcontext-local-state gcontext))
 			     (server-state (gcontext-server-state gcontext)))
 			 (declare (type gcontext-state local-state server-state))
-			 (setf (gcontext-internal-font-obj server-state) font
-			       (gcontext-internal-font server-state) font-id)
-			 (without-interrupts
-			   (setf (gcontext-internal-font-obj local-state) font
-				 (gcontext-internal-font local-state) font-id)))
+			 (#-allegro-pre-smp
+			  without-interrupts
+			  #+allegro-pre-smp
+			  excl:with-strong-consistency-spin-lock
+			  #+allegro-pre-smp
+			  ((svref (gcontext-smpcontrol gcontext) 0) :name draw-glyphs16)
+
+			  (setf (gcontext-internal-font-obj server-state) font
+				(gcontext-internal-font server-state) font-id)
+			  (setf (gcontext-internal-font-obj local-state) font
+				(gcontext-internal-font local-state) font-id)))
 		       (card8-put 0 #xff)
 		       (card8-put 1 (ldb (byte 8 24) font-id))
 		       (card8-put 2 (ldb (byte 8 16) font-id))

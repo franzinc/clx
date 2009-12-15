@@ -1000,7 +1000,9 @@
 
 #+excl
 (defmacro without-aborts (&body body)
-  `(without-interrupts ,@body))
+  `(#-allegro-pre-smp without-interrupts
+      #+allegro-pre-smp excl:with-delayed-interrupts           ;;; [bug18657]
+      ,@body))
 
 #+lcl3.0
 (defmacro without-aborts (&body body)
@@ -1135,10 +1137,18 @@
 ;; This should use GET-SETF-METHOD to avoid evaluating subforms multiple times.
 ;; It doesn't because CLtL doesn't pass the environment to GET-SETF-METHOD.
 (defmacro conditional-store (place old-value new-value)
+  #-allegro-pre-smp
   `(without-interrupts
      (cond ((eq ,place ,old-value)
 	    (setf ,place ,new-value)
-	    t))))
+	    t)))
+  #+allegro-pre-smp
+  (let ((nv (gensym)) (ov (gensym)))
+    ;; [bug18657] use atomic update if place is suitable
+    ;;  If place is not suitable, then those uses will need to be modified.
+    `(let ((,ov ,old-value) (,nv ,new-value))
+       (excl:atomic-conditional-setf ,place ,nv ,ov)))
+  )
 
 ;;;----------------------------------------------------------------------------
 ;;; IO Error Recovery
@@ -1949,6 +1959,9 @@
 ;;; This controls macro expansion, and isn't changable at run-time You will
 ;;; probably want to set this to nil if you want good performance at
 ;;; production time.
+;;          2009-12-01 mm: Using defconstant causes compiler warnings in ACL 8.2.
+#+excl (defparameter *type-check?* t)
+#-excl
 (defconstant *type-check?* #+(or Genera Minima) nil #-(or Genera Minima) t)
 
 ;; TYPE? is used to allow the code to do error checking at a different level from
@@ -2397,6 +2410,15 @@
 ;;-----------------------------------------------------------------------------
 ;; GC stuff
 ;;-----------------------------------------------------------------------------
+
+#+allegro-pre-smp
+(excl:defvar-nonbindable *gcontext-local-state-cache* nil)
+#+allegro-pre-smp
+(excl:defvar-nonbindable *temp-gcontext-cache* nil)
+#+allegro-pre-smp
+(excl:defvar-nonbindable *event-free-list* nil)
+#+allegro-pre-smp
+(excl:defvar-nonbindable *pending-command-free-list* nil)
 
 (defun gc-cleanup ()
   (declare (special *event-free-list*

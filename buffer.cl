@@ -485,6 +485,31 @@
 	  (declare (type array-index i j))
 	  (setf (aref string j) (card8->char (read-card8 i))))))))
 
+;;; 2009-12-01 mm: Declare these functions before any uses.
+#+(and allegro (version>= 8 2))
+(excl:defun-proto read-sequence-card8 (reply-buffer result-type nitems &optional transform data
+			    (start 0) (index 0))
+  (declare (type reply-buffer reply-buffer)
+	   (type t result-type) ;; CL type
+	   (type array-index nitems start index)
+	   (type (or null sequence) data))
+  (declare (type (or null (function (card8) t)) transform)
+	   #+clx-ansi-common-lisp
+	   (dynamic-extent transform)
+	   #+(and lispm (not clx-ansi-common-lisp))
+	   (sys:downward-funarg transform)))
+#+(and allegro (version>= 8 2))
+(excl:defun-proto write-sequence-card8
+       (buffer boffset data &optional (start 0) (end (length data)) transform)
+  (declare (type buffer buffer)
+	   (type sequence data)
+	   (type array-index boffset start end))
+  (declare (type (or null (function (t) card8)) transform)
+	   #+clx-ansi-common-lisp
+	   (dynamic-extent transform)
+	   #+(and lispm (not clx-ansi-common-lisp))
+	   (sys:downward-funarg transform)))
+
 ;;; Reading sequences of chars
 
 (defun read-sequence-char (reply-buffer result-type nitems &optional transform data

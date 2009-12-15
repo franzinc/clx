@@ -88,6 +88,34 @@
 
 ) ;; end EVAL-WHEN
 
+
+(defmacro with-gcontext-values ((name gcontext vars &rest vals) &rest body)
+
+  #+allegro-pre-smp
+  `(excl:with-strong-spin-consistent-bindings 
+    ,(mapcar (lambda (v b)
+	       (list v b))
+	     vars vals)
+    ((svref (gcontext-smpcontrol ,gcontext) 0) :name ,name)
+    ,@body)   
+
+  #-allegro-pre-smp
+  (declare (ignore gcontext))
+  #-allegro-pre-smp
+  `(multiple-value-bind ,vars
+       (without-interrupts (values ,@vals))
+     ,@body)
+  )
+
+(defmacro gcontext-atomically (&body body)
+   #+allegro-pre-smp
+   `(progn ,@body)  ;; only used inside modify-gcontext, therefore a noop
+   #-allegro-pre-smp
+   `(without-interrupts ,@body)
+   )
+
+
+
 (deftype gcmask () '(unsigned-byte #.*gcontext-fast-change-length*))
 
 (deftype xgcmask () '(unsigned-byte #.*gcontext-data-length*))
@@ -101,6 +129,7 @@
 (defvar *gcontext-extensions* nil) ;; list of gcontext-extension
 
 ;; Gcontext state Resource
+#-allegro-pre-smp  ;;; defvar-nonbindable in dependent.cl
 (defvar *gcontext-local-state-cache* nil) ;; List of unused gcontext local states
 
 (defmacro gcontext-state-next (state)
@@ -127,6 +156,7 @@
 			gcontext-state-next gcontext-state))
 
 ;; Temp-Gcontext Resource
+#-allegro-pre-smp ;;; defvar-nonbindable in dependent.cl
 (defvar *temp-gcontext-cache* nil) ;; List of unused gcontexts
 
 (defun allocate-temp-gcontext ()
@@ -166,9 +196,19 @@
   ;; The timestamp must be altered after the modification
   `(let ((,local-state (gcontext-local-state ,gcontext)))
      (declare (type gcontext-state ,local-state))
+     
+     #+allegro-pre-smp
+     (excl:with-strong-consistency-spin-lock
+      ((svref (gcontext-smpcontrol ,gcontext) 0) :name modify-gcontext)
+      (unwind-protect
+	 (progn ,@body)
+       (setf (gcontext-internal-timestamp ,local-state) 0)))
+
+     #-allegro-pre-smp
      (prog1
 	 (progn ,@body)
-       (setf (gcontext-internal-timestamp ,local-state) 0))))
+       (setf (gcontext-internal-timestamp ,local-state) 0))
+     ))
 
 (defmacro def-gc-accessor (name type)
   (let* ((gcontext-name (xintern 'gcontext- name))
@@ -243,11 +283,13 @@
   (declare (values (or null (member :none) pixmap rect-seq)
 		   (or null (member :unsorted :y-sorted :yx-sorted :yx-banded))))
   (access-gcontext (gcontext local-state)
-    (multiple-value-bind (clip clip-mask)
-	(without-interrupts
-	  (values (gcontext-internal-clip local-state)
-		  (gcontext-internal-clip-mask local-state)))
-      (if (null clip)
+    (with-gcontext-values
+     (gcontext-clip-mask
+      gcontext
+      (clip clip-mask)
+      (gcontext-internal-clip local-state)
+      (gcontext-internal-clip-mask local-state))
+     (if (null clip)
 	  (values (let ((%buffer (gcontext-display gcontext)))
 		    (declare (type display %buffer))
 		    (decode-type (or (member :none) pixmap) clip-mask))
@@ -281,7 +323,7 @@
     (modify-gcontext (gcontext local-state)
       (let ((server-state (gcontext-server-state gcontext)))
 	(declare (type gcontext-state server-state))
-	(without-interrupts
+	(gcontext-atomically
 	  (setf (gcontext-internal-clip local-state) clip
 		(gcontext-internal-clip-mask local-state) clip-mask)
 	  (if (null clip)
@@ -298,11 +340,12 @@
   (declare (type gcontext gcontext))
   (declare (values (or null card8 sequence)))
   (access-gcontext (gcontext local-state)
-    (multiple-value-bind (dash dashes)
-	(without-interrupts 
-	  (values (gcontext-internal-dash local-state)
-		  (gcontext-internal-dashes local-state)))
-      (if (null dash)
+    (with-gcontext-values
+     (gcontext-dashes
+      gcontext (dash dashes)
+      (gcontext-internal-dash local-state)
+      (gcontext-internal-dashes local-state))
+     (if (null dash)
 	  dashes
 	dash))))
 
@@ -320,7 +363,7 @@
     (modify-gcontext (gcontext local-state)
       (let ((server-state (gcontext-server-state gcontext)))
 	(declare (type gcontext-state server-state))
-	(without-interrupts
+	(gcontext-atomically
 	  (setf (gcontext-internal-dash local-state) dash
 		(gcontext-internal-dashes local-state) dashes)
 	  (if (null dash)
@@ -358,7 +401,7 @@
     (modify-gcontext (gcontext local-state)
       (let ((server-state (gcontext-server-state gcontext)))
 	(declare (type gcontext-state server-state))
-	(without-interrupts
+	(gcontext-atomically
 	  (setf (gcontext-internal-font-obj local-state) font-object
 		(gcontext-internal-font local-state) font)
 	  ;; check against font, not against font-obj
@@ -438,11 +481,13 @@
 	    (funcall (gcontext-extension-set-function (car extension)) gcontext local)))
 
 	;; Update clipping rectangles
-	(multiple-value-bind (local-clip server-clip)
-	    (without-interrupts 
-	      (values (gcontext-internal-clip local-state)
-		      (gcontext-internal-clip server-state)))
-	  (unless (equalp local-clip server-clip)
+	(with-gcontext-values
+	 (force-gcontext-changes-internal-rect
+	  gcontext
+	  (local-clip server-clip)
+	  (gcontext-internal-clip local-state)
+	  (gcontext-internal-clip server-state))
+	 (unless (equalp local-clip server-clip)
 	    (setf (gcontext-internal-clip server-state) nil)
 	    (unless (null local-clip)
 	      (with-buffer-request (display *x-setcliprectangles*)
@@ -456,11 +501,13 @@
 	      (setf (gcontext-internal-clip server-state) local-clip))))
 
 	;; Update dashes
-	(multiple-value-bind (local-dash server-dash)
-	    (without-interrupts 
-	      (values (gcontext-internal-dash local-state)
-		      (gcontext-internal-dash server-state)))
-	  (unless (equalp local-dash server-dash)
+	(with-gcontext-values
+	 (force-gcontext-changes-internal-dashes
+	  gcontext 
+	  (local-dash server-dash)
+	  (gcontext-internal-dash local-state)
+	  (gcontext-internal-dash server-state))
+	 (unless (equalp local-dash server-dash)
 	    (setf (gcontext-internal-dash server-state) nil)
 	    (unless (null local-dash)
 	      (with-buffer-request (display *x-setdashes*)
