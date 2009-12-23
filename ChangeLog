@@ -6,6 +6,10 @@
 
 *******************************************************************************
 
+2009-12-23    <mm@franz.com>
+
+	* aclCUR/clx0.cl (display): add grabbber-lock slot
+
 2009-12-15  mm  <mm@franz.com>
 
 	try again with github ssh key

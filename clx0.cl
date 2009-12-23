@@ -336,6 +336,9 @@
   (atom-id-map (make-hash-table :test (resource-id-map-test)
 				:size *atom-cache-size*)
 	       :type hash-table)
+  #+allegro-pre-smp
+  (grabber-lock (mp:make-process-lock :name "Grabber lock")) ;mm 2009-12 - This lock replaces
+					; without-scheduling wrappers in xcw.
   )
 
 (defun print-display-name (display stream)
@@ -532,7 +535,7 @@
   #+allegro-pre-smp
   (smpcontrol 
    ;; The control place that synchronizes serial access to gcontext state slots.
-   ;; There is only one control for bot serer and local-state becoause sometimes
+   ;; There is only one control for both server and local-state because sometimes
    ;;  we need to lock both at the same time.
    (make-array 1 :initial-element 0) :type simple-vector)
   )
