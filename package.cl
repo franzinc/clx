@@ -240,6 +240,9 @@ only be loaded into a case insensitive Allegro CL.")))
 #+clx-ansi-common-lisp
 (common-lisp:in-package :common-lisp-user)
 
+#+excl
+(eval-when (compile eval load) (require :cltl1))
+
 #+clx-ansi-common-lisp
 (defpackage xlib
   (:use common-lisp)
@@ -249,7 +252,7 @@ only be loaded into a case insensitive Allegro CL.")))
   #+allegro (:import-from excl without-interrupts)
   #+(and allegro (not (version>= 4 1))) (:import-from lisp define-compiler-macro)
   #+excl (:import-from excl arglist)
-  #+(and (not (version>= 9 0)) excl) (:import-from cltl1 char-bit)
+  #+excl (:import-from cltl1 char-bit)
   #+Genera (:import-from sys array-register)
   #+Genera (:import-from zwei indentation)
   #+lcl3.0 (:import-from lcl arglist)
