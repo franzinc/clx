@@ -126,6 +126,10 @@ endif
 endif
 
 ifeq ($(OS_NAME),linux)
+X11R6exists = $(shell if test -d /usr/X11R6/include; then echo yes; fi)
+ifeq ($(X11R6exists),yes)
+XCFLAGS = -I/usr/X11R6/include
+endif
 PICFLAGS = -fPIC
 MAKE_SHARED = ld -shared
 THREADLIB = -lpthread
