@@ -1304,14 +1304,21 @@
 #+(and excl clx-use-allegro-streams)
 (defun open-x-stream (host display protocol)
   (declare (ignore protocol)) ;; Derive from host
-  (let ((stream (if (or (string= host "") (string= host "unix"))
-                   (socket:make-socket
-                    :address-family :file
-                    :remote-filename (format nil "/tmp/.X11-unix/X~D" display)
-                    :format :binary)
-                 (socket:make-socket :remote-host (string host)
-                                     :remote-port (+ *x-tcp-port* display)
-                                     :format :binary))))
+  (let ((stream (cond
+		 ((or (string= host "") (string= host "unix"))
+		  (socket:make-socket
+		   :address-family :file
+		   :remote-filename (format nil "/tmp/.X11-unix/X~D" display)
+		   :format :binary))
+		 #+macosx
+		 ((position #\/ host)
+		  (socket:make-socket
+		   :address-family :file
+		   :remote-filename (format nil "~a:~a" host display)
+		   :format :binary))
+                 (t (socket:make-socket :remote-host (string host)
+					:remote-port (+ *x-tcp-port* display)
+					:format :binary)))))
     (if (streamp stream)
 	stream
       (error "Cannot connect to server: ~A:~D" host display))))

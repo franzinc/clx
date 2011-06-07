@@ -4,6 +4,12 @@
   :type :system
   :post-loadable t)
 
+#+(version= 8 2)
+(sys:defpatch "clx" 1
+  "v1: support launchd DISPLAY settings on macosx."
+  :type :system
+  :post-loadable t)
+
 ;;; -*- Mode: LISP; Syntax: Common-lisp; Base: 10; Lowercase: Yes;  -*-
 
 ;;; Copyright 1990 Massachusetts Institute of Technology, Cambridge,
