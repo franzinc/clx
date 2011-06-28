@@ -937,6 +937,16 @@
 (defmacro holding-lock ((locator display &optional whostate &key timeout)
 			&body body)
   (declare (ignore display))
+  ;;mm 2011-06: The older code looks like a copy of the ACL
+  ;; w-p-l code.
+  #+(version>= 8 2)
+  `(mp:with-process-lock
+    (,locator :whostate ,(cond ((null whostate) "holding-lock")
+			       ((stringp whostate) whostate)
+			       (t `(or ,whostate "holding-lock")))
+	      :timeout ,timeout)
+    ,@body)
+  #-(version>= 8 2)
   `(let (.hl-lock. .hl-obtained-lock. .hl-curproc.)
      (unwind-protect
 	 (block .hl-doit.
@@ -1146,6 +1156,7 @@
   (let ((nv (gensym)) (ov (gensym)))
     ;; [bug18657] use atomic update if place is suitable
     ;;  If place is not suitable, then those uses will need to be modified.
+    ;;  Must use the let to preserve order of evaluation. 
     `(let ((,ov ,old-value) (,nv ,new-value))
        (excl:atomic-conditional-setf ,place ,nv ,ov)))
   )

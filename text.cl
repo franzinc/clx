@@ -681,9 +681,9 @@
 			 (#-allegro-pre-smp
 			  without-interrupts
 			  #+allegro-pre-smp
-			  excl:with-strong-consistency-spin-lock
+			  mp:with-exclusive-lock
 			  #+allegro-pre-smp
-			  ((svref (gcontext-smpcontrol gcontext) 0) :name draw-glyphs8)
+			  ((gcontext-state-lock gcontext))
 
 			  (setf (gcontext-internal-font-obj server-state) font
 				(gcontext-internal-font server-state) font-id)
@@ -793,9 +793,9 @@
 			 (#-allegro-pre-smp
 			  without-interrupts
 			  #+allegro-pre-smp
-			  excl:with-strong-consistency-spin-lock
+			  mp:with-exclusive-lock 
 			  #+allegro-pre-smp
-			  ((svref (gcontext-smpcontrol gcontext) 0) :name draw-glyphs16)
+			  ((gcontext-state-lock gcontext))
 
 			  (setf (gcontext-internal-font-obj server-state) font
 				(gcontext-internal-font server-state) font-id)

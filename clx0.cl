@@ -533,11 +533,11 @@
   (next nil #-explorer :type #-explorer (or null gcontext))
 
   #+allegro-pre-smp
-  (smpcontrol 
-   ;; The control place that synchronizes serial access to gcontext state slots.
-   ;; There is only one control for both server and local-state because sometimes
-   ;;  we need to lock both at the same time.
-   (make-array 1 :initial-element 0) :type simple-vector)
+  (state-lock
+   ;; The lock that synchronizes serial access to gcontext state slots.
+   ;; There is only one lock for both server and local-state because sometimes
+   ;;   we need to lock both at the same time.
+   (mp:make-sharable-lock :name "GContext state lock" :max-shared 40))
   )
 
 (defun print-gcontext (gcontext stream depth)

@@ -89,15 +89,27 @@
 ) ;; end EVAL-WHEN
 
 
-(defmacro with-gcontext-values ((name gcontext vars &rest vals) &rest body)
-
+(defmacro with-gcontext-values ((gcontext vars &rest vals) &rest body)
+  ;; Read-only access to gc slots.
   #+allegro-pre-smp
-  `(excl:with-strong-spin-consistent-bindings 
-    ,(mapcar (lambda (v b)
-	       (list v b))
-	     vars vals)
-    ((svref (gcontext-smpcontrol ,gcontext) 0) :name ,name)
-    ,@body)   
+  `(multiple-value-bind ,vars
+       (mp:with-shared-lock ((gcontext-state-lock ,gcontext)) (values ,@vals))
+     ,@body)
+
+  #-allegro-pre-smp
+  (declare (ignore gcontext))
+  #-allegro-pre-smp
+  `(multiple-value-bind ,vars
+       (without-interrupts (values ,@vals))
+     ,@body)
+  )
+
+(defmacro with-gcontext-exclusive-values ((gcontext vars &rest vals) &rest body)
+  ;; Access and modify gc slots.
+  #+allegro-pre-smp
+  `(multiple-value-bind ,vars
+       (mp:with-exclusive-lock ((gcontext-state-lock ,gcontext)) (values ,@vals))
+     ,@body)
 
   #-allegro-pre-smp
   (declare (ignore gcontext))
@@ -198,8 +210,8 @@
      (declare (type gcontext-state ,local-state))
      
      #+allegro-pre-smp
-     (excl:with-strong-consistency-spin-lock
-      ((svref (gcontext-smpcontrol ,gcontext) 0) :name modify-gcontext)
+     (mp:with-exclusive-lock
+      ((gcontext-state-lock ,gcontext))
       (unwind-protect
 	 (progn ,@body)
        (setf (gcontext-internal-timestamp ,local-state) 0)))
@@ -284,8 +296,7 @@
 		   (or null (member :unsorted :y-sorted :yx-sorted :yx-banded))))
   (access-gcontext (gcontext local-state)
     (with-gcontext-values
-     (gcontext-clip-mask
-      gcontext
+     (gcontext
       (clip clip-mask)
       (gcontext-internal-clip local-state)
       (gcontext-internal-clip-mask local-state))
@@ -341,8 +352,8 @@
   (declare (values (or null card8 sequence)))
   (access-gcontext (gcontext local-state)
     (with-gcontext-values
-     (gcontext-dashes
-      gcontext (dash dashes)
+     (gcontext
+      (dash dashes)
       (gcontext-internal-dash local-state)
       (gcontext-internal-dashes local-state))
      (if (null dash)
@@ -481,9 +492,8 @@
 	    (funcall (gcontext-extension-set-function (car extension)) gcontext local)))
 
 	;; Update clipping rectangles
-	(with-gcontext-values
-	 (force-gcontext-changes-internal-rect
-	  gcontext
+	(with-gcontext-exclusive-values
+	 (gcontext
 	  (local-clip server-clip)
 	  (gcontext-internal-clip local-state)
 	  (gcontext-internal-clip server-state))
@@ -501,9 +511,8 @@
 	      (setf (gcontext-internal-clip server-state) local-clip))))
 
 	;; Update dashes
-	(with-gcontext-values
-	 (force-gcontext-changes-internal-dashes
-	  gcontext 
+	(with-gcontext-exclusive-values
+	 (gcontext 
 	  (local-dash server-dash)
 	  (gcontext-internal-dash local-state)
 	  (gcontext-internal-dash server-state))
