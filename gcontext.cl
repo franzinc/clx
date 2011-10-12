@@ -93,7 +93,8 @@
   ;; Read-only access to gc slots.
   #+allegro-pre-smp
   `(multiple-value-bind ,vars
-       (mp:with-shared-lock ((gcontext-state-lock ,gcontext)) (values ,@vals))
+       ;; Use the form that returns the values of the body [bug20514]
+       (mp:with-sharable-lock (:shared (gcontext-state-lock ,gcontext)) (values ,@vals))
      ,@body)
 
   #-allegro-pre-smp
@@ -108,7 +109,8 @@
   ;; Access and modify gc slots.
   #+allegro-pre-smp
   `(multiple-value-bind ,vars
-       (mp:with-exclusive-lock ((gcontext-state-lock ,gcontext)) (values ,@vals))
+       ;; Use the form that returns the values of the body [bug20514]
+       (mp:with-sharable-lock (:exclusive (gcontext-state-lock ,gcontext)) (values ,@vals))
      ,@body)
 
   #-allegro-pre-smp
@@ -210,8 +212,8 @@
      (declare (type gcontext-state ,local-state))
      
      #+allegro-pre-smp
-     (mp:with-exclusive-lock
-      ((gcontext-state-lock ,gcontext))
+     (mp:with-sharable-lock
+      (:exclusive (gcontext-state-lock ,gcontext))
       (unwind-protect
 	 (progn ,@body)
        (setf (gcontext-internal-timestamp ,local-state) 0)))

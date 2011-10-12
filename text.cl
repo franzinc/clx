@@ -681,9 +681,9 @@
 			 (#-allegro-pre-smp
 			  without-interrupts
 			  #+allegro-pre-smp
-			  mp:with-exclusive-lock
+			  mp:with-sharable-lock  ;;; bug20414
 			  #+allegro-pre-smp
-			  ((gcontext-state-lock gcontext))
+			  (:exclusive (gcontext-state-lock gcontext))
 
 			  (setf (gcontext-internal-font-obj server-state) font
 				(gcontext-internal-font server-state) font-id)
