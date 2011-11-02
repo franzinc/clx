@@ -136,7 +136,8 @@ THREADLIB = -lpthread
 endif
 
 ifeq ($(OS_NAME),freebsd)
-XCFLAGS = -I/usr/X11R6/include
+x11_include_location := $(shell if test -d /usr/local/include/X11; then echo /usr/local/include; else echo /usr/X11R6/include; fi)
+XCFLAGS = -I$(x11_include_location)
 PICFLAGS = -fPIC -DPIC
 MAKE_SHARED = ld -Bshareable -Bdynamic
 endif
