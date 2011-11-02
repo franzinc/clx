@@ -98,7 +98,7 @@ else
 XCFLAGS = -I/usr/X11R6/include
 endif
 else
-XCFLAGS = -I/usr/X11R6/include
+XCFLAGS = -I/usr/X11R6/include -arch i386
 ifeq ($(MACHINE),x86)
 MAKE_SHARED = sh ../src/bin/make_shared.mac86
 else
