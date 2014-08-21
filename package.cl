@@ -1,15 +1,3 @@
-#+(version= 8 0)
-(sys:defpatch "clx" 1
-  "v1: support unix domain socket connections"
-  :type :system
-  :post-loadable t)
-
-#+(version= 8 2)
-(sys:defpatch "clx" 1
-  "v1: support launchd DISPLAY settings on macosx."
-  :type :system
-  :post-loadable t)
-
 ;;; -*- Mode: LISP; Syntax: Common-lisp; Base: 10; Lowercase: Yes;  -*-
 
 ;;; Copyright 1990 Massachusetts Institute of Technology, Cambridge,
@@ -22,6 +10,12 @@
 ;;; documentation, and that the name MIT not be used in advertising or
 ;;; publicity pertaining to distribution of the software without specific,
 ;;; written prior permission.
+
+#+(version= 9 0)
+(sys:defpatch "clx" 1
+  "v1: rebuild for sharable lock change."
+  :type :system
+  :post-loadable t)
 
 ;;; The CLtL way
 
