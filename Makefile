@@ -167,6 +167,7 @@ DEBUG			= 1
 RECORD_XREF_INFO	= nil
 RECORD_SOURCE_FILE_INFO	= nil
 SAVE_LOCAL_NAMES	= nil
+SAVE_SOURCE_DEBUG	= nil
 LOAD_XREF_INFO		= nil
 LOAD_SOURCE_FILE_INFO	= nil
 LOAD_LOCAL_NAMES_INFO	= nil
@@ -266,6 +267,7 @@ compile-no-clos-CLX:	$(C_OBJS)
 	      (*record-xref-info* $(RECORD_XREF_INFO)) \
 	      (*load-xref-info* $(LOAD_XREF_INFO)) \
 	      (comp::save-local-names-switch $(SAVE_LOCAL_NAMES)) \
+	      (comp:save-source-level-debug-info-switch $(SAVE_SOURCE_DEBUG)) \
 	      (*compile-print* $(compile_print)) \
 	      (*compile-verbose* $(compile_verbose))) \
 	    (setf (sys:gsgc-switch :print) $(gc_print)) \
@@ -294,6 +296,7 @@ compile-partial-clos-CLX:	$(C_OBJS)
 	      (*record-xref-info* $(RECORD_XREF_INFO)) \
 	      (*load-xref-info* $(LOAD_XREF_INFO)) \
 	      (comp::save-local-names-switch $(SAVE_LOCAL_NAMES)) \
+	      (comp:save-source-level-debug-info-switch $(SAVE_SOURCE_DEBUG)) \
 	      (*compile-verbose* $(compile_verbose)) \
 	      (*compile-print* $(compile_print))) \
 	    (setf (sys:gsgc-switch :print) $(gc_print)) \
@@ -320,6 +323,7 @@ compile-full-clos-CLX:	$(C_OBJS)
 	      (*record-xref-info* $(RECORD_XREF_INFO)) \
 	      (*load-xref-info* $(LOAD_XREF_INFO)) \
 	      (comp::save-local-names-switch $(SAVE_LOCAL_NAMES)) \
+	      (comp:save-source-level-debug-info-switch $(SAVE_SOURCE_DEBUG)) \
 	      (*compile-print* $(compile_print)) \
 	      (*compile-verbose* $(compile_verbose))) \
 	    (setf (sys:gsgc-switch :print) $(gc_print)) \
