@@ -109,7 +109,7 @@ endif
 
 ifeq ($(OS_NAME),sunos)
 ifeq ($(SIXTYFOURBIT),yes)
-ifeq ($(MACHINE),x86_64)
+ifeq ($(MACHINE),x86)
 XCFLAGS = -xarch=amd64 -DAcl64Bit
 PICFLAGS = -KPIC
 MAKE_SHARED = ld -G
