@@ -30,7 +30,7 @@ SAVEIMG = yes
 # *************************************************************************
 ifdef SAVEIMG
 ifeq ($(OS_NAME),windows)
-CL		= sh ../src/runlisp.sh -f clx.tmp ../src/$(lispexe) -I ../src/$(lispdxl)
+CL		= bash ../src/runlisp.sh -f clx.tmp ../src/$(lispexe) -I ../src/$(lispdxl)
 else
 CL		= cat clx.tmp | ../src/$(lispexe) -I ../src/$(lispdxl)
 endif
