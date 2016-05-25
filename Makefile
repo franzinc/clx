@@ -92,7 +92,7 @@ SHAREFLAGS =
 SO = dylib
 ifeq ($(SIXTYFOURBIT),yes)
 MAKE_SHARED = sh ../src/bin/make_shared.mac64
-ifeq ($(MACHINE),x86)
+ifeq ($(MACHINE),x86_64)
 XCFLAGS = -I/usr/X11R6/include -m64 -arch x86_64
 else
 XCFLAGS = -I/usr/X11R6/include
@@ -104,12 +104,13 @@ MAKE_SHARED = sh ../src/bin/make_shared.mac86
 else
 MAKE_SHARED = sh ../src/bin/make_shared.mac
 endif
+
 endif
 endif
 
 ifeq ($(OS_NAME),sunos)
 ifeq ($(SIXTYFOURBIT),yes)
-ifeq ($(MACHINE),x86)
+ifeq ($(MACHINE),x86_64)
 XCFLAGS = -xarch=amd64 -DAcl64Bit
 PICFLAGS = -KPIC
 MAKE_SHARED = ld -G
