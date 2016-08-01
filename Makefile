@@ -1,4 +1,3 @@
-# $Id: Makefile,v 1.33 2007/09/14 19:33:58 duane Exp $
 #  Makefile for CLX
 
 SHELL = sh
