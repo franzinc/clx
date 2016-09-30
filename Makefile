@@ -92,12 +92,12 @@ SO = dylib
 ifeq ($(SIXTYFOURBIT),yes)
 MAKE_SHARED = sh ../src/bin/make_shared.mac64
 ifeq ($(MACHINE),x86_64)
-XCFLAGS = -I/usr/X11R6/include -m64 -arch x86_64
+XCFLAGS = -I/usr/X11/include -m64 -arch x86_64
 else
-XCFLAGS = -I/usr/X11R6/include
+XCFLAGS = -I/usr/X11/include
 endif
 else
-XCFLAGS = -I/usr/X11R6/include -arch i386
+XCFLAGS = -I/usr/X11/include -arch i386
 ifeq ($(MACHINE),x86)
 MAKE_SHARED = sh ../src/bin/make_shared.mac86
 else
