@@ -1,3 +1,4 @@
-.git-branch-name
+*.so
+*.dylib
 /clx.tmp
 /runlisp.out
