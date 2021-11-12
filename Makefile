@@ -2,6 +2,8 @@
 
 SHELL = sh
 
+FICODESIGN = ../src/scm-bin/ficodesign
+
 makefile_top = $(shell if test -f ../makefile.top; then echo exists; fi)
 
 ifeq ($(makefile_top),exists)
@@ -216,6 +218,7 @@ excldep.sl: excldep.c
 excldep.dylib: excldep.c
 	$(CC) $(CFLAGS) -c $(PICFLAGS) excldep.c
 	$(MAKE_SHARED) -o excldep.dylib excldep.o
+	-$(FICODESIGN) excldep.dylib 
 
 socket.so: socket.c
 	$(CC) $(CFLAGS) -c $(PICFLAGS) socket.c
@@ -228,6 +231,7 @@ socket.sl: socket.c
 socket.dylib: socket.c
 	$(CC) $(CFLAGS) -c $(PICFLAGS) socket.c
 	$(MAKE_SHARED) -o socket.dylib socket.o
+	-$(FICODESIGN) socket.dylib 
 
 #
 # Three build rules are provided: no-clos, partial-clos, and full-clos.

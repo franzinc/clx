@@ -30,14 +30,21 @@ extern int errno;		/* Certain (broken) OS's don't have this */
 
 #ifdef UNIXCONN
 #include <sys/un.h>
-#ifndef X_UNIX_PATH
-#ifdef hpux
-#define X_UNIX_PATH "/usr/spool/sockets/X11/"
-#define OLD_UNIX_PATH "/tmp/.X11-unix/X"
-#else /* hpux */
-#define X_UNIX_PATH "/tmp/.X11-unix/X"
-#endif /* hpux */
-#endif /* X_UNIX_PATH */
+
+# ifndef X_UNIX_PATH
+#  ifdef hpux
+#   define X_UNIX_PATH "/usr/spool/sockets/X11/"
+#   define OLD_UNIX_PATH "/tmp/.X11-unix/X"
+#  else /* hpux */
+#   define X_UNIX_PATH "/tmp/.X11-unix/X"
+#  endif /* hpux */
+# endif /* X_UNIX_PATH */
+
+# ifdef __APPLE__
+/* need to include this starting with a recent Xcode on macsup, 10/29/21 */
+#  include <arpa/inet.h>
+# endif
+
 #endif /* UNIXCONN */
 
 # ifdef m_alpha
