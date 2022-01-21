@@ -135,6 +135,10 @@ endif
 PICFLAGS = -fPIC
 MAKE_SHARED = ld -shared
 THREADLIB = -lpthread
+ifneq ($(SIXTYFOURBIT),yes)
+XCFLAGS += -m32
+MAKE_SHARED = ../src/bin/make_shared.lx32
+endif
 endif
 
 ifeq ($(OS_NAME),freebsd)
